@@ -88,7 +88,7 @@ screen_set_pixel
     if(global_fix_screen_info.visual == FB_VISUAL_MONO01)
     {
         /* 白色 */
-        if((c->r == global_color_limit.r_limit) && (c->g == global_color_limit.g_limit) && (c->g == global_color_limit.g_limit))
+        if((c->r == global_color_limit.r_limit) && (c->g == global_color_limit.g_limit) && (c->b == global_color_limit.b_limit))
         {
             color = 0;
         }
@@ -96,7 +96,7 @@ screen_set_pixel
         else if
         ((c->r == 0) &&
          (c->g == 0) &&
-         (c->g == 0))
+         (c->b == 0))
         {
             color = 1;
         }
@@ -107,7 +107,7 @@ screen_set_pixel
         if
         ((c->r == global_color_limit.r_limit) &&
          (c->g == global_color_limit.g_limit) &&
-         (c->g == global_color_limit.g_limit))
+         (c->b == global_color_limit.b_limit))
         {
             color = 1;
         }
@@ -115,7 +115,7 @@ screen_set_pixel
         else if
         ((c->r == 0) &&
          (c->g == 0) &&
-         (c->g == 0))
+         (c->b == 0))
         {
             color = 0;
         }
