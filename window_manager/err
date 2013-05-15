@@ -1,0 +1,8 @@
+INFO:[egui_comm.c:97]	in comm_send_respond: send respond RESPOND_TYPE_REGISTER_APPLICATION
+INFO:[egui_comm.c:49]	in comm_send_head_and_body: send respond RESPOND_TYPE_CANCEL_APPLICATION
+INFO:[egui_comm.c:97]	in comm_send_respond: send respond RESPOND_TYPE_GRAPHICS_DEVICE_INIT
+INFO:[egui_comm.c:49]	in comm_send_head_and_body: send respond RESPOND_TYPE_CANCEL_APPLICATION
+INFO:[egui_comm.c:97]	in comm_send_respond: send respond RESPOND_TYPE_REGISTER_WINDOW
+INFO:[egui_comm.c:49]	in comm_send_head_and_body: send respond RESPOND_TYPE_CANCEL_APPLICATION
+ERROR:[egui_uds.c:266]	detect client socket close
+ERROR:[egui_uds.c:266]	detect client socket close
