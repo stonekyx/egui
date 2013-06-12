@@ -61,6 +61,6 @@ $(DEFAULT): $(header) $(source) $(object)
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(INCLUDE) 
 
 $(CLEAN):
-	$(RM) -f *.o paint shutdown widget label button text_line single_window multi_windows pop_up_window toplevel_child traversal icon
+	$(RM) -f *.o paint shutdown widget label button text_line single_window multi_windows pop_up_window toplevel_child traversal icon editerbasic
 	$(MAKE) clean -C file_browser
 	$(MAKE) clean -C calculator

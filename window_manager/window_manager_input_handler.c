@@ -154,7 +154,10 @@ static si_t mask_active_by_mouse_down(union message * msg)
 	struct window_info_iterator iter;
 	window_info_iterator_clear(&iter);
 
-	all_app_traversal_decrement(&iter, _do_find_clicked_window, &msg->mouse.cursor_position);
+	if(!all_app_traversal_decrement(&iter, _do_find_clicked_window, &msg->mouse.cursor_position)) {
+        /* Clear useless pointers in tainted iter */
+        window_info_iterator_clear(&iter);
+    }
 
 	/* 在桌面上按下了鼠标的某个键 */
 	if(iter.app_info_ptr == NULL || iter.win_info_ptr == NULL)
