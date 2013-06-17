@@ -66,6 +66,7 @@ static si_t diff_timeval(struct timeval * t1, struct timeval * t2, struct timeva
 static si_t basic_mouse(struct input_device * self, union message * m)
 {
     struct input_event ie;
+    static int syn_ok;
 
     /* 读取数据 */
 	if(uds_read(&self->uds, &ie, sizeof(struct input_event)) < 0)
@@ -74,11 +75,35 @@ static si_t basic_mouse(struct input_device * self, union message * m)
 		return -1;
 	}
 
+    if(ie.type != EV_SYN && !syn_ok) {
+        return 1;
+    }
+
     /* 时间 */
     m->mouse.time.tv_sec = ie.time.tv_sec;
     m->mouse.time.tv_usec = ie.time.tv_usec;
 
-    if(ie.type == EV_KEY)
+    if(ie.type == EV_SYN) {
+        switch(ie.code) {
+            case SYN_REPORT:
+                syn_ok=1;
+                return 1;
+                break;
+            case SYN_CONFIG:
+                return 1;
+                break;
+            case SYN_MT_REPORT: /* FIXME: for touch-pad events, not implemented. */
+                return 1;
+                break;
+            case SYN_DROPPED:
+                syn_ok=0;
+                return 1;
+                break;
+            default:
+                EGUI_PRINT_ERROR("Unknown input_event code %d for type EV_SYN.", ie.code);
+                return -1;
+        }
+    } else if(ie.type == EV_KEY)
     {
         /* 松开鼠标的键 */
         if(ie.value == 0)
@@ -140,6 +165,10 @@ static si_t basic_mouse(struct input_device * self, union message * m)
         }
 
         return 0;
+    } else if(ie.type == EV_MSC){
+        if(ie.code == MSC_SCAN) { /* physical mapping of a key, ignoring */
+            return 1;
+        }
     }
 
     return -1;
@@ -148,11 +177,13 @@ static si_t basic_mouse(struct input_device * self, union message * m)
 static si_t deal_with_mouse(struct input_device * self, struct list* msg_list)
 {
 	union message msg;
-	if(0 != basic_mouse(self, &msg))
+    int get_msg_res;
+	if(0 > (get_msg_res=basic_mouse(self, &msg)))
 	{
 		EGUI_PRINT_ERROR("failed to get mouse msg");
 		return -1;
 	}
+    if(1==get_msg_res) return 0;
 
 	list_push_back(msg_list, &msg, sizeof(union message));
 
