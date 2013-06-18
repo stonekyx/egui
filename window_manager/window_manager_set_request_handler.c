@@ -273,6 +273,8 @@ static si_t update_handler(addr_t app_ptr, si_t gd_handler)
         struct object* tree = vector_at(&(app_info_ptr->window_info_vector), 0);
         struct window_info* win_info_ptr = (struct window_info *)(tree->lchild);
 
+        memset(global_screen.buffer_addr, 0, global_screen.size);
+
         /* 更新光标 */
         flush_above_in_z_order_including(app_info_ptr, win_info_ptr, &gd_ptr->rectangle);
         screen_flush(gd_ptr->rectangle.x, gd_ptr->rectangle.y, gd_ptr->rectangle.width, gd_ptr->rectangle.height);

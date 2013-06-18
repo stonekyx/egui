@@ -255,6 +255,24 @@ extern si_t screen_index_to_color(struct color * c, ui_t * index);
 extern si_t screen_set_pixel(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y);
 
 /**
+ * 把一个像素绘制到给定的void数组中
+ *
+ * 将 video 数组中坐标为（x，y）的像素绘制成 c 所指的颜色
+ *
+ * @param video 目标数组
+ * @param width 数组代表的虚屏幕的宽度
+ * @param height 高度
+ * @param depth 色彩深度
+ * @param c 颜色结构体的指针
+ * @param a 像素所在区域
+ * @param x 像素的横坐标
+ * @param y 像素的纵坐标
+ *
+ * @return 成功返回0，失败返回-1。
+**/
+extern si_t screen_set_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
+
+/**
  * 获得屏幕上的某一点
  *
  * 将 s 所指的屏幕上坐标为（x，y）的像素保存到 c 所指的颜色结构体中
@@ -268,6 +286,24 @@ extern si_t screen_set_pixel(struct screen * s, struct rectangle * a, struct col
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_get_pixel(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y);
+
+/**
+ * 从给定void数组中获取一点
+ *
+ * 将 video 数组中坐标为（x，y）的像素保存到 c 所指的颜色结构体中
+ *
+ * @param video 来源数组
+ * @param width 数组代表的虚屏幕的宽度
+ * @param height 高度
+ * @param depth 色彩深度
+ * @param c 颜色结构体的指针
+ * @param a 像素所在区域
+ * @param x 像素的横坐标
+ * @param y 像素的纵坐标
+ *
+ * @return 成功返回0，失败返回-1。
+**/
+extern si_t screen_get_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
 
 /**
  * 在屏幕上绘制某一横线
@@ -364,6 +400,15 @@ extern si_t screen_clear(struct screen * s, struct color * c);
  * @return 0
 **/
 extern si_t screen_cpy_area(void * dst, void * src, si_t dst_x, si_t dst_y, si_t src_x, si_t src_y, si_t x_size, si_t y_size);
+
+/**
+ * @brief 把一个像素区域从 s 复制到 d，支持alpha blending。
+ *
+ * @param all 同screen_cpy_area
+ *
+ * @return 0
+**/
+extern si_t screen_cpy_area_alpha(void * dst, void * src, si_t dst_x, si_t dst_y, si_t src_x, si_t src_y, si_t x_size, si_t y_size);
 
 /**
  * 将视频缓冲区刷新到视频存储区

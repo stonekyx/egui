@@ -34,39 +34,26 @@
 # include "../graph_lower.h"
 
 /*
-  get picture element
-
-  获得像素的值
-*/
+ * 从裸数组中获取像素。
+ */
 si_t
-screen_get_pixel
-(struct screen * s,
+screen_get_pixel_raw
+(void * video,
+ si_t width,
+ si_t height,
+ si_t depth,
  struct rectangle * a,
  struct color * c,
  si_t x,
  si_t y)
 {
     ui_t offset, color;
-    byte_t * video;
     struct rectangle result_area, screen_area;
-
-    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-    {
-        video = s->memory_addr;
-    }
-    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-    {
-        video = s->buffer_addr;
-    }
-    else
-    {
-        return -1;
-    }
 
     screen_area.x = 0;
     screen_area.y = 0;
-    screen_area.width = s->width;
-    screen_area.height = s->height;
+    screen_area.width = width;
+    screen_area.height = height;
 
     /* 工作区域不在屏幕区域 */
     if(area_intersection(a, &screen_area, &result_area) == -1)
@@ -85,13 +72,45 @@ screen_get_pixel
     }
 
     /* 获得像素关于显存的偏移量 */
-    offset = (y * s->width + x) * (s->color_depth >> 3);
+    offset = (y * width + x) * (depth >> 3);
 
     /* 将像素的值赋给 color */
-    memcpy(&color, video + offset, s->color_depth >> 3);
+    memcpy(&color, video + offset, depth >> 3);
 
     /* 将 color 转换成 struct color */
     screen_value_to_color(c, &color);
 
     return 0;
+}
+
+/*
+  get picture element
+
+  获得像素的值
+*/
+si_t
+screen_get_pixel
+(struct screen * s,
+ struct rectangle * a,
+ struct color * c,
+ si_t x,
+ si_t y)
+{
+    byte_t * video;
+
+    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
+    {
+        video = s->memory_addr;
+    }
+    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
+    {
+        video = s->buffer_addr;
+    }
+    else
+    {
+        return -1;
+    }
+
+    return screen_get_pixel_raw(video, s->width, s->height, s->color_depth,
+            a, c, x, y);
 }

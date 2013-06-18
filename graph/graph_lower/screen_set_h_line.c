@@ -39,7 +39,7 @@ color_byte
 (ui_t color_depth,
  ui_t color)
 {
-    ui08_t temp;
+    ui08_t temp = 0;
 
     if(color_depth == 1)
     {

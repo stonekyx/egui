@@ -31,6 +31,7 @@
 
 # include <base_type.h>
 
+#define COLOR_ALPHA_MAX 100
 
 /* RGB 颜色 */
 struct color
@@ -69,5 +70,7 @@ struct color_limit
     /* 透明的最大值 */
     si_t a_limit;
 };
+
+struct color *alpha_blend(struct color *, struct color *);
 
 # endif

@@ -72,10 +72,10 @@ screen_value_to_color
 (struct color * c,
  ui_t * value)
 {
-    c->r = ((~((ui_t)-1 << global_var_screen_info.red.length)) << global_var_screen_info.red.offset) & (* value);
-    c->g = ((~((ui_t)-1 << global_var_screen_info.green.length)) << global_var_screen_info.green.offset) & (* value);
-    c->b = ((~((ui_t)-1 << global_var_screen_info.blue.length)) << global_var_screen_info.blue.offset) & (* value);
-    c->a = ((~((ui_t)-1 << global_var_screen_info.transp.length)) << global_var_screen_info.transp.offset) & (* value);
+    c->r = (((ui_t)1<<global_var_screen_info.red.length)-1) & ((*value) >> global_var_screen_info.red.offset);
+    c->g = (((ui_t)1<<global_var_screen_info.green.length)-1) & ((*value) >> global_var_screen_info.green.offset);
+    c->b = (((ui_t)1<<global_var_screen_info.blue.length)-1) & ((*value) >> global_var_screen_info.blue.offset);
+    c->a = (((ui_t)1<<global_var_screen_info.transp.length)-1) & ((*value) >> global_var_screen_info.transp.offset);
 
     return 0;
 }

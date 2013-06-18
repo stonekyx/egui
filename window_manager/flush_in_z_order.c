@@ -33,7 +33,7 @@
 
 static void flush_area_to_screen(struct screen* s, struct rectangle* area)
 {
-	screen_cpy_area(s->memory_addr, s->buffer_addr,
+	screen_cpy_area_alpha(s->memory_addr, s->buffer_addr,
 		area->x, area->y, area->x, area->y, area->width, area->height);
 }
 

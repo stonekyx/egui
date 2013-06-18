@@ -28,28 +28,26 @@
 **/
 
 # include <string.h>
+#include <stdio.h>
 
 # include <data_structures.h>
 
 # include "../graph_lower.h"
 
-si_t
-screen_cpy_area
-(void * dst,
- void * src,
- si_t dst_x,
+#include <color.h>
+
+static si_t
+get_actual_areas
+(si_t dst_x,
  si_t dst_y,
  si_t src_x,
  si_t src_y,
  si_t width,
- si_t height)
+ si_t height,
+ struct rectangle * const ans_src,
+ struct rectangle * const ans_dst)
 {
-    ui_t bit, byte_quantity, line_bit, size, line_byte;
-    ui_t src_h_offset, src_h_bit;
-    ui_t dst_h_offset, dst_h_bit;
-    byte_t * src_addr;
-    byte_t * dst_addr;
-    struct rectangle src_area, dst_area, temp_src_area, temp_dst_area, screen_area, temp_area;
+    static struct rectangle src_area, dst_area, temp_src_area, temp_dst_area, screen_area, temp_area;
 
     /* 屏幕区域 */
     screen_area.x = 0;
@@ -99,6 +97,35 @@ screen_cpy_area
     /* 获得实际的目标区域 */
     if(area_intersection(&temp_area, &temp_dst_area, &dst_area) == -1)
     {
+        return -1;
+    }
+
+    *ans_src = src_area;
+    *ans_dst = dst_area;
+
+    return 0;
+}
+
+si_t
+screen_cpy_area
+(void * dst,
+ void * src,
+ si_t dst_x,
+ si_t dst_y,
+ si_t src_x,
+ si_t src_y,
+ si_t width,
+ si_t height)
+{
+    ui_t bit, byte_quantity, line_bit, size, line_byte;
+    ui_t src_h_offset, src_h_bit;
+    ui_t dst_h_offset, dst_h_bit;
+    byte_t * src_addr;
+    byte_t * dst_addr;
+    struct rectangle src_area, dst_area;
+
+    if(get_actual_areas(dst_x, dst_y, src_x, src_y, width, height,
+                &src_area, &dst_area)<0) {
         return -1;
     }
 
@@ -181,3 +208,52 @@ screen_cpy_area
     return 0;
 }
 
+si_t
+screen_cpy_area_alpha
+(void * dst,
+ void * src,
+ si_t dst_x,
+ si_t dst_y,
+ si_t src_x,
+ si_t src_y,
+ si_t width,
+ si_t height)
+{
+    struct rectangle src_area, dst_area;
+
+    if(get_actual_areas(dst_x, dst_y, src_x, src_y, width, height,
+                &src_area, &dst_area)<0) {
+        return -1;
+    }
+
+    src_x = src_area.x;
+    src_y = src_area.y;
+    dst_x = dst_area.x;
+    dst_y = dst_area.y;
+    width = src_area.width;
+    height = dst_area.height;
+
+    {
+        register int i;
+        for(i=src_x; i<src_x+width; i++) {
+            register int j;
+            for(j=src_y; j<src_y+height; j++) {
+                static struct color src_pix;
+                if(screen_get_pixel_raw(src, global_screen.width,
+                            global_screen.height,
+                            global_screen.color_depth,
+                            &src_area, &src_pix, i, j)<0) {
+                    continue;
+                }
+                screen_set_pixel_raw(dst, global_screen.width,
+                        global_screen.height,
+                        global_screen.color_depth,
+                        &dst_area, &src_pix,
+                        i-src_x+dst_x, j-src_y+dst_y);
+                /* automatic alpha blended */
+            }
+        }
+    }
+
+    return 0;
+}

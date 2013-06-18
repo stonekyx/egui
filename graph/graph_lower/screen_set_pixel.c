@@ -33,38 +33,25 @@
 
 # include "../graph_lower.h"
 
-/*
-    picture element
-*/
 si_t
-screen_set_pixel
-(struct screen * s,
+screen_set_pixel_raw
+(void * video,
+ si_t width,
+ si_t height,
+ si_t depth,
  struct rectangle * a,
  struct color * c,
  si_t x,
  si_t y)
 {
     ui_t offset, color, bit;
-    byte_t * addr, * video;
+    byte_t * addr;
     struct rectangle result_area, screen_area;
-
-    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-    {
-        video = s->memory_addr;
-    }
-    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-    {
-        video = s->buffer_addr;
-    }
-    else
-    {
-        return -1;
-    }
 
     screen_area.x = 0;
     screen_area.y = 0;
-    screen_area.width = s->width;
-    screen_area.height = s->height;
+    screen_area.width = width;
+    screen_area.height = height;
 
     /* 工作区域不在屏幕区域 */
     if(area_intersection(a, &screen_area, &result_area) == -1)
@@ -83,7 +70,7 @@ screen_set_pixel
     }
 
     /* 获得像素关于显存的位偏移量 */
-    bit = (y * s->width + x) * s->color_depth;
+    bit = (y * width + x) * depth;
 
     if(global_fix_screen_info.visual == FB_VISUAL_MONO01)
     {
@@ -132,18 +119,26 @@ screen_set_pixel
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_TRUECOLOR)
     {
+        if(depth>=32) {
+            /* if alpha channel is available, try alpha blending. */
+            static struct color old;
+            if(screen_get_pixel_raw(video, width, height, depth, a, &old, x, y)>=0) {
+                old = *alpha_blend(c, &old);
+                c = &old;
+            }
+        }
         /* 获得颜色的值 */
         screen_color_to_value(&color, c);
     }
 
-    if(s->color_depth < 8)
+    if(depth < 8)
     {
         /* 开始位在字节内的偏移量 */
         offset = bit & 7;
         /* 字节地址 */
         addr = video + (bit >> 3);
 
-        if(s->color_depth == 1)
+        if(depth == 1)
         {
             /* 调整颜色 */
             color = (color & 0X1) << offset;
@@ -152,7 +147,7 @@ screen_set_pixel
             /* 或上颜色 */
             * addr |= color;
         }
-        else if(s->color_depth == 2)
+        else if(depth == 2)
         {
             /* 调整颜色 */
             color = (color & 0X3) << offset;
@@ -161,7 +156,7 @@ screen_set_pixel
             /* 或上颜色 */
             * addr |= color;
         }
-        else if(s->color_depth == 4)
+        else if(depth == 4)
         {
             /* 调整颜色 */
             color = (color & 0XF) << offset;
@@ -177,8 +172,38 @@ screen_set_pixel
         offset = bit >> 3;
 
         /* 将颜色写入视频缓冲区 */
-        memcpy((void *)(video + offset), (void *)(&color), s->color_depth >> 3);
+        memcpy((void *)(video + offset), (void *)(&color), depth >> 3);
     }
 
     return 0;
+}
+
+/*
+    picture element
+*/
+si_t
+screen_set_pixel
+(struct screen * s,
+ struct rectangle * a,
+ struct color * c,
+ si_t x,
+ si_t y)
+{
+    byte_t * video;
+
+    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
+    {
+        video = s->memory_addr;
+    }
+    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
+    {
+        video = s->buffer_addr;
+    }
+    else
+    {
+        return -1;
+    }
+
+    return screen_set_pixel_raw(video, s->width, s->height, s->color_depth,
+            a, c, x, y);
 }

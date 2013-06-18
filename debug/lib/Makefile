@@ -24,8 +24,8 @@ test_server.o \
 test_client.o 
 
 $(DEFAULT): $(object)
-	$(CC) test_server.o -ldata_structures -lcomm -lgeometry -lgraph -lserver_lib -L $(LIBRARY) -o test_server
-	$(CC) test_client.o -ldata_structures -lcomm -lgeometry -lclient_lib -L $(LIBRARY) -o test_client
+	$(CC) test_server.o -ldata_structures -lcomm -lgeometry -lgraph -lserver_lib -lcolor -L $(LIBRARY) -o test_server
+	$(CC) test_client.o -ldata_structures -lcomm -lgeometry -lclient_lib -lcolor -L $(LIBRARY) -o test_client
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)

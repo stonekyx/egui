@@ -29,6 +29,7 @@
 
 #include "log.h"
 #include <signal.h>
+#include <color.h>
 #include "window_manager.h"
 
 int main(int argc, char* argv[])
@@ -52,6 +53,7 @@ int main(int argc, char* argv[])
 		return -1;
 	}
 #endif /** commented by padme 2012-05-12 }}} **/
+
 
 	if(0 != window_manager_init())
 	{

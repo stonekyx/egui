@@ -10,9 +10,11 @@ $(DEFAULT):
 	make --directory=data_structures
 	make --directory=geometry
 	make --directory=config_parser
+	make --directory=color
 
 $(CLEAN):
 	make clean -C data_structures
 	make clean -C geometry
 	make clean -C config_parser
+	make clean -C color
 

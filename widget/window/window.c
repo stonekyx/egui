@@ -80,13 +80,13 @@ struct window_style window_default_style =
     30, /* .title_bar_size */
 
 	/** 默认窗口边框颜色 **/
-	{0x46, 0xa5, 0xe5, 0},	/* .frame_color */
+	{0x46, 0xa5, 0xe5, 50},	/* .frame_color */
 
 	/** 菜单栏背景色 **/
-	{0x18, 0x29, 0x45, 0},	/* .menu_bar_backcolor */
+	{0x18, 0x29, 0x45, 50},	/* .menu_bar_backcolor */
 
 	/** 菜单栏边框色 **/
-	{0xcb, 0xf3, 0xfb, 0},	/* .menu_bar_frame_color */
+	{0xcb, 0xf3, 0xfb, 50},	/* .menu_bar_frame_color */
 
 	/** 标题栏字体颜色 **/
 	{0xcc, 0xff, 0x99, 0},	/* .title_bar_font_color */

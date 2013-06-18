@@ -1,5 +1,5 @@
 CC = $(CROSS_COMPILE)gcc
-CFLAGS = -std=iso9899:1990 -g -pedantic -Wall -lpthread -g
+CFLAGS = -std=iso9899:1990 -g -pedantic -Wall -lpthread -g -O3
 
 CD = cd
 CP = cp
@@ -29,6 +29,7 @@ application_info.c \
 cursor.c \
 flush_in_z_order.c \
 main.c \
+main_test.c \
 window_info.c \
 window_manager.c \
 window_info_iterator.c \
@@ -48,12 +49,25 @@ window_manager_accept_handler.o \
 window_manager_input_handler.o \
 window_manager_set_request_handler.o
 
-$(DEFAULT): $(header) $(source) $(object)
-	$(CC) $(CFLAGS) $(object) -o server -I $(INCLUDE) -L $(LIBRARY) -ldata_structures -lgeometry -lcomm -lgraph -levent -lserver_lib -lconfig_parser
+object_test = \
+application_info.o \
+cursor.o \
+flush_in_z_order.o \
+main_test.o \
+window_info.o \
+window_manager.o \
+window_info_iterator.o \
+window_manager_accept_handler.o \
+window_manager_input_handler.o \
+window_manager_set_request_handler.o
+
+$(DEFAULT): $(header) $(source) $(object) $(object_test)
+	$(CC) $(CFLAGS) $(object) -o server -I $(INCLUDE) -L $(LIBRARY) -ldata_structures -lgeometry -lcomm -lgraph -levent -lserver_lib -lconfig_parser -lcolor
+	$(CC) $(CFLAGS) $(object_test) -o tserver -I $(INCLUDE) -L $(LIBRARY) -ldata_structures -lgeometry -lcomm -lgraph -levent -lserver_lib -lconfig_parser -lcolor
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
-	$(RM) -f *.o server
+	$(RM) -f *.o server tserver
 
