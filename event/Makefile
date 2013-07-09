@@ -1,5 +1,5 @@
 CC = $(CROSS_COMPILE)gcc
-CFLAGS = -g -std=iso9899:1990 -pedantic -Wall -g -O3 -mtune=native
+CFLAGS = -g -std=iso9899:1990 -pedantic -Wall -g
 
 CD = cd
 CP = cp

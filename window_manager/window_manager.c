@@ -333,7 +333,7 @@ static void applications_init(si_t frame_size, si_t title_bar_size)
 /**
  * @brief 清理应用程序
  **/
-static void application_exit()
+static void applications_exit()
 {
 	si_t n = 0, i = 0;
 
@@ -366,7 +366,7 @@ si_t window_manager_init()
 		return -1;
 	}
 
-	if(0 != event_init("/dev/input/by-path/pci-0000:00:1d.0-usb-0:1:1.0-event-kbd", "/dev/input/by-path/pci-0000:00:1d.0-usb-0:1:1.1-event-mouse", 1000))
+	if(0 != event_init("/dev/input/event8", "/dev/input/event9", 1000))
 	{
 		EGUI_PRINT_ERROR("failed to init event module");
 		return -1;
@@ -401,7 +401,7 @@ si_t window_manager_init()
  **/
 si_t window_manager_exit()
 {
-	application_exit();
+	applications_exit();
 	cursor_exit();
 	graph_exit();
 	comm_exit();

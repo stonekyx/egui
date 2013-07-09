@@ -1,5 +1,5 @@
 CC = $(CROSS_COMPILE)gcc
-CFLAGS = -std=iso9899:1990 -g -pedantic -Wall -lpthread -g -O3
+CFLAGS = -std=iso9899:1990 -g -pedantic -Wall -lpthread -g
 
 CD = cd
 CP = cp
@@ -69,5 +69,5 @@ $(DEFAULT): $(header) $(source) $(object) $(object_test)
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
-	$(RM) -f *.o server tserver
+	$(RM) -f *.o server tserver *.out
 
