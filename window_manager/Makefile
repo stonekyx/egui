@@ -62,8 +62,8 @@ window_manager_input_handler.o \
 window_manager_set_request_handler.o
 
 $(DEFAULT): $(header) $(source) $(object) $(object_test)
-	$(CC) $(CFLAGS) $(object) -o server -I $(INCLUDE) -L $(LIBRARY) -ldata_structures -lgeometry -lcomm -lgraph -levent -lserver_lib -lconfig_parser -lcolor
-	$(CC) $(CFLAGS) $(object_test) -o tserver -I $(INCLUDE) -L $(LIBRARY) -ldata_structures -lgeometry -lcomm -lgraph -levent -lserver_lib -lconfig_parser -lcolor
+	$(CC) $(CFLAGS) $(object) -o server -I $(INCLUDE) -L $(LIBRARY) -lserver_lib -lgraph -lgeometry -levent -lcomm -lconfig_parser -ldata_structures -lcolor
+	$(CC) $(CFLAGS) $(object_test) -o tserver -I $(INCLUDE) -L $(LIBRARY) -lserver_lib -lgraph -lgeometry -levent -lcomm -lconfig_parser -ldata_structures -lcolor
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)

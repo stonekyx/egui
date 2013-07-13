@@ -9,7 +9,7 @@ MAKE = make
 
 INCLUDE = $(shell pwd)/../../include
 LIBRARY = $(shell pwd)/../../library
-DEP_LIBS = -ldata_structures -lcomm -lwidget -lapplication -lclient_lib -lconfig_parser -lgeometry 
+DEP_LIBS = -lwidget -lapplication -lwidget -lclient_lib -lgeometry -lcomm -lconfig_parser -ldata_structures
 
 DEFAULT = default
 CLEAN = clean
@@ -46,10 +46,10 @@ $(DEFAULT): $(header) $(source) $(object)
 	$(CC) $(CFLAGS) test_scroll_bar.o -o test_scroll_bar -I $(INCLUDE) -L $(LIBRARY) $(DEP_LIBS)
 	$(CC) $(CFLAGS) test_image_view.o -o test_image_view -I $(INCLUDE) -L $(LIBRARY) $(DEP_LIBS)
 	#$(CC) $(CFLAGS) test_icon.o -o test_icon -I $(INCLUDE) -L $(LIBRARY) $(DEP_LIBS)
-#	$(MAKE) --directory=vkeybd
+# $(MAKE) --directory=vkeybd
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(INCLUDE) 
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(INCLUDE)
 
 $(CLEAN):
 	$(RM) *.o test_widget test_label test_button test_scroll_bar test_text_line test_image_view

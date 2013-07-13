@@ -4,7 +4,7 @@ CFLAGS = -std=iso9899:1990 -pedantic -Wall -g
 DEFAULT = default
 CLEAN = clean
 
-.PHONY:  $(DEFAULT) $(CLEAN)
+.PHONY: $(DEFAULT) $(CLEAN)
 
 $(DEFAULT):
 	make --directory=config_parser

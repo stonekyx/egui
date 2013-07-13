@@ -18,13 +18,13 @@ CLEAN = clean
 header = event.h
 
 source = keybd.c \
-		 mouse.c 
+		 mouse.c
 
 object = keybd.o \
-		 mouse.o 
+		 mouse.o
 
 $(DEFAULT): $(header) $(source) $(object)
-	$(CC) -fPIC -shared $(object) -L $(LIBRARY) -lcomm -o event.so
+	$(CC) -fPIC -shared $(object) -L $(LIBRARY) -lcomm -ldata_structures -o event.so
 	$(CP) event.so $(LIBRARY)/libevent.so
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)

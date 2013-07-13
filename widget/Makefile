@@ -27,8 +27,8 @@ $(DEFAULT):
 	$(MAKE) --directory=window
 	$(MAKE) --directory=dialog
 	$(CC) -fPIC -shared *.o -L $(LIBRARY) -o widget.so
-	$(CP) widget.so $(LIBRARY)/libwidget.so	
-	
+	$(CP) widget.so $(LIBRARY)/libwidget.so
+
 $(CLEAN):
 	$(MAKE) clean -C widget
 	$(MAKE) clean -C button

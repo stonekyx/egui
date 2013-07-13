@@ -32,10 +32,10 @@ debug_graph_lower.o \
 debug_graph_engine.o
 
 $(DEFAULT): $(object)
-	$(CC) $(object) -ldata_structures -lgeometry -lgraph -L $(LIBRARY) -o debug_graph
+	$(CC) $(object) -lgraph -lgeometry -ldata_structures -lcolor -L $(LIBRARY) -o debug_graph
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) 
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
 	$(RM) -f *.o

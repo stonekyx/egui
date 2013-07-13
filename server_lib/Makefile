@@ -16,7 +16,7 @@ CLEAN = clean
 .PHONY: $(DEFAULT) $(CLEAN)
 
 header = \
-server_lib.h 
+server_lib.h
 
 source = \
 server_lib.c

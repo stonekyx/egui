@@ -9,7 +9,7 @@ MAKE = make
 
 INCLUDE = $(shell pwd)/../../include
 LIBRARY = $(shell pwd)/../../library
-DEP_LIBS = -ldata_structures -lcomm -lwidget -lapplication -lclient_lib -lconfig_parser -lgeometry 
+DEP_LIBS = -lwidget -lapplication -lwidget -lclient_lib -lgeometry -lcomm -lconfig_parser -ldata_structures
 
 DEFAULT = default
 CLEAN = clean
@@ -55,10 +55,10 @@ $(DEFAULT): $(header) $(source) $(object)
 	$(MAKE) --directory=calculator
 	#$(CC) $(CFLAGS) traversal.o -o traversal -I $(INCLUDE) -L $(LIBRARY) $(DEP_LIBS)
 	#$(CC) $(CFLAGS) paint.o -o paint -I $(INCLUDE) -L $(LIBRARY) $(DEP_LIBS)
-#	$(MAKE) --directory=vkeybd
+# $(MAKE) --directory=vkeybd
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(INCLUDE) 
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(INCLUDE)
 
 $(CLEAN):
 	$(RM) -f *.o paint shutdown widget label button text_line single_window multi_windows pop_up_window toplevel_child traversal icon editerbasic

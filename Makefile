@@ -6,7 +6,7 @@ LIBRARY = $(shell pwd)/library
 DEFAULT = default
 CLEAN = clean
 
-.PHONY:  $(DEFAULT) $(CLEAN)
+.PHONY: $(DEFAULT) $(CLEAN)
 
 $(DEFAULT):
 	make --directory=utils
@@ -21,7 +21,7 @@ $(DEFAULT):
 	make --directory=debug
 
 $(CLEAN):
-	rm -rf $(LIBRARY)/*
+	rm -rf $(LIBRARY)/*.{so,a,png,dot}
 	make clean -C utils
 	make clean -C comm
 	make clean -C graph

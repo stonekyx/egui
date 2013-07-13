@@ -9,7 +9,7 @@ MAKE = make
 
 INCLUDE = $(shell pwd)/../../../include
 LIBRARY = $(shell pwd)/../../../library
-DEP_LIBS = -ldata_structures -lcomm -lwidget -lapplication -lclient_lib -lconfig_parser -lgeometry 
+DEP_LIBS = -lwidget -lapplication -lwidget -lclient_lib -lgeometry -lcomm -lconfig_parser -ldata_structures
 
 DEFAULT = default
 CLEAN = clean

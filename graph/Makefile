@@ -21,7 +21,7 @@ $(DEFAULT):
 	$(CC) -fPIC -shared *.o -o graph.so
 	$(CP) graph.so $(LIBRARY)/libgraph.so
 
-$(CLEAN): 
+$(CLEAN):
 	$(RM) -f *.so *.o
 
 

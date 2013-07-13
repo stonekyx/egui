@@ -20,7 +20,7 @@ source = main.c
 object = main.o
 
 $(DEFAULT): $(object)
-	$(CC) main.o -levent -lcomm -ldata_structures -levent -L $(LIBRARY) -o main
+	$(CC) main.o -levent -lcomm -ldata_structures -L $(LIBRARY) -o main
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)

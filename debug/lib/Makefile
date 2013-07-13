@@ -17,15 +17,15 @@ CLEAN = clean
 
 source = \
 test_server.c \
-test_client.c 
+test_client.c
 
 object = \
 test_server.o \
-test_client.o 
+test_client.o
 
 $(DEFAULT): $(object)
-	$(CC) test_server.o -ldata_structures -lcomm -lgeometry -lgraph -lserver_lib -lcolor -L $(LIBRARY) -o test_server
-	$(CC) test_client.o -ldata_structures -lcomm -lgeometry -lclient_lib -lcolor -L $(LIBRARY) -o test_client
+	$(CC) test_server.o -lserver_lib -lgraph -lgeometry -lcomm -ldata_structures -lcolor -L $(LIBRARY) -o test_server
+	$(CC) test_client.o -lclient_lib -lgeometry -lcomm -ldata_structures -lcolor -L $(LIBRARY) -o test_client
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)

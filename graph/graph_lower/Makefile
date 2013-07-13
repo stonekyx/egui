@@ -34,7 +34,7 @@ screen_set_v_line.c \
 screen_set_x_line.c \
 screen_set_area.c \
 screen_cpy_area.c \
-screen_flush.c 
+screen_flush.c
 
 
 
@@ -54,7 +54,7 @@ screen_set_v_line.o \
 screen_set_x_line.o \
 screen_set_area.o \
 screen_cpy_area.o \
-screen_flush.o 
+screen_flush.o
 
 
 
@@ -63,7 +63,7 @@ $(DEFAULT): $(header) $(source) $(object)
 	$(MV) $(object) ..
 
 %.o: %.c
-	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) 
+	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
 	$(RM) -f *.o
