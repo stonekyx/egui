@@ -6,12 +6,28 @@ CP = cp
 MV = mv
 RM = rm
 MAKE = make
+LN = ln
 
 INCLUDE = $(shell pwd)/../include
 LIBRARY = $(shell pwd)/../library
 
 DEFAULT = default
 CLEAN = clean
+
+SONAME = libwidget.so.1
+REALNAME = libwidget.so.1.0.0
+SIMPNAME = libwidget.so
+
+OBJECTS = widget/widget.o \
+		  button/button.o \
+		  label/label.o \
+		  panel/panel.o \
+		  scroll_bar/scroll_bar.o \
+		  text_line/text_line.o \
+		  image_view/image_view.o \
+		  window/window.o \
+		  window/paint_window_decoration.o \
+		  dialog/dialog.o
 
 .PHONY: $(DEFAULT) $(CLEAN)
 
@@ -26,8 +42,10 @@ $(DEFAULT):
 	$(MAKE) --directory=image_view
 	$(MAKE) --directory=window
 	$(MAKE) --directory=dialog
-	$(CC) -fPIC -shared *.o -L $(LIBRARY) -o widget.so
-	$(CP) widget.so $(LIBRARY)/libwidget.so
+	$(CC) -shared -Wl,-soname,$(SONAME) \
+		-o $(LIBRARY)/$(REALNAME) $(OBJECTS) -lc
+	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
+	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 
 $(CLEAN):
 	$(MAKE) clean -C widget
@@ -39,6 +57,6 @@ $(CLEAN):
 	$(MAKE) clean -C text_line
 	$(MAKE) clean -C image_view
 	$(MAKE) clean -C window
-	$(RM) -f widget.so
-	$(RM) -f *.o
+	$(MAKE) clean -C dialog
+	$(RM) -f $(LIBRARY)/$(SONAME) $(LIBRARY)/$(REALNAME) $(LIBRARY)/$(SIMPNAME)
 

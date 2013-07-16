@@ -6,6 +6,7 @@ CP = cp
 MV = mv
 RM = rm
 MAKE = make
+LN = ln
 
 INCLUDE = $(shell pwd)/../../include
 LIBRARY = $(shell pwd)/../../library
@@ -33,13 +34,19 @@ queue.o \
 tree.o \
 object.o
 
+SONAME = libdata_structures.so.1
+REALNAME = libdata_structures.so.1.0.0
+SIMPNAME = libdata_structures.so
+
 $(DEFAULT): $(header) $(source) $(object)
-	$(CC) -fPIC -shared $(object) -o data_structures.so
-	$(CP) data_structures.so $(LIBRARY)/libdata_structures.so
+	$(CC) -shared -Wl,-soname,$(SONAME) \
+		-o $(LIBRARY)/$(REALNAME) $(object) -lc
+	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
+	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
-	$(RM) -f *.so *.o
+	$(RM) -f $(object) $(LIBRARY)/$(SONAME) $(LIBRARY)/$(REALNAME) $(LIBRARY)/$(SIMPNAME)
 

@@ -25,10 +25,10 @@ object = \
 widget.o
 
 $(DEFAULT): $(header) $(source) $(object)
-	$(MV) $(object) ..
+
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
-	$(RM) -f *.so *.o test
+	$(RM) -f $(object) test

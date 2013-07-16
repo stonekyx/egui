@@ -25,10 +25,10 @@ object = \
 button.o
 
 $(DEFAULT): $(header) $(source) $(object)
-	$(MV) $(object) ..
+
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
 
 $(CLEAN):
-	$(RM) -f *.so *.o
+	$(RM) -f $(object)

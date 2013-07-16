@@ -112,10 +112,10 @@ font_matrix/font_matrix_56.o \
 font_matrix/font_matrix_64.o
 
 $(DEFAULT): $(header) $(source) $(object)
-	$(MV) $(object) ..
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
+	echo graph_engine/$@ >> ../objects.lst
 
 $(CLEAN):
-	$(RM) -f *.o font_matrix/*.o
+	$(RM) -f $(object)

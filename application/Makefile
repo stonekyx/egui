@@ -6,6 +6,7 @@ CP = cp
 MV = mv
 RM = rm
 MAKE = make
+LN = ln
 
 INCLUDE = $(shell pwd)/../include
 LIBRARY = $(shell pwd)/../library
@@ -30,12 +31,18 @@ application.o \
 manipulate_window.o \
 exec.o
 
+SONAME = libapplication.so.1
+REALNAME = libapplication.so.1.0.0
+SIMPNAME = libapplication.so
+
 $(DEFAULT): $(header) $(source) $(object)
-	$(CC) -fPIC -shared $(object) -o application.so
-	$(CP) application.so $(LIBRARY)/libapplication.so
+	$(CC) -shared -Wl,-soname,$(SONAME) \
+		-o $(LIBRARY)/$(REALNAME) $(object) -lc
+	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
+	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE) -L $(LIBRARY)
 
 $(CLEAN):
-	$(RM) -f *.so *.o
+	$(RM) -f $(object) $(LIBRARY)/$(SONAME) $(LIBRARY)/$(REALNAME) $(LIBRARY)/$(SIMPNAME)
