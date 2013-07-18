@@ -21,7 +21,8 @@ $(DEFAULT):
 	make --directory=debug
 
 $(CLEAN):
-	rm -rf $(LIBRARY)/*.{so,a,png,dot}
+	rm -f $(LIBRARY)/dep.png
+	rm -f $(LIBRARY)/dep.dot
 	make clean -C utils
 	make clean -C comm
 	make clean -C graph

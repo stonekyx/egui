@@ -37,7 +37,8 @@ SIMPNAME = libapplication.so
 
 $(DEFAULT): $(header) $(source) $(object)
 	$(CC) -shared -Wl,-soname,$(SONAME) \
-		-o $(LIBRARY)/$(REALNAME) $(object) -lc
+		-o $(LIBRARY)/$(REALNAME) $(object) -lc \
+		-L$(LIBRARY) -lwidget -lclient_lib -lgeometry -lcomm -lconfig_parser -ldata_structures
 	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
 	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 

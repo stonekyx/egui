@@ -26,7 +26,8 @@ $(DEFAULT):
 	$(MAKE) --directory=graph_lower
 	$(MAKE) --directory=graph_engine
 	$(CC) -shared -Wl,-soname,$(SONAME) \
-		-o $(LIBRARY)/$(REALNAME) `cat $(OBJLIST)` -lc
+		-o $(LIBRARY)/$(REALNAME) `cat $(OBJLIST)` -lc \
+		-L$(LIBRARY) -lgeometry -lcolor
 	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
 	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 

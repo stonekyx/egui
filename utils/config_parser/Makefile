@@ -30,7 +30,8 @@ SIMPNAME = libconfig_parser.so
 
 $(DEFAULT): $(header) $(source) $(object)
 	$(CC) -shared -Wl,-soname,$(SONAME) \
-		-o $(LIBRARY)/$(REALNAME) $(object) -lc
+		-o $(LIBRARY)/$(REALNAME) $(object) -lc \
+		-L$(LIBRARY) -ldata_structures
 	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
 	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 

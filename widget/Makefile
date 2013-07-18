@@ -43,7 +43,8 @@ $(DEFAULT):
 	$(MAKE) --directory=window
 	$(MAKE) --directory=dialog
 	$(CC) -shared -Wl,-soname,$(SONAME) \
-		-o $(LIBRARY)/$(REALNAME) $(OBJECTS) -lc
+		-o $(LIBRARY)/$(REALNAME) $(OBJECTS) -lc \
+		-L$(LIBRARY) -lclient_lib -lgeometry -lcomm -lconfig_parser -ldata_structures
 	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
 	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
 

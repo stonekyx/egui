@@ -1,3 +1,20 @@
+/*
+ * Use this program with caution.
+ * Please make sure what will happen and how to avoid that
+ * before running this program to rectify any Makefile's.
+ *
+ * libwidget.so and libdata_structures.so have mutual dependency,
+ * and this program will add BOTH -lwidget and -ldata_structures to
+ * any Makefile that already includes EITHER of them, resulting in
+ * util/data_structures/Makefile to depend on the library itself is
+ * going to generate. The same happens on widget/Makefile.
+ *
+ * Anyway, the correct way to use this program is:
+ * #!/bin/bash
+ * find . -name 'Makefile' -exec bash ./fix_make {} \;
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
@@ -10,24 +27,25 @@ static void trim(char *line)
     line[len]=0;
 }
 
-const char *libs[] = {"widget", "application", "server_lib", "graph", "client_lib", "geometry", "event", "comm", "config_parser", "data_structures", "color"};
+const char *libs[] = {"widget", "application", "server_lib", "graph", "client_lib", "geometry", "event", "comm", "config_parser", "data_structures", "color", "c"};
 int app[20];
-const int std[]={0,1,0,2,3,4,5,6,7,8,9,10};
+const int std[]={0,1,0,2,3,4,5,6,7,8,9,10,11};
 
-const int depends[11][4]={
+const int depends[20][4]={
     {1,5,8,9},
     {0,4,7,9},
     {3,5,7},
     {5,10},
     {7},
-    {},
+    {0},
     {7,9},
     {9},
     {9},
-    {},
-    {},
+    {0},
+    {0},
+    {0},
 };
-const int depcnt[11]={4,4,3,2,1,0,2,1,1,0,0};
+const int depcnt[20]={4,4,3,2,1,0,2,1,1,0,0,0};
 
 void mark_depend(int x)
 {
@@ -41,7 +59,7 @@ void mark_depend(int x)
 
 void record_app(char *token)
 {
-    int i;
+    unsigned int i;
     if(token==NULL) {
         memset(app, 0, sizeof(app));
         return;
@@ -55,7 +73,7 @@ void record_app(char *token)
 
 void flush_records(char *new)
 {
-    int i;
+    unsigned int i;
     for(i=0; i<sizeof(std)/sizeof(int); i++) {
         if(app[std[i]]) {
             strcat(new, " -l");

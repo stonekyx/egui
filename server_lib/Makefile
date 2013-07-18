@@ -31,7 +31,7 @@ SIMPNAME = libserver_lib.so
 
 $(DEFAULT): $(header) $(source) $(object)
 	$(CC) -shared -Wl,-soname,$(SONAME) \
-		$(object) -L $(LIBRARY) -lcomm -ldata_structures -lc \
+		$(object) -L$(LIBRARY) -lgraph -lgeometry -lcomm -ldata_structures -lcolor -lc \
 		-o $(LIBRARY)/$(REALNAME)
 	$(LN) -sf $(REALNAME) $(LIBRARY)/$(SONAME)
 	$(LN) -sf $(SONAME) $(LIBRARY)/$(SIMPNAME)
