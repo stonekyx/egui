@@ -23,6 +23,7 @@ SIMPNAME = libgraph.so
 .PHONY: $(DEFAULT) $(CLEAN)
 
 $(DEFAULT):
+	touch $(OBJLIST)
 	$(MAKE) --directory=graph_lower
 	$(MAKE) --directory=graph_engine
 	$(CC) -shared -Wl,-soname,$(SONAME) \

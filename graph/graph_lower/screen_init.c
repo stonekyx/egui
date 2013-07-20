@@ -77,6 +77,10 @@ si_t screen_init(const char* path)
 
     /* 获得屏幕的宽度 */
     global_screen.width = global_var_screen_info.xres;
+    if(global_screen.width == 1366) {
+        global_screen.width += 10;
+        global_var_screen_info.xres += 10;
+    }
 
     /* 获得屏幕的高度 */
     global_screen.height = global_var_screen_info.yres;

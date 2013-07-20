@@ -63,7 +63,9 @@ $(DEFAULT): $(header) $(source) $(object)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -fPIC -c $< -o $@ -I $(INCLUDE)
-	echo graph_lower/$@ >> ../objects.lst
+	if ( ! grep -q "graph_lower/$@" ../objects.lst); then \
+		echo graph_lower/$@ >> ../objects.lst; \
+		fi
 
 $(CLEAN):
 	$(RM) -f $(object)
