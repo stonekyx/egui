@@ -1,0 +1,3 @@
+2013-07-31	Stone Kang	<stonekyx@gmail.com>
+	* configure.ac, Makefile.am: Start using non-recursive automake and
+	autoconf.

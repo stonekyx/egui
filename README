@@ -1,0 +1,38 @@
+EGUI - A simple Graphical User Interface system under Linux
+-----------------------------------------------------------
+
+EGUI utilizes the Linux framebuffer mechanism to display windows and other
+widgets in text terminals.
+
+The APIs of server and client side are not clear now, some client operations
+may need to call server functions, and vise versa.
+
+Alpha channel is supported for framebuffers that have an alpha field of
+positive length (typically 8 bits). On some other devices the color may be
+incorrect, like on Raspberry PI. On Ubuntu 13.04 with AMD graphical card the
+default framebuffer has 32-bit pixels, but alpha channel has zero length, so
+transparency is disabled.
+
+As for the future plan, first we need to extend the widgets to at least 20
+kinds. And as we bypass X to draw on framebuffer directly, we also need to get
+to know all different kinds of framebuffers and how the bits are arranged on
+them. Maybe it's a good idea to read some X source code.
+
+According to the idea of the director, our final goal is to implement an IDE
+in text terminal. That's actually a long way to go, as the current maintainers
+can't work on this regularly after graduation.
+
+It might be interesting and exciting to discover all kinds of framebuffers,
+but it might also be frastrating, as this is only reinventing-the-wheel after
+X. It's possible that a group leader in the future will find it necessary to
+turn to X APIs.
+
+
+This project is directed under the Red Ant Laboratory, School of Software,
+Dalian University of Technology. It was started by Jin Silan in 2009.
+
+I sincerely hope that this README could be updated every year by a new group
+leader.
+
+Stone Kang <stonekyx@gmail.com>
+Jul. 2013
