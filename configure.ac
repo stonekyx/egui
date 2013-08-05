@@ -20,6 +20,28 @@ AC_CHECK_HEADERS([fcntl.h limits.h stddef.h stdlib.h string.h sys/ioctl.h sys/so
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T
 
+my_save_cflags="$CFLAGS"
+CFLAGS="-std=c99 -pedantic -Wall -g"
+AC_MSG_CHECKING([whether CC supports -std=c99 -pedantic -Wall -g])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
+                [AC_MSG_RESULT([yes])]
+                [AM_CFLAGS="-std=c99 -pedantic -Wall -g"],
+                [AC_MSG_RESULT([no])]
+                [AC_MSG_WARN([Your compiler may not support c99, compiling is likely to fail.])]
+                )
+AC_SUBST([AM_CFLAGS])
+
+CFLAGS="-I/usr/include"
+AC_MSG_CHECKING([whether CC supports -I])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
+                [AC_MSG_RESULT([yes])]
+                [AM_CPPFLAGS='-I$(top_srcdir)/include'],
+                [AC_MSG_RESULT([no])]
+                [AC_MSG_WARN([Your compiler may not support -I flag, compiling is very likely to fail.])]
+                )
+AC_SUBST([AM_CPPFLAGS])
+CFLAGS="$my_save_cflags"
+
 # Checks for library functions.
 AC_FUNC_FORK
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK

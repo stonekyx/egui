@@ -12,9 +12,6 @@ noinst_PROGRAMS=
 
 noinst_HEADERS=
 
-AM_CFLAGS = -std=iso9899:1990 -pedantic -Wall -g
-AM_CPPFLAGS = -I$(top_srcdir)/include
-
 ACLOCAL_AMFLAGS= -I m4
 
 include $(top_srcdir)/include/local.mk

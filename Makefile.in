@@ -643,6 +643,8 @@ am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
 distcleancheck_listfiles = find . -type f -print
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
+AM_CFLAGS = @AM_CFLAGS@
+AM_CPPFLAGS = @AM_CPPFLAGS@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
 AR = @AR@
 AUTOCONF = @AUTOCONF@
@@ -787,8 +789,6 @@ nobase_pkginclude_HEADERS = include/application.h include/base_type.h \
 	application/manipulate_window.h application/exec.h \
 	application/external.h
 noinst_HEADERS = widget/window/paint_window_decoration.h
-AM_CFLAGS = -std=iso9899:1990 -pedantic -Wall -g
-AM_CPPFLAGS = -I$(top_srcdir)/include
 ACLOCAL_AMFLAGS = -I m4
 library_libdata_structures_la_SOURCES = utils/data_structures/vector.c \
 								utils/data_structures/list.c \
