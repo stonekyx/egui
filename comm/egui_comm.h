@@ -45,7 +45,7 @@
  *
  * @return 成功返回0，否则返回-1打印错误日志
  **/
-extern si_t comm_send_request(struct egui_uds* uds_ptr, si_t detail_type, addr_t body, ui_t body_size);
+extern si_t comm_send_request(const struct egui_uds* uds_ptr, si_t detail_type, const_addr_t body, ui_t body_size);
 
 /**
  * 发送一个包含附加信息的请求
@@ -59,7 +59,7 @@ extern si_t comm_send_request(struct egui_uds* uds_ptr, si_t detail_type, addr_t
  *
  * @return 成功返回0，否则返回-1打印错误日志
  **/
-extern si_t comm_send_request_with_extra(struct egui_uds* uds_ptr, si_t detail_type, addr_t body, ui_t body_size, addr_t extra, ui_t extra_size);
+extern si_t comm_send_request_with_extra(const struct egui_uds* uds_ptr, si_t detail_type, const_addr_t body, ui_t body_size, const_addr_t extra, ui_t extra_size);
 
 /**
  * 发送一个回应
@@ -69,7 +69,7 @@ extern si_t comm_send_request_with_extra(struct egui_uds* uds_ptr, si_t detail_t
  *
  * @return 成功返回0，否则返回-1打印错误日志
  **/
-extern si_t comm_send_respond(struct egui_uds* uds_ptr, union respond* respond_ptr);
+extern si_t comm_send_respond(const struct egui_uds* uds_ptr, const union respond* respond_ptr);
 
 /**
  * 发送一个消息
@@ -79,7 +79,7 @@ extern si_t comm_send_respond(struct egui_uds* uds_ptr, union respond* respond_p
  *
  * @return 成功返回0，否则返回-1打印错误日志
  **/
-extern si_t comm_send_message(struct egui_uds* uds_ptr, union message* message_ptr);
+extern si_t comm_send_message(const struct egui_uds* uds_ptr, const union message* message_ptr);
 
 /**
  * 接受一个请求并发送回应

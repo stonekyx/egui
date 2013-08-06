@@ -174,17 +174,17 @@ extern void respond_set_empty(union respond* respond_ptr)
 	respond_ptr->normal.body_len = 0;
 }
 
-extern si_t respond_get_type(union respond* respond_ptr)
+extern si_t respond_get_type(const union respond* respond_ptr)
 {
 	return respond_ptr->normal.type;
 }
 
-extern si_t respond_get_len(union respond* respond_ptr)
+extern si_t respond_get_len(const union respond* respond_ptr)
 {
 	return respond_ptr->normal.body_len;
 }
 
-extern addr_t respond_get_value(union respond* respond_ptr)
+extern const_addr_t respond_get_value(const union respond* respond_ptr)
 {
 	/**
 	 * 可变长的回应包的retval是一个地址，直接返回即可

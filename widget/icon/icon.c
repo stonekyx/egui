@@ -210,7 +210,7 @@ si_t file_exist(char * file_path)
 	}
 	else
 	{
-		close( fd );
+        /* Don't need to close fd as open is not successful */
 		return 1;
 	}
 }

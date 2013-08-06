@@ -770,7 +770,7 @@ static si_t lines_between(char* p, char* q, si_t maxline, si_t is_enter_enable, 
 
 static si_t text_line_default_show_text(struct text_line* t, si_t x, si_t y)
 {
-    si_t fontx, fonty, startx, starty, rulerx, rulery1, rulery2, max_line;
+    si_t fontx=0, fonty=0, startx=0, starty=0, rulerx=0, rulery1=0, rulery2=0, max_line=0;
 
     /**
      * start axis;
@@ -1122,7 +1122,7 @@ static si_t text_line_default_widget_repaint(struct text_line* t, union message*
 static si_t text_line_default_keybd_press(struct text_line* t, union message* msg)
 {
     si_t buflen;
-    char input_char;
+    char input_char=0;
     si_t retval;
 
     /**

@@ -224,7 +224,7 @@ void uds_init_from_naked_socket(struct egui_uds* uds, si_t sockfd)
 	uds->peer_role = PEER_ROLE_LISTENER;
 }
 
-si_t uds_read(struct egui_uds* uds, addr_t content, ui_t bytes)
+si_t uds_read(const struct egui_uds* uds, addr_t content, ui_t bytes)
 {
 	si_t nread = read(uds->sock_fd, content, bytes);
 	if(nread < 0)
@@ -235,7 +235,7 @@ si_t uds_read(struct egui_uds* uds, addr_t content, ui_t bytes)
 	return nread;
 }
 
-si_t uds_write(struct egui_uds* uds, addr_t content, ui_t bytes)
+si_t uds_write(const struct egui_uds* uds, const_addr_t content, ui_t bytes)
 {
 	si_t nwrite = write(uds->sock_fd, content, bytes);
 	if(nwrite < 0)

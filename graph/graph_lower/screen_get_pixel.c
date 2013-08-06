@@ -75,7 +75,7 @@ screen_get_pixel_raw
     offset = (y * width + x) * (depth >> 3);
 
     /* 将像素的值赋给 color */
-    memcpy(&color, video + offset, depth >> 3);
+    memcpy(&color, (byte_t*)video + offset, depth >> 3);
 
     /* 将 color 转换成 struct color */
     screen_value_to_color(c, &color);

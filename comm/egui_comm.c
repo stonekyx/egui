@@ -39,7 +39,9 @@
 /**
  * send packet head & packet body
  **/
-static si_t comm_send_head_and_body(struct egui_uds* uds_ptr, si_t packet_type, si_t detail_type, addr_t body, ui_t body_size, addr_t extra, ui_t extra_size)
+static si_t comm_send_head_and_body(const struct egui_uds* uds_ptr, si_t packet_type, si_t detail_type,
+        const_addr_t body,  ui_t body_size,
+        const_addr_t extra, ui_t extra_size)
 {
 	struct packet_head   head;
 	head.packet_type = packet_type;
@@ -74,34 +76,44 @@ static si_t comm_send_head_and_body(struct egui_uds* uds_ptr, si_t packet_type, 
 /**
  * send packet request
  **/
-extern si_t comm_send_request(struct egui_uds* uds_ptr, si_t detail_type, addr_t body, ui_t body_size)
+extern si_t comm_send_request(const struct egui_uds* uds_ptr, si_t detail_type,
+        const_addr_t body, ui_t body_size)
 {
-	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_REQUEST, detail_type, body, body_size, NULL, 0);
+	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_REQUEST, detail_type,
+            body, body_size,
+            NULL, 0);
 }
 
 /**
  * send packet request with extra msg
  **/
-extern si_t comm_send_request_with_extra(struct egui_uds* uds_ptr, si_t detail_type, addr_t body, ui_t body_size, addr_t extra, ui_t extra_size)
+extern si_t comm_send_request_with_extra(const struct egui_uds* uds_ptr, si_t detail_type,
+        const_addr_t body, ui_t body_size,
+        const_addr_t extra, ui_t extra_size)
 { 
-	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_REQUEST, detail_type, body, body_size, extra, extra_size);
+	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_REQUEST, detail_type,
+            body , body_size,
+            extra, extra_size);
 }
 
 /**
  * send packet respond
  **/
-extern si_t comm_send_respond(struct egui_uds* uds_ptr, union respond* respond_ptr)
+extern si_t comm_send_respond(const struct egui_uds* uds_ptr, const union respond* respond_ptr)
 { 
-	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_RESPOND, respond_get_type(respond_ptr), respond_get_value(respond_ptr), respond_get_len(respond_ptr), NULL, 0);
+	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_RESPOND, respond_get_type(respond_ptr),
+            respond_get_value(respond_ptr), respond_get_len(respond_ptr),
+            NULL                          , 0);
 }
 
 /**
  * send packet message
  **/
-extern si_t comm_send_message(struct egui_uds* uds_ptr, union message* message_ptr)
+extern si_t comm_send_message(const struct egui_uds* uds_ptr, const union message* message_ptr)
 { 
 	return comm_send_head_and_body(uds_ptr, PACKET_TYPE_MESSAGE, message_get_type(message_ptr),
-		message_ptr, sizeof(union message), NULL, 0);
+		message_ptr, sizeof(union message),
+        NULL       , 0);
 }
 
 /**

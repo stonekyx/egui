@@ -141,9 +141,9 @@ static si_t bitmap_init(struct bitmap * bm)
     }
 
     /* 初始化位图数据区域地址 */
-    bm->data = bm->addr + (* ((ui32_t *)(bm->head->bhOffBits)));
+    bm->data = bm->addr + bm->head->bhOffBits;
     /* 初始化位图颜色深度 */
-    bm->color_depth = * (ui16_t *)(bm->info->biBitCount);
+    bm->color_depth = bm->info->biBitCount;
 
     return 0;
 }
@@ -205,8 +205,8 @@ static si_t show_bitmap(struct bitmap * bm, struct graphics_device* gd, struct r
  **/
 static si_t bitmap_align(struct bitmap* bm, struct rectangle* location, int align)
 {
-    int x = * (si32_t *)(bm->info->biWidth);
-    int origin = * (si32_t *)(bm->info->biHeight);
+    int x = bm->info->biWidth;
+    int origin = bm->info->biHeight;
     int y = origin > 0 ? origin : (- origin);
 
     /**
@@ -323,7 +323,7 @@ static ui_t __getdot__(void * addr, ui_t color_depth, ui_t position)
 **/
 static si_t __is_color_table_used__(struct bitmap_info * info)
 {
-    switch(* ((ui16_t *)(info->biBitCount)))
+    switch(info->biBitCount)
     {
         case 1:
             return 1;
@@ -336,8 +336,8 @@ static si_t __is_color_table_used__(struct bitmap_info * info)
         /* 若 biCompression == BI_BITFIELDS，则不使用颜色列表。 */
         case 16:
             if
-            ((* ((ui32_t *)(info->biCompression)) == BI_RGB) ||
-             (* ((ui32_t *)(info->biCompression)) == BI_BITFIELDS))
+            ((info->biCompression == BI_RGB) ||
+             (info->biCompression == BI_BITFIELDS))
             {
                 return 0;
             }
@@ -353,8 +353,8 @@ static si_t __is_color_table_used__(struct bitmap_info * info)
         /* 若 biCompression == BI_BITFIELDS，则不使用颜色列表。 */
         case 32:
             if
-            ((* ((ui32_t *)(info->biCompression)) == BI_RGB) ||
-             (* ((ui32_t *)(info->biCompression)) == BI_BITFIELDS))
+            ((info->biCompression == BI_RGB) ||
+             (info->biCompression == BI_BITFIELDS))
             {
                 return 0;
             }
@@ -379,7 +379,7 @@ static si_t __is_color_table_used__(struct bitmap_info * info)
 **/
 static si_t __is_color_field_used__(struct bitmap_info * info)
 {
-    switch(* ((ui16_t *)(info->biBitCount)))
+    switch(info->biBitCount)
     {
         case 1:
             return 0;
@@ -390,7 +390,7 @@ static si_t __is_color_field_used__(struct bitmap_info * info)
 
         /* 若 biCompression == BI_BITFIELDS，则不使用颜色掩码。 */
         case 16:
-            if(* ((ui32_t *)(info->biCompression)) == BI_BITFIELDS)
+            if(info->biCompression == BI_BITFIELDS)
             {
                 return 1;
             }
@@ -404,7 +404,7 @@ static si_t __is_color_field_used__(struct bitmap_info * info)
 
         /* 若 biCompression == BI_BITFIELDS，则不使用颜色掩码。 */
         case 32:
-            if(* ((ui32_t *)(info->biCompression)) == BI_BITFIELDS)
+            if(info->biCompression == BI_BITFIELDS)
             {
                 return 1;
             }
@@ -435,9 +435,9 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
     si_t x, y, i, j, origin;
 
     /* 获得位图的宽度 */
-    x = * (si32_t *)(bm->info->biWidth);
+    x = bm->info->biWidth;
     /* 获得位图的高度 */
-    origin = * (si32_t *)(bm->info->biHeight);
+    origin = bm->info->biHeight;
     y = origin > 0 ? origin : (- origin);
 
     /* 原点在左下角 */
@@ -454,9 +454,9 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
                 rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
 
                 /* 获取颜色分量 */
-                c.r = (* (ui08_t *)(rgb->rgbRed)) * global_color_limit.r_limit / (ui08_t)-1;
-                c.g = (* (ui08_t *)(rgb->rgbGreen)) * global_color_limit.g_limit / (ui08_t)-1;
-                c.b = (* (ui08_t *)(rgb->rgbBlue)) * global_color_limit.b_limit / (ui08_t)-1;
+                c.r = (rgb->rgbRed) * global_color_limit.r_limit / (ui08_t)-1;
+                c.g = (rgb->rgbGreen) * global_color_limit.g_limit / (ui08_t)-1;
+                c.b = (rgb->rgbBlue) * global_color_limit.b_limit / (ui08_t)-1;
 
                 /* 设置图形设备的颜色 */
                 screen_set_pixel(&(gd->screen), location, &c, location->x + i, location->y + j);
@@ -477,9 +477,9 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
                 rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
 
                 /* 获取颜色分量 */
-                c.r = (* (ui08_t *)(rgb->rgbRed)) * global_color_limit.r_limit / (ui08_t)-1;
-                c.g = (* (ui08_t *)(rgb->rgbGreen)) * global_color_limit.g_limit / (ui08_t)-1;
-                c.b = (* (ui08_t *)(rgb->rgbBlue)) * global_color_limit.b_limit / (ui08_t)-1;
+                c.r = (rgb->rgbRed) * global_color_limit.r_limit / (ui08_t)-1;
+                c.g = (rgb->rgbGreen) * global_color_limit.g_limit / (ui08_t)-1;
+                c.b = (rgb->rgbBlue) * global_color_limit.b_limit / (ui08_t)-1;
 
                 /* 设置图形设备的颜色 */
                 screen_set_pixel(&(gd->screen), location, &c, location->x + i, location->y + j);
@@ -504,14 +504,14 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
     si_t x, y, i, j, origin;
 
     /* 获得颜色掩码 */
-    r_field = *((ui32_t *)(bm->color_field->rField));
-    g_field = *((ui32_t *)(bm->color_field->gField));
-    b_field = *((ui32_t *)(bm->color_field->bField));
+    r_field = bm->color_field->rField;
+    g_field = bm->color_field->gField;
+    b_field = bm->color_field->bField;
 
     /* 获得位图的宽度 */
-    x = * (si32_t *)(bm->info->biWidth);
+    x = bm->info->biWidth;
     /* 获得位图的高度 */
-    origin = * (si32_t *)(bm->info->biHeight);
+    origin = bm->info->biHeight;
     y = origin > 0 ? origin : (- origin);
 
     /* 原点在左下角 */
@@ -576,12 +576,12 @@ static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, s
     si_t x, y, i, j, origin;
 
     /* 获得位图的宽度 */
-    x = * (si32_t *)(bm->info->biWidth);
+    x = bm->info->biWidth;
     /* 获得位图的高度 */
-    origin = * (si32_t *)(bm->info->biHeight);
+    origin = bm->info->biHeight;
     y = origin > 0 ? origin : (- origin);
 
-    switch(* ((ui16_t *)(bm->info->biBitCount)))
+    switch(bm->info->biBitCount)
     {
         case 16:
             b_mask = 0X1F;

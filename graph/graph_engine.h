@@ -78,7 +78,7 @@ struct bitmap_head
      *
      * 必须是 0X4D42 (BM)
     **/
-    ui08_t bhType[__AMOUNT__(1, 2)];
+    ui16_t bhType;
     /**
      * 文件大小
      *
@@ -86,7 +86,7 @@ struct bitmap_head
      *
      * 以字节为单位
     **/
-    ui08_t bhSize[__AMOUNT__(3, 6)];
+    ui32_t bhSize;
     /**
      * 保留
      *
@@ -94,7 +94,7 @@ struct bitmap_head
      *
      * 必须是 0
     **/
-    ui08_t bhReserved1[__AMOUNT__(7, 8)];
+    ui16_t bhReserved1;
     /**
      * 保留
      *
@@ -102,13 +102,13 @@ struct bitmap_head
      *
      * 必须是 0
     **/
-    ui08_t bhReserved2[__AMOUNT__(9, 10)];
+    ui16_t bhReserved2;
     /**
      * 位图数据的偏移量
      *
      * ui32_t
     **/
-    ui08_t bhOffBits[__AMOUNT__(11, 14)];
+    ui32_t bhOffBits;
 };
 
 struct bitmap_info
@@ -120,7 +120,7 @@ struct bitmap_info
      *
      * 以字节为单位
     **/
-    ui08_t biSize[__AMOUNT__(1, 4)];
+    ui32_t biSize;
     /**
      * 位图的宽度
      *
@@ -128,7 +128,7 @@ struct bitmap_info
      *
      * 以像素为单位
     **/
-    ui08_t biWidth[__AMOUNT__(5, 8)];
+    si32_t biWidth;
     /**
      * 位图的高度
      *
@@ -139,7 +139,7 @@ struct bitmap_info
      * 若是正数，则位图原点在左下角。
      * 若是负数，则位图原点在左上角且 biCompression 必须是 BI_RGB 或者 BI_BITFIELDS。此时不能压缩位图。
     **/
-    ui08_t biHeight[__AMOUNT__(9, 12)];
+    si32_t biHeight;
     /**
      * 目标屏幕的数目
      *
@@ -147,7 +147,7 @@ struct bitmap_info
      *
      * 必须是 1
     **/
-    ui08_t biPlanes[__AMOUNT__(13, 14)];
+    ui16_t biPlanes;
     /**
      * 颜色深度
      *
@@ -191,7 +191,7 @@ struct bitmap_info
      * 存放颜色列表的位置存放 3 个 ui32_t，分别对应红色绿色蓝色
      * 的掩码。
     **/
-    ui08_t biBitCount[__AMOUNT__(15, 16)];
+    ui16_t biBitCount;
     /**
      * 位图压缩种类
      *
@@ -199,7 +199,7 @@ struct bitmap_info
      *
      * 必须是 BI_RGB, BI_BITFIELDS, BI_ALPHABITFIELDS
     **/
-    ui08_t biCompression[__AMOUNT__(17, 20)];
+    ui32_t biCompression;
     /**
      * 位图数据大小
      *
@@ -211,7 +211,7 @@ struct bitmap_info
      *
      * biWidth * biHeight * biBitCount / CHAR_BIT
     **/
-    ui08_t biSizeImage[__AMOUNT__(21, 24)];
+    ui32_t biSizeImage;
     /**
      * 位图的水平大小
      *
@@ -219,7 +219,7 @@ struct bitmap_info
      *
      * 以 pixel/meter 为单位
     **/
-    ui08_t biXPelsPerMeter[__AMOUNT__(25, 28)];
+    si32_t biXPelsPerMeter;
     /**
      * 位图的竖直大小
      *
@@ -227,19 +227,19 @@ struct bitmap_info
      *
      * 以 pixel/meter 为单位
     **/
-    ui08_t biYPelsPerMeter[__AMOUNT__(29, 32)];
+    si32_t biYPelsPerMeter;
     /**
      * 颜色列表中实际被使用颜色的数目
      *
      * ui32_t
     **/
-    ui08_t biClrUsed[__AMOUNT__(33, 36)];
+    ui32_t biClrUsed;
     /**
      * 显示位图需要颜色种类的数目
      *
      * ui32_t
     **/
-    ui08_t biClrImportant[__AMOUNT__(37, 40)];
+    ui32_t biClrImportant;
 };
 
 struct rgb
@@ -249,19 +249,19 @@ struct rgb
      *
      * ui08_t
     **/
-    ui08_t rgbBlue[__AMOUNT__(1, 1)];
+    ui08_t rgbBlue;
     /**
      * 绿色的值
      *
      * ui08_t
     **/
-    ui08_t rgbGreen[__AMOUNT__(2, 2)];
+    ui08_t rgbGreen;
     /**
      * 红色的值
      *
      * ui08_t
     **/
-    ui08_t rgbRed[__AMOUNT__(3, 3)];
+    ui08_t rgbRed;
     /**
      * 保留
      *
@@ -269,14 +269,14 @@ struct rgb
      *
      * 必须是 0
     **/
-    ui08_t rgbReserved[__AMOUNT__(4, 4)];
+    ui08_t rgbReserved;
 };
 
 struct color_field
 {
-    ui08_t rField[__AMOUNT__(1, 4)];
-    ui08_t gField[__AMOUNT__(5, 8)];
-    ui08_t bField[__AMOUNT__(9, 12)];
+    ui32_t rField;
+    ui32_t gField;
+    ui32_t bField;
 };
 
 /**

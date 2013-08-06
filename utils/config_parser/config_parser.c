@@ -44,7 +44,7 @@ static si_t starts_with(char line[], const char ch)
 static si_t strip(char str[])
 {
     char *p = str;
-    char *q;
+    char *q = NULL;
     si_t tmp_len;
     si_t len;
 

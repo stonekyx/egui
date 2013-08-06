@@ -9,11 +9,11 @@
 # include "client_lib.h"
 
 
-static void label_handler(struct widget* subscriber, struct widget* publisher, int event)
+static void label_handler(struct widget* subscriber, struct widget* publisher, si_t event)
 {
     struct scroll_bar* s = (struct scroll_bar*)publisher;
     struct label* l = (struct label*)subscriber;
-    sprintf(l->text, "e:%3d, %3d, s:%3d, %3d",  s->elevator_offset, s->elevator_height, s->total_len, s->cur_offset);
+    sprintf(l->text, "e:%3ld, %3ld, s:%3ld, %3ld",  s->elevator_offset, s->elevator_height, s->total_len, s->cur_offset);
     label_repaint(l);
     label_show(l);
 }

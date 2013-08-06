@@ -239,9 +239,9 @@ union respond
 	struct respond_body_variable va;
 };
 extern void respond_set_empty(union respond* respond_ptr);
-extern si_t respond_get_type(union respond* respond_ptr);
-extern si_t respond_get_len(union respond* respond_ptr);
-extern addr_t respond_get_value(union respond* respond_ptr);
+extern si_t respond_get_type(const union respond* respond_ptr);
+extern si_t respond_get_len(const union respond* respond_ptr);
+extern const_addr_t respond_get_value(const union respond* respond_ptr);
 
 # endif
 

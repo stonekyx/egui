@@ -138,13 +138,13 @@ struct message_base
     MESSAGE_BASE_DEFINITION
 };
 extern void message_set_window_descriptor(union message* m, si_t w);
-extern si_t message_get_window_descriptor(union message* m);
+extern si_t message_get_window_descriptor(const union message* m);
 extern void message_set_type(union message* m, si_t t);
-extern si_t message_get_type(union message* m);
+extern si_t message_get_type(const union message* m);
 extern void message_set_cursor_position(union message* m, struct point* c);
-extern struct point* message_get_cursor_position(union message* m);
+extern const struct point* message_get_cursor_position(const union message* m);
 extern void message_set_time(union message* m, struct timeval* t);
-extern struct timeval* message_get_time(union message* m);
+extern const struct timeval* message_get_time(const union message* m);
 
 /**
  * 键盘输入事件编码
@@ -387,9 +387,9 @@ struct message_keybd
 };
 
 extern void message_set_keybd(union message* msg, si_t t, si_t c, si_t v, si_t m);
-extern si_t message_get_keybd_code(union message* m);
-extern si_t message_get_keybd_value(union message* m);
-extern si_t message_get_keybd_mask(union message* m);
+extern si_t message_get_keybd_code(const union message* m);
+extern si_t message_get_keybd_value(const union message* m);
+extern si_t message_get_keybd_mask(const union message* m);
 
 /**
  * keyboard lose focus
@@ -551,9 +551,9 @@ struct message_mouse
 };
 
 extern void message_set_mouse(union message* msg, si_t t, si_t c, si_t v, si_t m);
-extern si_t message_get_mouse_code(union message* m);
-extern si_t message_get_mouse_value(union message* m);
-extern si_t message_get_mouse_mask(union message* m);
+extern si_t message_get_mouse_code(const union message* m);
+extern si_t message_get_mouse_value(const union message* m);
+extern si_t message_get_mouse_mask(const union message* m);
 
 /**
  * 显示窗口
@@ -576,7 +576,7 @@ struct message_widget_repaint
 };
 
 extern void message_set_widget_repaint(union message* m, si_t w, struct rectangle* r);
-extern struct rectangle* message_get_widget_repaint_area(union message* m);
+extern const struct rectangle* message_get_widget_repaint_area(const union message* m);
 
 /**
  * 移动窗口
@@ -589,7 +589,7 @@ struct message_widget_move
 };
 
 extern void message_set_widget_move(union message* m, si_t w, struct point* p);
-extern struct point* message_get_widget_move_poisition(union message* m);
+extern const struct point* message_get_widget_move_poisition(const union message* m);
 
 /**
  * 调整窗口大小
@@ -602,7 +602,7 @@ struct message_widget_resize
 };
 
 extern void message_set_widget_resize(union message* m, si_t w, struct rectangle* area);
-extern struct rectangle* message_get_widget_resize_area(union message* m);
+extern const struct rectangle* message_get_widget_resize_area(const union message* m);
 
 /**
  * 激活窗口

@@ -189,7 +189,7 @@ enum APPLICATION_TYPE
 	APPLICATION_TYPE_DESKTOP = 1 << 2,
 	APPLICATION_TYPE_WINDOW_MANAGER_EXIT = 1 << 3
 };
-extern void request_set_register_application(struct packet_body_register_application* body, si_t video_access_mode, si_t application_type, char* name, si_t length);
+extern void request_set_register_application(struct packet_body_register_application* body, si_t video_access_mode, si_t application_type, const char* name, si_t length);
 extern void request_get_register_application(addr_t arg, si_t* video_access_mode, si_t* application_type, char** name, si_t* length);
 
 /**
@@ -247,7 +247,7 @@ struct packet_body_register_window
     si_t maximize_enable;
     si_t modal;
 };
-extern void request_set_register_window(struct packet_body_register_window* body, si_t parent_window_descriptor, char* title, si_t title_length, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal);
+extern void request_set_register_window(struct packet_body_register_window* body, si_t parent_window_descriptor, const char* title, si_t title_length, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal);
 extern void request_get_register_window(addr_t body, si_t* parent_window_descriptor, char** title, si_t* title_length, si_t* x, si_t* y, si_t* width, si_t* height, si_t* minimize_enable, si_t* maximize_enable, si_t* modal);
 
 /**
@@ -411,7 +411,7 @@ struct packet_body_draw_bitmap
 	si_t length;
     si_t align;
 };
-extern void request_set_draw_bitmap(struct packet_body_draw_bitmap* body, si_t gd, char* name, si_t length, si_t align);
+extern void request_set_draw_bitmap(struct packet_body_draw_bitmap* body, si_t gd, const char* name, si_t length, si_t align);
 extern si_t request_call_by_draw_bitmap(addr_t arg, si_t (*callable)(si_t, char*, si_t));
 
 /**
@@ -451,7 +451,7 @@ struct packet_body_draw_img
 	si_t length;
 	si_t align;
 };
-extern void request_set_draw_img(struct packet_body_draw_img* body, si_t gd, char* name, si_t length, si_t align);
+extern void request_set_draw_img(struct packet_body_draw_img* body, si_t gd, const char* name, si_t length, si_t align);
 extern si_t request_call_by_draw_img(addr_t arg, si_t (*callable)(si_t, char*, si_t));
 
 /**
@@ -489,7 +489,7 @@ struct packet_body_draw_polygon
 	struct point * points;
 	si_t point_count;
 };
-extern void request_set_draw_polygon(struct packet_body_draw_polygon* body, si_t gd, struct point* point, si_t point_count);
+extern void request_set_draw_polygon(struct packet_body_draw_polygon* body, si_t gd, const struct point* point, si_t point_count);
 extern si_t request_call_by_draw_polygon(addr_t arg, si_t (*callable)(si_t, struct point*, si_t));
 
 /**
@@ -691,7 +691,7 @@ struct packet_body_show_text
     char * str;
     si_t length;
 };
-extern void request_set_show_text(struct packet_body_show_text* body, si_t gd, si_t x, si_t y, char *str, si_t length);
+extern void request_set_show_text(struct packet_body_show_text* body, si_t gd, si_t x, si_t y, const char *str, si_t length);
 extern si_t request_call_by_show_text(addr_t arg, si_t (*callable)(si_t, si_t, si_t, char *, si_t));
 
 struct packet_body_get_window_title

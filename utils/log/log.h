@@ -34,6 +34,8 @@
 # include <errno.h>
 # include <string.h>
 
+#if __STRICT_ANSI__==0 && __GNUC__
+
 #define EGUI_PRINT_SYS_ERROR(args...) \
 	do{ \
 		fprintf(stderr, "ERROR:[%s:%d]\t", __FILE__,__LINE__); \
@@ -53,5 +55,27 @@
 		fprintf(stderr, "\n"); \
 	} while(0)
 
+#else
+
+#define EGUI_PRINT_SYS_ERROR(...) \
+	do{ \
+		fprintf(stderr, "ERROR:[%s:%d]\t", __FILE__,__LINE__); \
+		fprintf(stderr, __VA_ARGS__); \
+		fprintf(stderr, ": %s\n", strerror(errno)); \
+	}while(0)
+#define EGUI_PRINT_ERROR(...) \
+	do{ \
+		fprintf(stderr, "ERROR:[%s:%d]\t", __FILE__, __LINE__); \
+		fprintf(stderr, __VA_ARGS__); \
+		fprintf(stderr, "\n"); \
+	} while(0)
+#define EGUI_PRINT_INFO(...) \
+	do{ \
+		fprintf(stderr, "INFO:[%s:%d]\t", __FILE__, __LINE__); \
+		fprintf(stderr, __VA_ARGS__); \
+		fprintf(stderr, "\n"); \
+	} while(0)
+
+#endif
 
 # endif

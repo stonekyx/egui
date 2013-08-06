@@ -98,7 +98,7 @@ extern void message_set_window_descriptor(union message* m, si_t w)
 {
 	m->base.window_descriptor = w;
 }
-extern si_t message_get_window_descriptor(union message* m)
+extern si_t message_get_window_descriptor(const union message* m)
 {
 	return m->base.window_descriptor;
 }
@@ -107,7 +107,7 @@ extern void message_set_type(union message* m, si_t t)
 {
 	m->base.type = t;
 }
-extern si_t message_get_type(union message* m)
+extern si_t message_get_type(const union message* m)
 {
 	return m->base.type;
 }
@@ -116,7 +116,7 @@ extern void message_set_cursor_position(union message* m, struct point* c)
 {
 	m->base.cursor_position = *c;
 }
-extern struct point* message_get_cursor_position(union message* m)
+extern const struct point* message_get_cursor_position(const union message* m)
 {
 	return &m->base.cursor_position;
 }
@@ -125,7 +125,7 @@ extern void message_set_time(union message* m, struct timeval* t)
 {
 	m->base.time = *t;
 }
-extern struct timeval* message_get_time(union message* m)
+extern const struct timeval* message_get_time(const union message* m)
 {
 	return &m->base.time;
 }
@@ -147,17 +147,17 @@ extern void message_set_keybd(union message* msg, si_t t, si_t c, si_t v, si_t m
 	msg->keybd.mask = m;
 }
 
-extern si_t message_get_keybd_code(union message* m)
+extern si_t message_get_keybd_code(const union message* m)
 {
 	return m->keybd.code;
 }
 
-extern si_t message_get_keybd_value(union message* m)
+extern si_t message_get_keybd_value(const union message* m)
 {
 	return m->keybd.value;
 }
 
-extern si_t message_get_keybd_mask(union message* m)
+extern si_t message_get_keybd_mask(const union message* m)
 {
 	return m->keybd.mask;
 }
@@ -178,17 +178,17 @@ extern void message_set_mouse(union message* msg, si_t t, si_t c, si_t v, si_t m
 	msg->mouse.mask = m;
 }
 
-extern si_t message_get_mouse_code(union message* m)
+extern si_t message_get_mouse_code(const union message* m)
 {
 	return m->mouse.code;
 }
 
-extern si_t message_get_mouse_value(union message* m)
+extern si_t message_get_mouse_value(const union message* m)
 {
 	return m->mouse.value;
 }
 
-extern si_t message_get_mouse_mask(union message* m)
+extern si_t message_get_mouse_mask(const union message* m)
 {
 	return m->mouse.mask;
 }
@@ -207,7 +207,7 @@ extern void message_set_widget_repaint(union message* m, si_t w, struct rectangl
 	m->widget_repaint.area = *r;
 }
 
-extern struct rectangle* message_get_widget_repaint_area(union message* m)
+extern const struct rectangle* message_get_widget_repaint_area(const union message* m)
 {
 	return &m->widget_repaint.area;
 }
@@ -218,7 +218,7 @@ extern void message_set_widget_move(union message* m, si_t w, struct point* p)
 	m->widget_move.position = *p;
 }
 
-extern struct point* message_get_widget_move_poisition(union message* m)
+extern const struct point* message_get_widget_move_poisition(const union message* m)
 {
 	return &m->widget_move.position;
 }
@@ -229,7 +229,7 @@ extern void message_set_widget_resize(union message* m, si_t w, struct rectangle
 	m->widget_resize.area = *area;
 }
 
-extern struct rectangle* message_get_widget_resize_area(union message* m)
+extern const struct rectangle* message_get_widget_resize_area(const union message* m)
 {
 	return &m->widget_resize.area;
 }

@@ -4,6 +4,7 @@
 Makefile
 tags
 cscope.out
+_build
 !.gitignore
 
 # Object files

@@ -562,7 +562,7 @@ void object_move_first(struct object* obj)
 	/* 将活动窗口变成父窗口的右子节点 */
 	if(obj == obj->parent->parent || obj == obj->parent->rchild)
 	{
-		return 0;
+		return ;
 	}
 	/* 找到 win_info_ptr 的父窗口 */
 	parent = obj->parent;

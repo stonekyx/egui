@@ -56,7 +56,7 @@ extern void client_lib_init(struct egui_uds* uds_ptr, struct queue* queue_ptr);
  * @param application_type 应用程序类型
  * @param name 应用程序名字
  **/
-extern si_t register_application(si_t video_access_mode, si_t application_type, char* name);
+extern si_t register_application(si_t video_access_mode, si_t application_type, const char* name);
 
 /**
  * @brief 取消应用程序
@@ -130,7 +130,7 @@ extern si_t desktop_dirty();
  *
  * @return 窗口的描述符
 */
-extern si_t register_window(si_t parent_window_descriptor, char* title, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal);
+extern si_t register_window(si_t parent_window_descriptor, const char* title, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal);
 
 /*
  * @brief 注销窗口
@@ -286,7 +286,7 @@ extern si_t draw_rectangle(si_t gd, si_t x, si_t y, si_t width, si_t height);
  *
  * @return 0
 */
-extern si_t draw_polygon(si_t gd, struct point * p, si_t n);
+extern si_t draw_polygon(si_t gd, const struct point * p, si_t n);
 
 /*
  * @brief 绘制一个圆
@@ -355,7 +355,7 @@ extern si_t draw_arrow (si_t gd, si_t x, si_t y, si_t size, si_t direction);
  *
  * @return 0
  */
-extern si_t draw_img(si_t gd, char* img_path, si_t align);
+extern si_t draw_img(si_t gd, const char* img_path, si_t align);
 
 /**
  * @brief 绘制bmp图
@@ -368,7 +368,7 @@ extern si_t draw_img(si_t gd, char* img_path, si_t align);
  *
  * @return 0
  **/
-extern si_t draw_bitmap(si_t gd, char* name, int align);
+extern si_t draw_bitmap(si_t gd, const char* name, int align);
 
 /*
  * @brief 填充一个矩形
@@ -477,7 +477,7 @@ extern si_t cpy_area(si_t gd, si_t mode, si_t dst_x, si_t dst_y, si_t src_x, si_
  *
  * @return 0
 */
-extern si_t show_text(si_t gd, si_t x, si_t y, char * str, si_t size);
+extern si_t show_text(si_t gd, si_t x, si_t y, const char * str, si_t size);
 
 /*
  * @brief 获得区域宽度

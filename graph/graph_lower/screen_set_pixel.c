@@ -136,7 +136,7 @@ screen_set_pixel_raw
         /* 开始位在字节内的偏移量 */
         offset = bit & 7;
         /* 字节地址 */
-        addr = video + (bit >> 3);
+        addr = (byte_t*)video + (bit >> 3);
 
         if(depth == 1)
         {
@@ -172,7 +172,7 @@ screen_set_pixel_raw
         offset = bit >> 3;
 
         /* 将颜色写入视频缓冲区 */
-        memcpy((void *)(video + offset), (void *)(&color), depth >> 3);
+        memcpy((void *)((byte_t*)video + offset), (void *)(&color), depth >> 3);
     }
 
     return 0;

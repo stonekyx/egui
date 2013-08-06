@@ -196,7 +196,7 @@ static void write_struct_var_to_func_arg(addr_t struct_ptr, int param_num, ...)
  *
  **/
 
-extern void request_set_register_application(struct packet_body_register_application* body, si_t video_access_mode, si_t application_type, char* name, si_t length)
+extern void request_set_register_application(struct packet_body_register_application* body, si_t video_access_mode, si_t application_type, const char* name, si_t length)
 {
 	write_func_arg_to_struct_var((addr_t)body, 4, video_access_mode, application_type, name, length);
 }
@@ -245,7 +245,7 @@ extern void request_get_update(addr_t body, si_t* gd)
 	write_struct_var_to_func_arg(body, 1, gd);
 }
 
-extern void request_set_register_window(struct packet_body_register_window* body, si_t parent_window_descriptor, char* title, si_t title_length, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal)
+extern void request_set_register_window(struct packet_body_register_window* body, si_t parent_window_descriptor, const char* title, si_t title_length, si_t x, si_t y, si_t width, si_t height, si_t minimize_enable, si_t maximize_enable, si_t modal)
 {
 	write_func_arg_to_struct_var((addr_t)body, 10, parent_window_descriptor, title, title_length, x, y, width, height, minimize_enable, maximize_enable, modal);
 }
@@ -382,7 +382,7 @@ extern si_t request_call_by_draw_arrow(addr_t arg, si_t (*callable)(si_t, si_t, 
 	return callable(body->gd, body->x, body->y, body->size, body->direction);
 }
 
-extern void request_set_draw_bitmap(struct packet_body_draw_bitmap* body, si_t gd, char* name, si_t length, si_t align)
+extern void request_set_draw_bitmap(struct packet_body_draw_bitmap* body, si_t gd, const char* name, si_t length, si_t align)
 {
 	write_func_arg_to_struct_var((addr_t)body, 4, gd, name, length, align);
 }
@@ -416,7 +416,7 @@ extern si_t request_call_by_draw_ellipse(addr_t arg, si_t (*callable)(si_t, si_t
 	return callable(body->gd, body->x, body->y, body->a, body->b);
 }
 
-extern void request_set_draw_img(struct packet_body_draw_img* body, si_t gd, char* name, si_t length, si_t align)
+extern void request_set_draw_img(struct packet_body_draw_img* body, si_t gd, const char* name, si_t length, si_t align)
 {
 	write_func_arg_to_struct_var((addr_t)body, 4, gd, name, length, align);
 }
@@ -450,7 +450,7 @@ extern si_t request_call_by_draw_point(addr_t arg, si_t (*callable)(si_t, si_t, 
 	return callable(body->gd, body->x, body->y);
 }
 
-extern void request_set_draw_polygon(struct packet_body_draw_polygon* body, si_t gd, struct point* point, si_t point_count)
+extern void request_set_draw_polygon(struct packet_body_draw_polygon* body, si_t gd, const struct point* point, si_t point_count)
 {
 	write_func_arg_to_struct_var((addr_t)body, 3, gd, point, point_count);
 }
@@ -628,7 +628,7 @@ extern si_t request_call_by_set_font(addr_t arg, si_t (*callable)(si_t, si_t))
 	return callable(body->gd, body->font);
 }
 
-extern void request_set_show_text(struct packet_body_show_text* body, si_t gd, si_t x, si_t y, char *str, si_t length)
+extern void request_set_show_text(struct packet_body_show_text* body, si_t gd, si_t x, si_t y, const char *str, si_t length)
 {
 	write_func_arg_to_struct_var((addr_t)body, 5, gd, x, y, str, length);
 }

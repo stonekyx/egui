@@ -59,7 +59,7 @@ struct my_widget * mw;
 /* scroll bar for my widget */
 struct scroll_bar* s;
 
-static void mywidget_subscribe_scrollbar(struct widget* subscriber, struct widget* pulisher, int event)
+static void mywidget_subscribe_scrollbar(struct widget* subscriber, struct widget* pulisher, si_t event)
 {
     struct scroll_bar* s = SCROLL_BAR_POINTER(pulisher);
     int lines_per_page = s->area.height / s->line_height;

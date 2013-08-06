@@ -94,10 +94,19 @@ typedef double f64_t;
 **/
 typedef double f_t;
 
+/*
+ * FIXME: Not conforming to DCL05-C.
+ * Reference: https://www.securecoding.cert.org/confluence/display/seccode/DCL05-C.+Use+typedefs+of+non-pointer+types+only
+ */
 /**
  * 地址类型
 **/
 typedef void* addr_t;
+
+/**
+ * 常量地址类型
+**/
+typedef const void *const_addr_t;
 
 /**
  *bool类型 
