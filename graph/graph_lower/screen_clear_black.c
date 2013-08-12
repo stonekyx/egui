@@ -37,97 +37,40 @@ si_t
 screen_clear_black
 (struct screen * s)
 {
+    addr_t video;
+    if(VIDEO_ACCESS_MODE_BUFFER == s->video_access_mode) {
+        video = s->buffer_addr;
+    } else if(VIDEO_ACCESS_MODE_DIRECT == s->video_access_mode){
+        video = s->memory_addr;
+    } else {
+        return -1;
+    }
+
     /* 0 = White 1 = Black */
     if(global_fix_screen_info.visual == FB_VISUAL_MONO01)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0XFF, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0XFF, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0XFF, s->size);
     }
     /* 1 = White 0 = Black */
     else if(global_fix_screen_info.visual == FB_VISUAL_MONO10)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0X00, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0X00, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0X00, s->size);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_PSEUDOCOLOR)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0X00, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0X00, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0X00, s->size);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_STATIC_PSEUDOCOLOR)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0X00, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0X00, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0X00, s->size);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_DIRECTCOLOR)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0X00, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0X00, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0X00, s->size);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_TRUECOLOR)
     {
-        if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-        {
-            memset(s->buffer_addr, 0X00, s->size);
-        }
-        else if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-        {
-            memset(s->memory_addr, 0X00, s->size);
-        }
-        else
-        {
-            return -1;
-        }
+        memset(video, 0X00, s->size);
     }
 
     return 0;

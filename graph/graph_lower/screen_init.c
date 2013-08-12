@@ -78,6 +78,11 @@ si_t screen_init(const char* path)
     /* 获得屏幕的宽度 */
     global_screen.width = global_var_screen_info.xres;
     if(global_screen.width == 1366) {
+        /*
+         * Screens of 1366x768 has different framebuffer format.
+         * There are many other formats we need to consider.
+         * XXX: This fix is not nice.
+         */
         global_screen.width += 10;
         global_var_screen_info.xres += 10;
     }
@@ -91,6 +96,7 @@ si_t screen_init(const char* path)
     /* 获得视频存储器的大小或者视频缓冲区的大小 */
     global_screen.size = (global_var_screen_info.xres * global_var_screen_info.yres * global_var_screen_info.bits_per_pixel) >> 3;
 
+    /* XXX: Why always VIDEO_ACCESS_MODE_BUFFER? */
     global_screen.video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
 
     /* 映射视频地址 */

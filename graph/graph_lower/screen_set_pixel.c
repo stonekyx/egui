@@ -110,11 +110,13 @@ screen_set_pixel_raw
     if(global_fix_screen_info.visual == FB_VISUAL_DIRECTCOLOR)
     {
         /* 获得颜色索引 */
+        /* FIXME: Alpha channel is not considered. */
         screen_color_to_index(&color, c);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_PSEUDOCOLOR)
     {
         /* 获得颜色索引 */
+        /* FIXME: Alpha channel is not considered. */
         screen_color_to_index(&color, c);
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_TRUECOLOR)

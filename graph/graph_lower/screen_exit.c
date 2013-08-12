@@ -32,6 +32,7 @@
 # include <sys/mman.h>
 
 # include <data_structures.h>
+# include <log.h>
 
 # include "../graph_lower.h"
 
@@ -53,7 +54,10 @@ screen_exit()
     free(global_screen.buffer_addr);
 
     /* 释放视频存储区 */
-    munmap(global_screen.memory_addr, global_screen.size);
+    if(-1 == munmap(global_screen.memory_addr, global_screen.size)) {
+        EGUI_PRINT_SYS_ERROR("failed to unmap framebuffer: munmap()");
+        return -1;
+    }
 
     return 0;
 }

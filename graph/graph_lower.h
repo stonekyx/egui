@@ -105,6 +105,9 @@ extern struct fb_cmap global_cmap;
  * 全局变量
  *
  * 屏幕结构体
+ * 在间接访问模式（VIDEO_ACCESS_MODE_BUFFER）下，
+ * buffer_addr为软缓冲区，memory_addr为framebuffer的内存映射，
+ * screen_flush将buffer_addr中的指定区域写入memory_addr。
 **/
 extern struct screen global_screen;
 
@@ -117,6 +120,9 @@ extern struct color_limit global_color_limit;
 
 /**
  * 申请屏幕资源
+ * 获取系统屏幕信息，填写global_screen的信息域。
+ * 为global_screen分配buffer，映射framebuffer设备到内存。
+ * 初始化屏幕（填成黑色），为某些设备设置cmap。
  *
  * @param path framebuffer设备路径
  *
@@ -126,6 +132,7 @@ extern si_t screen_init(const char* path);
 
 /**
  * 释放屏幕资源
+ * 撤销screen_init()的操作，但不清空global_screen的数值信息域。
  *
  * @return 成功返回0，失败返回-1。
 **/
@@ -133,11 +140,13 @@ extern si_t screen_exit();
 
 /**
  * 获取屏幕的宽度
+ * XXX: 冗余？不需要考虑global_screen的私有属性，或者说考虑不完全。
  **/
 extern si_t screen_get_width();
 
 /**
  * 获取屏幕的长度
+ * XXX: 冗余？不需要考虑global_screen的私有属性，或者说考虑不完全。
  **/
 extern si_t screen_get_height();
 
@@ -164,6 +173,7 @@ extern si_t screen_clear_white(struct screen * s);
 extern si_t screen_clear_black(struct screen * s);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 刷新屏幕的某一区域
  *
  * 将 s 所指的屏幕上 reactangle 所指的区域刷新为视频缓冲区的值
@@ -306,6 +316,7 @@ extern si_t screen_get_pixel(struct screen * s, struct rectangle * a, struct col
 extern si_t screen_get_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
 
 /**
+ * FIXME: Alpha blending is not implemented.
  * 在屏幕上绘制某一横线
  *
  * 在 s 所指的屏幕上 a 所指区域内绘制 c 所指颜色的起点坐标为（x1，y1）终点坐标为（x2，y2）的横线
@@ -323,6 +334,7 @@ extern si_t screen_get_pixel_raw(void * video, si_t width, si_t height, si_t dep
 extern si_t screen_set_h_line(struct screen * s, struct rectangle * a, struct color * c, si_t x1, si_t y1, si_t x2, si_t y2);
 
 /**
+ * FIXME: Alpha blending is not implemented.
  * 在屏幕上绘制某一竖线
  *
  * 在 s 所指的屏幕上 a 所指区域内绘制 c 所指颜色的起点坐标为（x1，y1）终点坐标为（x2，y2）的竖线
@@ -340,6 +352,7 @@ extern si_t screen_set_h_line(struct screen * s, struct rectangle * a, struct co
 extern si_t screen_set_v_line(struct screen * s, struct rectangle * a, struct color * c, si_t x1, si_t y1, si_t x2, si_t y2);
 
 /**
+ * FIXME: Alpha blending is not implemented.
  * 在屏幕上绘制某一斜线
  *
  * 在 s 所指的屏幕上 a 所指区域内绘制 c 所指颜色的起点坐标为（x1，y1）终点坐标为（x2，y2）的斜线
@@ -357,6 +370,8 @@ extern si_t screen_set_v_line(struct screen * s, struct rectangle * a, struct co
 extern si_t screen_set_x_line(struct screen * s, struct rectangle * a, struct color * c, si_t x1, si_t y1, si_t x2, si_t y2);
 
 /**
+ * XXX: Alpha blending is not implemented.
+ * But for this function it may not be necessary.
  * 在屏幕上绘制某一矩形
  *
  * 在 s 所指的屏幕上 a 所指区域内绘制 c 所指颜色的顶点坐标为（x，y）宽度为 xsize 高度为 ysize 的矩形

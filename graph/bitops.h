@@ -72,6 +72,7 @@
     ((((ui08_t *)(addr))[(n) >> 3] >> ((n) & 0X7)) & 0X1)
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据算术右移
  *
  * 标准并没有规定有符号右移采用哪种方式（算术右移、逻辑右移）。
@@ -92,6 +93,7 @@ arithmetic_r_shift
  ui_t shift);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据算术左移
  *
  * @param addr 数据的地址
@@ -108,6 +110,7 @@ arithmetic_l_shift
  ui_t shift);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据逻辑右移
  *
  * @param addr 数据的地址
@@ -124,6 +127,7 @@ logical_r_shift
  ui_t shift);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据逻辑左移
  *
  * @param addr 数据的地址
@@ -140,6 +144,7 @@ logical_l_shift
  ui_t shift);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据循环右移
  *
  * @param addr 数据的地址
@@ -156,6 +161,7 @@ r_rotate
  ui_t rotate);
 
 /**
+ * FIXME: This function is not defined and never used.
  * 数据循环左移
  *
  * @param addr 数据的地址
