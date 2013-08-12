@@ -28,6 +28,7 @@
 **/
 
 # include <string.h>
+# include <limits.h>
 
 # include <data_structures.h>
 
@@ -260,18 +261,19 @@ screen_set_area
     }
 
     /* 获得起始像素相对于显存的位偏移量 */
-    h_bit = (y * s->width + x) * s->color_depth;
+    h_bit = y * global_fix_screen_info.line_length * CHAR_BIT + x * s->color_depth;
     /* 水平线总共的位数 */
     bit = width * s->color_depth;
     /* 获得结束像素之后的像素相对于显存的位偏移量 */
     t_bit = h_bit + bit;
     /* 每行所占的位数 */
-    line_bit = s->width * s->color_depth;
+    line_bit = global_fix_screen_info.line_length * CHAR_BIT;
     /* 竖直线的长度 */
     size = height;
 
     if(s->color_depth < 8)
     {
+        /* XXX: Not checked for line_length method, can't understand */
         while(size)
         {
             /* 开始位在字节内的偏移量 */

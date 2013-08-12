@@ -72,7 +72,7 @@ screen_get_pixel_raw
     }
 
     /* 获得像素关于显存的偏移量 */
-    offset = (y * width + x) * (depth >> 3);
+    offset = y * global_fix_screen_info.line_length + x * (depth >> 3);
 
     /* 将像素的值赋给 color */
     memcpy(&color, (byte_t*)video + offset, depth >> 3);

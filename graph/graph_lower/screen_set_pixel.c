@@ -28,6 +28,7 @@
 **/
 
 # include <string.h>
+# include <limits.h>
 
 # include <data_structures.h>
 
@@ -70,7 +71,7 @@ screen_set_pixel_raw
     }
 
     /* 获得像素关于显存的位偏移量 */
-    bit = (y * width + x) * depth;
+    bit = y * global_fix_screen_info.line_length * CHAR_BIT + x * depth;
 
     if(global_fix_screen_info.visual == FB_VISUAL_MONO01)
     {
