@@ -28,6 +28,7 @@
 **/
 
 # include <string.h>
+# include <limits.h>
 
 # include <data_structures.h>
 
@@ -40,7 +41,7 @@ screen_flush
  si_t width,
  si_t height)
 {
-    ui_t bit, byte_quantity, line_bit, size, line_byte;
+    ui_t bit, byte_quantity, size, line_byte;
     ui_t h_offset, h_bit;
     byte_t * src_addr, * dst_addr;
     struct rectangle screen_area, temp_area, real_area;
@@ -74,13 +75,12 @@ screen_flush
         height = real_area.height;
 
         /* 获得起始像素相对于显存的位偏移量 */
-        h_bit = (y * global_screen.width + x) * global_screen.color_depth;
+        h_bit = y * global_fix_screen_info.line_length * CHAR_BIT + x * global_screen.color_depth;
         /* 水平线总共的位数 */
         bit = width * global_screen.color_depth;
 
-        /* 每行所占的位数 */
-        line_bit = global_screen.width * global_screen.color_depth;
-        line_byte = line_bit >> 3;
+        /* 每行所占的字节数 */
+        line_byte = global_fix_screen_info.line_length;
 
         /* 竖直线的长度 */
         size = height;

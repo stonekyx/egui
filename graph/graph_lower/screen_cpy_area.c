@@ -28,7 +28,7 @@
 **/
 
 # include <string.h>
-#include <stdio.h>
+# include <limits.h>
 
 # include <data_structures.h>
 
@@ -117,7 +117,7 @@ screen_cpy_area
  si_t width,
  si_t height)
 {
-    ui_t bit, byte_quantity, line_bit, size, line_byte;
+    ui_t bit, byte_quantity, size, line_byte;
     ui_t src_h_offset, src_h_bit;
     ui_t dst_h_offset, dst_h_bit;
     byte_t * src_addr;
@@ -137,14 +137,13 @@ screen_cpy_area
     height = dst_area.height;
 
     /* 获得起始像素相对于显存的位偏移量 */
-    src_h_bit = (src_y * global_screen.width + src_x) * global_screen.color_depth;
-    dst_h_bit = (dst_y * global_screen.width + dst_x) * global_screen.color_depth;
+    src_h_bit = src_y * global_fix_screen_info.line_length * CHAR_BIT + src_x * global_screen.color_depth;
+    dst_h_bit = dst_y * global_fix_screen_info.line_length * CHAR_BIT + dst_x * global_screen.color_depth;
     /* 水平线总共的位数 */
     bit = width * global_screen.color_depth;
 
-    /* 每行所占的位数 */
-    line_bit = global_screen.width * global_screen.color_depth;
-    line_byte = line_bit >> 3;
+    /* 每行所占的字节数 */
+    line_byte = global_fix_screen_info.line_length;
     /* 竖直线的长度 */
     size = height;
 
@@ -163,8 +162,8 @@ screen_cpy_area
         if(src_h_bit <= dst_h_bit && src_addr == dst_addr)
         {
             /* 获得最后一行起始像素相对于显存的位偏移量 */
-            src_h_bit = ((src_y + height - 1) * global_screen.width + src_x) * global_screen.color_depth;
-            dst_h_bit = ((dst_y + height - 1) * global_screen.width + dst_x) * global_screen.color_depth;
+            src_h_bit = (src_y + height - 1) * global_fix_screen_info.line_length * CHAR_BIT + src_x * global_screen.color_depth;
+            dst_h_bit = (dst_y + height - 1) * global_fix_screen_info.line_length * CHAR_BIT + dst_x * global_screen.color_depth;
 
             /* 开始字节的偏移量 */
             src_h_offset = src_h_bit >> 3;
