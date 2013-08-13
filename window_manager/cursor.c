@@ -42,6 +42,9 @@ static si_t cursor_gd_handler = (si_t)&cursor_gd;
 
 si_t cursor_init(char* cursor_type)
 {
+    FILE *ftmp = fopen("/tmp/egui.debug.out", "a");
+    fprintf(ftmp, "%d\n", global_fix_screen_info.line_length);
+    fclose(ftmp);
 	global_wm.old_cursor.x = global_screen.width  >> 1;
 	global_wm.old_cursor.y = global_screen.height >> 1;
 	global_wm.new_cursor.x = global_screen.width  >> 1;
