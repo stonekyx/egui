@@ -85,7 +85,7 @@ si_t screen_init(const char* path)
     global_screen.color_depth = global_var_screen_info.bits_per_pixel;
 
     /* 获得视频存储器的大小或者视频缓冲区的大小 */
-    global_screen.size = (global_var_screen_info.xres * global_var_screen_info.yres * global_var_screen_info.bits_per_pixel) >> 3;
+    global_screen.size = global_fix_screen_info.smem_len;
 
     /* XXX: Why always VIDEO_ACCESS_MODE_BUFFER? */
     global_screen.video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
