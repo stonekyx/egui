@@ -28,7 +28,6 @@
 **/
 
 # include <string.h>
-# include <limits.h>
 
 # include <data_structures.h>
 
@@ -264,7 +263,7 @@ screen_set_h_line
     }
 
     /* 获得起始像素相对于显存的位偏移量 */
-    h_bit = y1 * global_fix_screen_info.line_length * CHAR_BIT + x1 * s->color_depth;
+    h_bit = (y1 * s->width + x1) * s->color_depth;
     /* 水平线总共的位数 */
     bit = (x2 - x1 + 1) * s->color_depth;
     /* 获得结束像素之后的像素相对于显存的位偏移量 */

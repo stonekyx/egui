@@ -28,7 +28,6 @@
 **/
 
 # include <string.h>
-# include <limits.h>
 
 # include <data_structures.h>
 
@@ -154,9 +153,9 @@ screen_set_v_line
     }
 
     /* 开始位的偏移量 */
-    bit = y1 * global_fix_screen_info.line_length * CHAR_BIT + x1 * s->color_depth;
+    bit = (y1 * s->width + x1) * s->color_depth;
     /* 每行所占的位数 */
-    line_bit = global_fix_screen_info.line_length * CHAR_BIT;
+    line_bit = s->width * s->color_depth;
     /* 竖直线的长度 */
     size = y2 - y1 + 1;
 

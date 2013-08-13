@@ -366,7 +366,7 @@ si_t window_manager_init()
 		return -1;
 	}
 
-	if(0 != event_init("/dev/input/event8", "/dev/input/event10", 1000))
+	if(0 != event_init("/dev/input/event8", "/dev/input/event9", 1000))
 	{
 		EGUI_PRINT_ERROR("failed to init event module");
 		return -1;

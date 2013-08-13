@@ -77,6 +77,15 @@ si_t screen_init(const char* path)
 
     /* 获得屏幕的宽度 */
     global_screen.width = global_var_screen_info.xres;
+    if(global_screen.width == 1366) {
+        /*
+         * Screens of 1366x768 has different framebuffer format.
+         * There are many other formats we need to consider.
+         * XXX: This fix is not nice.
+         */
+        global_screen.width += 10;
+        global_var_screen_info.xres += 10;
+    }
 
     /* 获得屏幕的高度 */
     global_screen.height = global_var_screen_info.yres;

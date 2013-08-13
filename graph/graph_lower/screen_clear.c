@@ -35,7 +35,7 @@ screen_clear
 (struct screen * s,
  struct color * c)
 {
-    ui_t pixel, color;
+    ui_t count, pixel, color;
     byte_t * addr;
 
     if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
@@ -53,8 +53,10 @@ screen_clear
 
     /* 像素对应的字节数 */
     pixel = s->color_depth >> 3;
-
+    /* 多少像素 */
+    count = s->width * s->height;
     /* 获得颜色的值 */
+
     if(global_fix_screen_info.visual == FB_VISUAL_DIRECTCOLOR)
     {
         /* 获得颜色索引 */
@@ -71,17 +73,10 @@ screen_clear
         screen_color_to_value(&color, c);
     }
 
+    while(count --)
     {
-        register ui_t i;
-        const ui_t width_byte = s->width * (s->color_depth<<3);
-        for(i=0; i<s->height; i++) {
-            register byte_t *taddr = addr;
-            while(taddr-addr < width_byte) {
-                memcpy(taddr, &color, pixel);
-                taddr += pixel;
-            }
-            addr += global_fix_screen_info.line_length;
-        }
+        memcpy(addr, &color, pixel);
+        addr += pixel;
     }
 
     return 0;
