@@ -42,6 +42,8 @@
 #include "log.h"
 #include "cursor.h"
 
+#include "config.h"
+
 struct window_manager global_wm;
 struct termios term;
 
@@ -366,7 +368,7 @@ si_t window_manager_init()
 		return -1;
 	}
 
-	if(0 != event_init("/dev/input/event8", "/dev/input/event10", 1000))
+	if(0 != event_init(KBD_EVENT_DEVICE, MOUSE_EVENT_DEVICE, 1000))
 	{
 		EGUI_PRINT_ERROR("failed to init event module");
 		return -1;

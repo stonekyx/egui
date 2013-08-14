@@ -106,6 +106,9 @@
 /* Define to 1 if `vfork' works. */
 #undef HAVE_WORKING_VFORK
 
+/* Path to keyboard event device. */
+#undef KBD_EVENT_DEVICE
+
 /* Define to 1 if `lstat' dereferences a symlink specified with a trailing
    slash. */
 #undef LSTAT_FOLLOWS_SLASHED_SYMLINK
@@ -113,6 +116,9 @@
 /* Define to the sub-directory in which libtool stores uninstalled libraries.
    */
 #undef LT_OBJDIR
+
+/* Path to mouse event device. */
+#undef MOUSE_EVENT_DEVICE
 
 /* Name of package */
 #undef PACKAGE

@@ -762,6 +762,8 @@ enable_dependency_tracking
 with_gnu_ld
 with_sysroot
 enable_libtool_lock
+with_mouse
+with_kbd
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1410,6 +1412,8 @@ Optional Packages:
   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
   --with-sysroot=DIR Search for dependent libraries within DIR
                         (or the compiler's sysroot if not specified).
+  --with-mouse=PATH       specify path to the mouse event device
+  --with-kbd=PATH         specify path to the keyboard event device
 
 Some influential environment variables:
   CC          C compiler command
@@ -11491,6 +11495,40 @@ CC="$lt_save_CC"
 
 # Only expand once:
 
+
+
+# Input device paths.
+
+# Check whether --with-mouse was given.
+if test "${with_mouse+set}" = set; then :
+  withval=$with_mouse;
+fi
+
+
+# Check whether --with-kbd was given.
+if test "${with_kbd+set}" = set; then :
+  withval=$with_kbd;
+fi
+
+if test "$with_kbd"; then :
+
+else
+  read with_kbd <<< `ls -1 /dev/input/by-path/*event*kbd* /dev/input/by-path/*kbd*event* 2>/dev/null | head -1`
+fi
+if test "$with_mouse"; then :
+
+else
+  read with_mouse <<< `ls -1 /dev/input/by-path/*event*mouse* /dev/input/by-path/*mouse*event* 2>/dev/null | head -1`
+fi
+
+cat >>confdefs.h <<_ACEOF
+#define MOUSE_EVENT_DEVICE "$with_mouse"
+_ACEOF
+
+
+cat >>confdefs.h <<_ACEOF
+#define KBD_EVENT_DEVICE "$with_kbd"
+_ACEOF
 
 
 # Checks for programs.

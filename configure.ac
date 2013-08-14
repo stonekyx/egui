@@ -8,6 +8,28 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([subdir-objects])
 LT_INIT
 
+# Input device paths.
+AC_ARG_WITH([mouse],
+            AS_HELP_STRING([--with-mouse=PATH],
+                           [specify path to the mouse event device]),
+            [],
+            []
+            )
+AC_ARG_WITH([kbd],
+            AS_HELP_STRING([--with-kbd=PATH],
+                           [specify path to the keyboard event device]),
+            [],
+            []
+            )
+AS_IF([test "$with_kbd"],
+      [],
+      [read with_kbd <<< `ls -1 /dev/input/by-path/*event*kbd* /dev/input/by-path/*kbd*event* 2>/dev/null | head -1`])
+AS_IF([test "$with_mouse"],
+      [],
+      [read with_mouse <<< `ls -1 /dev/input/by-path/*event*mouse* /dev/input/by-path/*mouse*event* 2>/dev/null | head -1`])
+AC_DEFINE_UNQUOTED([MOUSE_EVENT_DEVICE], ["$with_mouse"], [Path to mouse event device.])
+AC_DEFINE_UNQUOTED([KBD_EVENT_DEVICE], ["$with_kbd"], [Path to keyboard event device.])
+
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
