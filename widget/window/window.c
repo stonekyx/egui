@@ -39,10 +39,14 @@
 # include "window.h"
 # include "paint_window_decoration.h"
 
+/* Invalid path. No specification for window.cfg */
 # define WINDOW_STYLE_FILE "/home/work/.egui_style/window.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* window样式全局对象 */
+/* XXX: Not fully implemented.
+ * Several attributes are not used.
+ */
 struct window_style window_default_style = 
 {
     /* 初始化，默认未访问 */
@@ -97,6 +101,7 @@ struct window_style window_default_style =
 
 /**
  * @brief 用window全局样式对象初始化window对象
+ * XXX: Bound to fail.
  *
  * @param style window样式对象指针
  * @param w window指针

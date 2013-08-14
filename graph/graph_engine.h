@@ -32,6 +32,13 @@
 
 # include "graph_lower.h"
 
+/**
+ * This was used to calculate the length of an array within a struct, showing
+ * the bit offset among other members. But this method needs manual alignment,
+ * which breaks the strict aliasing rule of gcc.
+ * The usage of this macro is minimized since commit
+ * db408d3c9f80cb359f2f45a3e0b255c8bf12d0ce
+ */
 # define __AMOUNT__(head, tail) ((tail) - (head) + 1)
 
 /**
@@ -360,7 +367,23 @@ struct graphics_device
 **/
 extern si_t engine_get_color_limit(struct color_limit * result);
 
-
+/**
+ * 初始化图形设备
+ * 给出必要参数，返回转换成si_t的graphics_device指针
+ *
+ * XXX: 这个函数返回的设备指针不能直接使用，有必要的域未被初始化。
+ * * 未设定访问模式，可能为无效值。
+ * * 未初始化buffer_addr，在访问模式为VIDEO_ACCESS_MODE_BUFFER时可能
+ *   引起崩溃。
+ *
+ * 已有的调用点附近，1)用户程序将screen域完全重置，
+ * 2)服务器端将访问模式设置为DIRECT.
+ *
+ * 以上操作均由服务器端执行，客户程序不需要考虑。
+ *
+ * @param
+ * @return 转换成si_t的图形设备指针
+ */
 extern si_t engine_graphics_device_init(si_t x_axis, si_t y_axis, si_t x_size, si_t y_size, si_t r, si_t g, si_t b, si_t a, si_t font);
 
 /**

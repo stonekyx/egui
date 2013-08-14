@@ -68,9 +68,12 @@ engine_graphics_device_init
     gd->screen.width = global_screen.width;
     gd->screen.height = global_screen.height;
     gd->screen.color_depth = global_screen.color_depth;
+    /* XXX: Default to VIDEO_ACCESS_MODE_DIRECT? */
+    /* XXX: Access mode is not set. */
 
     /* 指向缓冲区 */
     gd->screen.memory_addr = global_screen.buffer_addr;
+    /* XXX: gd->screen.buffer_addr is not set, not even used. */
     /* 显存的大小 */
     gd->screen.size = global_screen.size;
 
