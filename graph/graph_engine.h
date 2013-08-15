@@ -396,7 +396,7 @@ extern si_t engine_graphics_device_init(si_t x_axis, si_t y_axis, si_t x_size, s
 extern si_t engine_graphics_device_exit(si_t graphics_device_handle);
 
 /**
- * 清空屏幕
+ * 清空屏幕，填充为设备指定的默认颜色
  *
  * @param graphics_device_handler 图形设备描述符
  *
@@ -508,7 +508,9 @@ extern si_t engine_draw_circle(si_t graphics_device_handle, si_t x, si_t y, si_t
 extern si_t engine_draw_ellipse(si_t graphics_device_handle, si_t x, si_t y, si_t a, si_t b);
 
 /**
- * 绘制 X
+ * 绘制一层完整的X形鼠标指针，厚度为1px，用户指定中间留空的量
+ * 真正的鼠标指针需要绘制两层，分别为黑色和白色，使得在各种环境下都能
+ * 明显地显示出来。
  *
  * @param graphics_device_handler 图形设备描述符
  * @param x 中心横坐标
