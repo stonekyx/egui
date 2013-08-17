@@ -40,7 +40,6 @@
 # include "paint_window_decoration.h"
 
 /* Invalid path. No specification for window.cfg */
-# define WINDOW_STYLE_FILE "/home/work/.egui_style/window.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* window样式全局对象 */
@@ -119,6 +118,7 @@ static si_t window_init_with_default_style(struct window * w)
 		char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
 		si_t tmp_int = -1;
         struct config_parser parser;
+        const char *WINDOW_STYLE_FILE = get_config_path("window.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(WINDOW_STYLE_FILE, &parser) != 0)

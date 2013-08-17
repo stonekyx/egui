@@ -97,5 +97,16 @@ extern si_t config_parser_set_str(struct config_parser * parser, const char * ke
  **/
 extern si_t config_parser_exit(struct config_parser * parser);
 
+#define CONFIG_DIR ".egui/"
+
+/**
+ * @brief 获得配置文件的路径
+ *
+ * @param filename 配置文件名
+ *
+ * @return 配置文件的路径
+ **/
+extern char *get_config_path(const char *filename);
+
 #endif
 

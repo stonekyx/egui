@@ -413,3 +413,16 @@ si_t config_parser_exit(struct config_parser * parser)
     return 0;
 }
 
+char *get_config_path(const char *filename)
+{
+    char *res = calloc(strlen(getenv("HOME"))+1+strlen(CONFIG_DIR)
+            +strlen(filename)+1, 1);
+    return strcat(
+            strcat(
+                strcat(
+                    strcat(res,
+                        getenv("HOME")),
+                    "/"),
+                CONFIG_DIR),
+            filename);
+}

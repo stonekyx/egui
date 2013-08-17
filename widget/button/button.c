@@ -40,7 +40,6 @@
 
 # include "button.h"
 
-# define BUTTON_STYLE_FILE "/home/work/.egui_style/button.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* 按钮样式全局对象 */
@@ -103,6 +102,7 @@ static si_t button_init_with_default_style(struct button * b)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *BUTTON_STYLE_FILE = get_config_path("button.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(BUTTON_STYLE_FILE, &parser) != 0)

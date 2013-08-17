@@ -39,7 +39,6 @@
 # include "dialog.h"
 # include "../window/paint_window_decoration.h"
 
-# define DIALOG_STYLE_FILE "/home/work/.egui_style/dialog.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* dialog样式全局对象 */
@@ -109,6 +108,7 @@ static si_t dialog_init_with_default_style(struct dialog * d)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *DIALOG_STYLE_FILE = get_config_path("dialog.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(DIALOG_STYLE_FILE, &parser) != 0)

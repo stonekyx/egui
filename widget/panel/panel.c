@@ -40,7 +40,6 @@
 
 # include "panel.h"
 
-# define PANEL_STYLE_FILE "/home/work/.egui_style/panel.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* panel样式全局对象 */
@@ -100,6 +99,7 @@ static si_t panel_init_with_default_style(struct panel * p)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *PANEL_STYLE_FILE = get_config_path("panel.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(PANEL_STYLE_FILE, &parser) != 0)

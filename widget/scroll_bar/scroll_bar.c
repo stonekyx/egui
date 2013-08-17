@@ -37,7 +37,6 @@
 
 #include "scroll_bar.h"
 
-#define SCROLL_BAR_STYLE_FILE "/home/work/.egui_style/scroll_bar.cfg"
 #define TMP_ARRAY_SIZE 256
 
 /* 滚动条样式全局对象 */
@@ -111,6 +110,7 @@ static si_t scroll_bar_init_with_default_style(struct scroll_bar * sb)
 	if(!style->flag)
 	{
 		struct config_parser parser;
+        const char *SCROLL_BAR_STYLE_FILE = get_config_path("scroll_bar.cfg");
 
 		/* 初始化配置处理器 */
 		if(config_parser_init(SCROLL_BAR_STYLE_FILE, &parser) != 0)

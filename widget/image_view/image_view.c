@@ -40,7 +40,6 @@
 
 # include "image_view.h"
 
-# define IMAGE_VIEW_STYLE_FILE "/home/work/.egui_style/image_view.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* 按钮样式全局对象 */
@@ -99,6 +98,7 @@ static si_t image_view_init_with_default_style(struct image_view * iv)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *IMAGE_VIEW_STYLE_FILE = get_config_path("image_view.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(IMAGE_VIEW_STYLE_FILE, &parser) != 0)

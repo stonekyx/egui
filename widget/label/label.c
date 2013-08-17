@@ -39,7 +39,6 @@
 
 # include "label.h"
 
-# define LABEL_STYLE_FILE "/home/work/.egui_style/label.cfg"
 # define TMP_ARRAY_SIZE 256
 
 /* label样式全局对象 */
@@ -102,6 +101,7 @@ static si_t label_init_with_default_style(struct label * l)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *LABEL_STYLE_FILE = get_config_path("label.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(LABEL_STYLE_FILE, &parser) != 0)

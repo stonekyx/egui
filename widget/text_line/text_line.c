@@ -38,8 +38,6 @@
 #include "comm.h"
 #include "client_lib.h"
 
-
-#define TEXT_LINE_STYLE_FILE "/home/work/.egui_style/text_line_style.cfg"
 #define TMP_ARRAY_SIZE 256
 #define MAXBUF 80
 
@@ -108,6 +106,7 @@ static si_t text_line_init_with_default_style(struct text_line * tl)
     if(!style->flag)
     {
         struct config_parser parser;
+        const char *TEXT_LINE_STYLE_FILE = get_config_path("text_line_style.cfg");
 
         /* 初始化配置处理器 */
         if(config_parser_init(TEXT_LINE_STYLE_FILE, &parser) != 0)
