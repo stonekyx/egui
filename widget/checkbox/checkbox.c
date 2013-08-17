@@ -42,7 +42,7 @@
 
 # define TMP_ARRAY_SIZE 256
 
-/* 按钮样式全局对象 */
+/* checkbox样式全局对象 */
 static struct checkbox_style checkbox_default_style =
 {
     /* 初始化，默认未访问 */
@@ -98,11 +98,11 @@ static si_t checkbox_init_with_default_style(struct checkbox * b)
     if(!style->flag)
     {
         struct config_parser parser;
-        const char *BUTTON_STYLE_FILE = get_config_path("checkbox.cfg");
+        const char *CHECKBOX_STYLE_FILE = get_config_path("checkbox.cfg");
 
         /* 初始化配置处理器 */
-        if(config_parser_init(BUTTON_STYLE_FILE, &parser) != 0) {
-            EGUI_PRINT_ERROR("fail to init checkbox style from config file %s.", BUTTON_STYLE_FILE);
+        if(config_parser_init(CHECKBOX_STYLE_FILE, &parser) != 0) {
+            EGUI_PRINT_ERROR("fail to init checkbox style from config file %s.", CHECKBOX_STYLE_FILE);
         } else {
 
             /* 从配置读取各项配置,赋予style指针 */
