@@ -35,12 +35,13 @@
 
 # include "../widget/widget.h"
 
-typedef void (*radiobutton_callback_t)(addr_t usr);
+typedef void (*radiobutton_callback_t)(char *name, addr_t usr);
 
 struct radiobutton
 {
     WIDGET_DEFINITION
-    int checked;
+    int selected;
+    char *name;
     radiobutton_callback_t click_callback;
     addr_t user_data;
 };
@@ -117,7 +118,7 @@ extern void radiobutton_show(struct radiobutton* c);
  *
  * @return 0
 **/
-extern struct radiobutton* radiobutton_init(int checked);
+extern struct radiobutton* radiobutton_init(int selected);
 
 /**
  * @brief 析构函数

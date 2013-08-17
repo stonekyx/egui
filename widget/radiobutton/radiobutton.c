@@ -42,6 +42,11 @@
 
 # define TMP_ARRAY_SIZE 256
 
+static si_t min(si_t x, si_t y)
+{
+    return x<y?x:y;
+}
+
 /* 按钮样式全局对象 */
 static struct radiobutton_style radiobutton_default_style =
 {
@@ -182,25 +187,32 @@ static si_t radiobutton_default_widget_show(struct radiobutton * b, union messag
     return 0;
 }
 
-static void _paint_radiobutton(struct radiobutton* c, si_t is_checked, struct rectangle* area, int x, int y)
+static void _paint_radiobutton(struct radiobutton* c, si_t is_selected, struct rectangle* area, int x, int y)
 {
+    struct widget *p =
+        WIDGET_POINTER(object_parent(OBJECT_POINTER(c)));
+    /* 外围背景色 */
+    set_color(p->gd, p->back_color.r, p->back_color.g, p->back_color.b, p->back_color.a);
+    fill_rectangle(c->gd, area->x, area->y, area->width, area->height);
     /* 背景色 */
     set_color(c->gd, c->back_color.r, c->back_color.g, c->back_color.b, c->back_color.a);
-    /* radiobutton 背景 */
-    fill_rectangle(c->gd, area->x, area->y, area->width, area->height);
+    fill_circle(c->gd,
+            x + c->area.width/2,
+            y + c->area.height/2,
+            min(c->area.width, c->area.height)/2);
 
     /* 前景色 */
     set_color(c->gd, c->fore_color.r, c->fore_color.g, c->fore_color.b, c->fore_color.a);
-    /* radiobutton 右边框和下边框 */
-    draw_line(c->gd, x + c->area.width - 1, y, x + c->area.width - 1, y + c->area.height - 1);
-    draw_line(c->gd, x, y + c->area.height - 1, x + c->area.width - 1, y + c->area.height - 1);
-    /* radiobutton 上边框和左边框 */
-    draw_line(c->gd, x, y, x + c->area.width - 1, y);
-    draw_line(c->gd, x, y, x, y + c->area.height - 1);
+    draw_circle(c->gd,
+            x + c->area.width/2,
+            y + c->area.height/2,
+            min(c->area.width, c->area.height)/2);
 
-    if(is_checked) {
-        draw_line(c->gd, x, y, x+c->area.width-1, y+c->area.height-1);
-        draw_line(c->gd, x, y+c->area.height-1, x+c->area.width-1, y);
+    if(is_selected) {
+        fill_circle(c->gd,
+                    x + c->area.width/2,
+                    y + c->area.height/2,
+                    min(c->area.width, c->area.height)/4);
     }
 }
 
@@ -217,7 +229,7 @@ static si_t radiobutton_default_widget_repaint(struct radiobutton *c, union mess
     /* 设置区域 */
     set_area(c->gd, area.x, area.y, area.width, area.height);
 
-    _paint_radiobutton(c, c->checked, &area, x, y);
+    _paint_radiobutton(c, c->selected, &area, x, y);
     return 0;
 }
 
@@ -257,7 +269,7 @@ void radiobutton_show(struct radiobutton* c)
     widget_show(WIDGET_POINTER(c));
 }
 
-struct radiobutton* radiobutton_init(int checked)
+struct radiobutton* radiobutton_init(int selected)
 {
     struct radiobutton * addr;
 
@@ -303,7 +315,7 @@ struct radiobutton* radiobutton_init(int checked)
     /* 默认的回调函数 */
     addr->callback = radiobutton_default_callback;
 
-    addr->checked = checked;
+    addr->selected = selected;
 
     addr->click_callback = NULL;
 
@@ -336,8 +348,8 @@ void radiobutton_set_color(struct radiobutton *c, struct color *fcolor, struct c
 
 void radiobutton_toggle(struct radiobutton* c)
 {
-    if(c->checked)
-        c->checked = 0;
+    if(c->selected)
+        c->selected = 0;
     else
-        c->checked = 1;
+        c->selected = 1;
 }

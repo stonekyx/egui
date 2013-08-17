@@ -95,7 +95,7 @@ typedef double f64_t;
 typedef double f_t;
 
 /*
- * FIXME: Not conforming to DCL05-C.
+ * XXX: Not conforming to DCL05-C.
  * Reference: https://www.securecoding.cert.org/confluence/display/seccode/DCL05-C.+Use+typedefs+of+non-pointer+types+only
  */
 /**
