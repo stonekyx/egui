@@ -33,6 +33,11 @@
 
 # include "application.h"
 
+void foo(addr_t data)
+{
+    puts((char*)data);
+}
+
 /*
     测试一个用户应用程序拥有两个顶层窗口
 */
@@ -42,6 +47,7 @@ int main()
 	si_t app_type = APPLICATION_TYPE_NORMAL;
     struct window * w1;
     struct window * w2;
+    struct checkbox *c;
 
     /* 初始化用户应用程序 */
     application_init(video_access_mode, app_type, "multi_windows");
@@ -71,6 +77,13 @@ int main()
     application_add_window(NULL, w2);
     /* 设置主窗口 */
     application_set_main_window(w1);
+
+    c = checkbox_init(0);
+
+    c->click_callback = foo;
+    c->user_data = "hello world!";
+
+    object_attach_child(OBJECT_POINTER(w2), OBJECT_POINTER(c));
 
     /* 运行 */
     application_exec();

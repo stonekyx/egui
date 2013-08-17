@@ -44,6 +44,7 @@
 #include "window/window.h"
 #include "dialog/dialog.h"
 #include "image_view/image_view.h"
+#include "checkbox/checkbox.h"
 
 #if 0
 

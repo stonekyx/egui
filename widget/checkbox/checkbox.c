@@ -25,7 +25,7 @@
  * 02110-1301, USA.
  *
  * All rights reserved.
-**/
+ **/
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -101,45 +101,42 @@ static si_t checkbox_init_with_default_style(struct checkbox * b)
         const char *BUTTON_STYLE_FILE = get_config_path("checkbox.cfg");
 
         /* 初始化配置处理器 */
-        if(config_parser_init(BUTTON_STYLE_FILE, &parser) != 0)
-        {
+        if(config_parser_init(BUTTON_STYLE_FILE, &parser) != 0) {
             EGUI_PRINT_ERROR("fail to init checkbox style from config file %s.", BUTTON_STYLE_FILE);
+        } else {
 
-            return -1;
+            /* 从配置读取各项配置,赋予style指针 */
+            config_parser_get_int(&parser, "area_x", &(style->area_x));
+            config_parser_get_int(&parser, "area_y", &(style->area_y));
+            config_parser_get_int(&parser, "area_width", &(style->area_width));
+            config_parser_get_int(&parser, "area_height", &(style->area_height));
+
+            config_parser_get_int(&parser, "border_size", &(style->border_size));
+
+            config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
+            config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
+            config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
+            config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
+
+            config_parser_get_str(&parser, "cursor", tmp_str);
+            if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0) {
+                style->cursor = tmp_int;
+            }
+
+            config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
+            config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
+            config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
+            config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
+
+            config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
+            config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
+            config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
+            config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
+
+            /* 退出配置处理器 */
+            config_parser_exit(&parser);
+            style->flag = 1;
         }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
     }
 
     /* 用checkbox默认样式初始化checkbox各样式属性 */
@@ -187,19 +184,19 @@ static si_t checkbox_default_widget_show(struct checkbox * b, union message * ms
 
 static void _paint_checkbox(struct checkbox* c, si_t is_checked, struct rectangle* area, int x, int y)
 {
-	/* 背景色 */
-	set_color(c->gd, c->back_color.r, c->back_color.g, c->back_color.b, c->back_color.a);
-	/* checkbox 背景 */
-	fill_rectangle(c->gd, area->x, area->y, area->width, area->height);
+    /* 背景色 */
+    set_color(c->gd, c->back_color.r, c->back_color.g, c->back_color.b, c->back_color.a);
+    /* checkbox 背景 */
+    fill_rectangle(c->gd, area->x, area->y, area->width, area->height);
 
-	/* 前景色 */
-	set_color(c->gd, c->fore_color.r, c->fore_color.g, c->fore_color.b, c->fore_color.a);
-	/* checkbox 右边框和下边框 */
-	draw_line(c->gd, x + c->area.width - 1, y, x + c->area.width - 1, y + c->area.height - 1);
-	draw_line(c->gd, x, y + c->area.height - 1, x + c->area.width - 1, y + c->area.height - 1);
-	/* checkbox 上边框和左边框 */
-	draw_line(c->gd, x, y, x + c->area.width - 1, y);
-	draw_line(c->gd, x, y, x, y + c->area.height - 1);
+    /* 前景色 */
+    set_color(c->gd, c->fore_color.r, c->fore_color.g, c->fore_color.b, c->fore_color.a);
+    /* checkbox 右边框和下边框 */
+    draw_line(c->gd, x + c->area.width - 1, y, x + c->area.width - 1, y + c->area.height - 1);
+    draw_line(c->gd, x, y + c->area.height - 1, x + c->area.width - 1, y + c->area.height - 1);
+    /* checkbox 上边框和左边框 */
+    draw_line(c->gd, x, y, x + c->area.width - 1, y);
+    draw_line(c->gd, x, y, x, y + c->area.height - 1);
 
     if(is_checked) {
         draw_line(c->gd, x, y, x+c->area.width-1, y+c->area.height-1);
@@ -220,24 +217,7 @@ static si_t checkbox_default_widget_repaint(struct checkbox *c, union message *m
     /* 设置区域 */
     set_area(c->gd, area.x, area.y, area.width, area.height);
 
-	_paint_checkbox(c, 0, &area, x, y);
-    return 0;
-}
-
-static si_t checkbox_default_mouse_press(struct checkbox *c, union message * msg)
-{
-    struct rectangle area;
-    si_t x, y;
-
-    /* 获得左上角的绝对坐标 */
-    widget_absolute_coordinate(WIDGET_POINTER(c), &x, &y);
-    /* 获得绝对的工作区域 */
-    /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(c), &area);
-    /* 设置区域 */
-    set_area(c->gd, area.x, area.y, area.width, area.height);
-
-	_paint_checkbox(c, 1, &area, x, y);
+    _paint_checkbox(c, c->checked, &area, x, y);
     return 0;
 }
 
@@ -256,7 +236,8 @@ si_t checkbox_default_callback(addr_t self, addr_t msg)
             checkbox_default_widget_show(b, m);
             break;
         case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
-            checkbox_default_mouse_press(b, m);
+            checkbox_toggle(b);
+            checkbox_default_widget_repaint(b, m);
             checkbox_default_widget_show(b, m);
             b->click_callback(b->user_data);
             break;
@@ -268,12 +249,12 @@ si_t checkbox_default_callback(addr_t self, addr_t msg)
 
 void checkbox_repaint(struct checkbox* c)
 {
-	widget_repaint(WIDGET_POINTER(c));
+    widget_repaint(WIDGET_POINTER(c));
 }
 
 void checkbox_show(struct checkbox* c)
 {
-	widget_show(WIDGET_POINTER(c));
+    widget_show(WIDGET_POINTER(c));
 }
 
 struct checkbox* checkbox_init(int checked)
@@ -318,7 +299,7 @@ struct checkbox* checkbox_init(int checked)
 
     /* 用全局样式对象初始化checkbox样式 */
     checkbox_init_with_default_style(addr);
-	
+
     /* 默认的回调函数 */
     addr->callback = checkbox_default_callback;
 
@@ -332,10 +313,10 @@ struct checkbox* checkbox_init(int checked)
 }
 
 /*
-    一般用户并不需要调用这个
-    用户应用程序退出之后，application 会释放这个控件所占的空间。
-    而窗口管理程序会释放所有资源，包括申请的每个图形设备。
-*/
+   一般用户并不需要调用这个
+   用户应用程序退出之后，application 会释放这个控件所占的空间。
+   而窗口管理程序会释放所有资源，包括申请的每个图形设备。
+   */
 si_t checkbox_exit(struct checkbox * c)
 {
     graphics_device_exit(c->gd);
@@ -345,17 +326,17 @@ si_t checkbox_exit(struct checkbox * c)
 
 void checkbox_set_bounds(struct checkbox *c, si_t x, si_t y, si_t width , si_t height)
 {
-	widget_set_bounds(WIDGET_POINTER(c), x, y, width, height);
+    widget_set_bounds(WIDGET_POINTER(c), x, y, width, height);
 }
 
 void checkbox_set_color(struct checkbox *c, struct color *fcolor, struct color *bcolor)
 {
-	widget_set_color(WIDGET_POINTER(c), fcolor, bcolor);
+    widget_set_color(WIDGET_POINTER(c), fcolor, bcolor);
 }
 
 void checkbox_toggle(struct checkbox* c)
 {
-	if(c->checked)
+    if(c->checked)
         c->checked = 0;
     else
         c->checked = 1;
