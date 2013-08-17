@@ -137,14 +137,6 @@ static si_t checkbox_init_with_default_style(struct checkbox * b)
         config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
         config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
 
-        tmp_int = -1;
-        memset(tmp_str, 0, TMP_ARRAY_SIZE);
-        config_parser_get_str(&parser, "font", tmp_str);
-        if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0)
-        {
-            style->font = tmp_int;
-        }
-
         /* 退出配置处理器 */
         config_parser_exit(&parser);
         style->flag = 1;
@@ -174,8 +166,6 @@ static si_t checkbox_init_with_default_style(struct checkbox * b)
     b->fore_color.g = style->fore_color_g;
     b->fore_color.b = style->fore_color_b;
     b->fore_color.a = style->fore_color_a;
-
-    b->font = style->font;
 
     return 0;
 }
