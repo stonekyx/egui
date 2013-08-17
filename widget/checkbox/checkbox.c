@@ -255,9 +255,10 @@ si_t checkbox_default_callback(addr_t self, addr_t msg)
         case MESSAGE_TYPE_WIDGET_SHOW:
             checkbox_default_widget_show(b, m);
             break;
-        case MESSAGE_TYPE_MOUSE_PRESS:
+        case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
             checkbox_default_mouse_press(b, m);
             checkbox_default_widget_show(b, m);
+            b->click_callback(b->user_data);
             break;
         default:
             break;
@@ -322,6 +323,10 @@ struct checkbox* checkbox_init(int checked)
     addr->callback = checkbox_default_callback;
 
     addr->checked = checked;
+
+    addr->click_callback = NULL;
+
+    addr->user_data = NULL;
 
     return addr;
 }

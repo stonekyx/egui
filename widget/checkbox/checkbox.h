@@ -35,10 +35,14 @@
 
 # include "../widget/widget.h"
 
+typedef void (*checkbox_callback_t)(addr_t usr);
+
 struct checkbox
 {
     WIDGET_DEFINITION
     int checked;
+    checkbox_callback_t click_callback;
+    addr_t user_data;
 };
 
 /* 按钮样式结构体 */
