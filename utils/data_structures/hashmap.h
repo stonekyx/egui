@@ -75,5 +75,12 @@ si_t hashmap_exit(struct hashmap *);
 
 si_t hashmap_insert(struct hashmap *q, struct hashmap_pair *data);
 
+struct hashmap_key
+hashmap_key_generate(const_addr_t key, ui_t key_size);
+
 struct hashmap_pair
 hashmap_pair_generate(const_addr_t key, ui_t key_size, addr_t value);
+
+addr_t hashmap_find(struct hashmap *q, struct hashmap_key *key);
+
+si_t hashmap_erase(struct hashmap *q, const struct hashmap_key *key);
