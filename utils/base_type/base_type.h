@@ -30,6 +30,8 @@
 # ifndef _BASE_TYPE_H_
 # define _BASE_TYPE_H_ 1
 
+# include <stdint.h>
+
 /**
  * 字节
 **/
@@ -38,32 +40,32 @@ typedef unsigned char byte_t;
 /**
  * 无符号整数，08位
 **/
-typedef unsigned char ui08_t;
+typedef uint8_t ui08_t;
 
 /**
  * 有符号整数，08位
 **/
-typedef signed char si08_t;
+typedef int8_t si08_t;
 
 /**
  * 无符号整数，16位
 **/
-typedef unsigned short int ui16_t;
+typedef uint16_t ui16_t;
 
 /**
  * 有符号整数，16位
 **/
-typedef signed short int si16_t;
+typedef int16_t si16_t;
 
 /**
  * 无符号整数，32位
 **/
-typedef unsigned int ui32_t;
+typedef uint32_t ui32_t;
 
 /**
  * 有符号整数，32位
 **/
-typedef signed int si32_t;
+typedef int32_t si32_t;
 
 /**
  * 系统中位数最多的无符号整数
@@ -111,6 +113,6 @@ typedef const void *const_addr_t;
 /**
  *bool类型 
  **/
-typedef char  bool_t;
+typedef char bool_t;
 
 # endif
