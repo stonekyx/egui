@@ -41,7 +41,7 @@ struct radiobutton
 {
     WIDGET_DEFINITION
     int selected;
-    char *name;
+    const char *name;
     radiobutton_callback_t click_callback;
     addr_t user_data;
 };
@@ -155,10 +155,10 @@ extern void radiobutton_set_bounds(struct radiobutton * c, si_t x, si_t y, si_t 
 extern void radiobutton_set_color(struct radiobutton * c, struct color* fcolor, struct color* bcolor);
 
 /**
- * @brief 反转radiobutton的选中状态
+ * @brief 选中指定的radiobutton，并取消选中其他同名的radiobutton
  *
  * @param c 控件
  **/
-extern void radiobutton_toggle(struct radiobutton *c);
+extern void radiobutton_select(struct radiobutton *c);
 
 # endif

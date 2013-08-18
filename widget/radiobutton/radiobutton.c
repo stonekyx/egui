@@ -269,7 +269,7 @@ void radiobutton_show(struct radiobutton* c)
     widget_show(WIDGET_POINTER(c));
 }
 
-struct radiobutton* radiobutton_init(int selected)
+struct radiobutton* radiobutton_init(const char *name, int selected)
 {
     struct radiobutton * addr;
 
@@ -315,7 +315,9 @@ struct radiobutton* radiobutton_init(int selected)
     /* 默认的回调函数 */
     addr->callback = radiobutton_default_callback;
 
-    addr->selected = selected;
+    addr->name = name;
+
+    radiobutton_select(addr);
 
     addr->click_callback = NULL;
 
@@ -346,7 +348,7 @@ void radiobutton_set_color(struct radiobutton *c, struct color *fcolor, struct c
     widget_set_color(WIDGET_POINTER(c), fcolor, bcolor);
 }
 
-void radiobutton_toggle(struct radiobutton* c)
+void radiobutton_select(struct radiobutton* c)
 {
     if(c->selected)
         c->selected = 0;
