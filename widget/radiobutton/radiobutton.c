@@ -248,10 +248,10 @@ si_t radiobutton_default_callback(addr_t self, addr_t msg)
             radiobutton_default_widget_show(b, m);
             break;
         case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
-            radiobutton_toggle(b);
+            radiobutton_select(b);
             radiobutton_default_widget_repaint(b, m);
             radiobutton_default_widget_show(b, m);
-            b->click_callback(b->user_data);
+            b->click_callback(b->group_name, b->user_data);
             break;
         default:
             break;
@@ -269,7 +269,7 @@ void radiobutton_show(struct radiobutton* c)
     widget_show(WIDGET_POINTER(c));
 }
 
-struct radiobutton* radiobutton_init(const char *name, int selected)
+struct radiobutton* radiobutton_init(const char *group_name, int selected)
 {
     struct radiobutton * addr;
 
@@ -315,7 +315,7 @@ struct radiobutton* radiobutton_init(const char *name, int selected)
     /* 默认的回调函数 */
     addr->callback = radiobutton_default_callback;
 
-    addr->name = name;
+    addr->group_name = group_name;
 
     radiobutton_select(addr);
 
