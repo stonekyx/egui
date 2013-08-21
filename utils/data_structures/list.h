@@ -191,7 +191,7 @@ list_count
  * @return 返回链表中第一个满足 func 的元素所在节点的指针，如果没有返回 NULL。
 **/
 extern
-void *
+struct list_node *
 list_find
 (struct list * l,
  si_t (* func)(void *));

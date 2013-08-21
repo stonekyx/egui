@@ -40,7 +40,7 @@ typedef void (*radiobutton_callback_t)(const char *group_name, addr_t usr);
 struct radiobutton
 {
     WIDGET_DEFINITION
-    int selected;
+    si_t selected;
     const char *group_name;
     radiobutton_callback_t click_callback;
     addr_t user_data;
@@ -158,7 +158,8 @@ extern void radiobutton_set_color(struct radiobutton * c, struct color* fcolor, 
  * @brief 选中指定的radiobutton，并取消选中其他同名的radiobutton
  *
  * @param c 控件
+ * @param m Placeholder
  **/
-extern void radiobutton_select(struct radiobutton *c);
+extern void radiobutton_select(struct radiobutton *c, union message *m);
 
 # endif

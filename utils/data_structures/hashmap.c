@@ -259,7 +259,8 @@ hashmap_pair_generate
 addr_t
 hashmap_find
 (const struct hashmap *q,
- const struct hashmap_key *key)
+ struct hashmap_key *key,
+ si_t free_key)
 {
     ui_t hashval;
     ui_t judge_pos;
@@ -268,6 +269,9 @@ hashmap_find
     }
     hashval = (q->hash_func)(key, q->prime);
     judge_pos = (q->probe_func)(q, hashval, key);
+    if(free_key) {
+        free(key);
+    }
     if(q->data[judge_pos]) {
         return q->data[judge_pos]->value;
     } else {
@@ -278,7 +282,8 @@ hashmap_find
 si_t
 hashmap_erase
 (struct hashmap *q,
- const struct hashmap_key *key)
+ struct hashmap_key *key,
+ si_t free_key)
 {
     ui_t hashval;
     ui_t judge_pos;
@@ -287,6 +292,9 @@ hashmap_erase
     }
     hashval = (q->hash_func)(key, q->prime);
     judge_pos = (q->probe_func)(q, hashval, key);
+    if(free_key) {
+        free(key);
+    }
     if(q->data[judge_pos]) {
         q->data_cnt--;
         q->data[judge_pos] = NULL;
