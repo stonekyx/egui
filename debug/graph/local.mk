@@ -1,9 +1,9 @@
-noinst_PROGRAMS += %D%/debug_graph
-%C%_debug_graph_SOURCES = %D%/debug_graph.c \
-	%D%/debug_graph_lower.c \
-	%D%/debug_graph_engine.c \
-	%D%/debug_graph.h \
-	%D%/debug_graph_lower.h \
-	%D%/debug_graph_engine.h
-%C%_debug_graph_LDADD = library/libgraph.la library/libgeometry.la\
+noinst_PROGRAMS += debug/graph/debug_graph
+debug_graph_debug_graph_SOURCES = debug/graph/debug_graph.c \
+	debug/graph/debug_graph_lower.c \
+	debug/graph/debug_graph_engine.c \
+	debug/graph/debug_graph.h \
+	debug/graph/debug_graph_lower.h \
+	debug/graph/debug_graph_engine.h
+debug_graph_debug_graph_LDADD = library/libgraph.la library/libgeometry.la\
 	library/libdata_structures.la library/libcolor.la

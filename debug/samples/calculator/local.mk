@@ -1,5 +1,5 @@
-noinst_PROGRAMS += %D%/calculator
+noinst_PROGRAMS += debug/samples/calculator/calculator
 
-%C%_calculator_SOURCES = %D%/calculator.c %D%/main.c\
-	%D%/calculator.h
-%C%_calculator_LDADD = library/libwidget.la library/libapplication.la library/libwidget.la library/libclient_lib.la library/libgeometry.la library/libcomm.la library/libconfig_parser.la library/libdata_structures.la
+debug_samples_calculator_calculator_SOURCES = debug/samples/calculator/calculator.c %D%/main.c\
+	debug/samples/calculator/calculator.h
+debug_samples_calculator_calculator_LDADD = library/libwidget.la library/libapplication.la library/libwidget.la library/libclient_lib.la library/libgeometry.la library/libcomm.la library/libconfig_parser.la library/libdata_structures.la

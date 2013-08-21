@@ -1,23 +1,23 @@
-%C%_LDADD_TEMP = library/libwidget.la library/libapplication.la library/libwidget.la library/libclient_lib.la library/libgeometry.la library/libcomm.la library/libconfig_parser.la library/libdata_structures.la
+debug_widget_LDADD_TEMP = library/libwidget.la library/libapplication.la library/libwidget.la library/libclient_lib.la library/libgeometry.la library/libcomm.la library/libconfig_parser.la library/libdata_structures.la
 
-noinst_PROGRAMS += %D%/test_widget \
-                   %D%/test_label \
-                   %D%/test_button \
-                   %D%/test_text_line \
-                   %D%/test_scroll_bar \
-                   %D%/test_image_view
+noinst_PROGRAMS += debug/widget/test_widget \
+                   debug/widget/test_label \
+                   debug/widget/test_button \
+                   debug/widget/test_text_line \
+                   debug/widget/test_scroll_bar \
+                   debug/widget/test_image_view
 
-%C%_test_widget_SOURCES = %D%/test_widget.c
-%C%_test_label_SOURCES = %D%/test_label.c
-%C%_test_button_SOURCES = %D%/test_button.c
-%C%_test_text_line_SOURCES = %D%/test_text_line.c
-%C%_test_scroll_bar_SOURCES = %D%/test_scroll_bar.c
-%C%_test_image_view_SOURCES = %D%/test_image_view.c
+debug_widget_test_widget_SOURCES = debug/widget/test_widget.c
+debug_widget_test_label_SOURCES = debug/widget/test_label.c
+debug_widget_test_button_SOURCES = debug/widget/test_button.c
+debug_widget_test_text_line_SOURCES = debug/widget/test_text_line.c
+debug_widget_test_scroll_bar_SOURCES = debug/widget/test_scroll_bar.c
+debug_widget_test_image_view_SOURCES = debug/widget/test_image_view.c
 
-%C%_test_widget_LDADD = $(%C%_LDADD_TEMP)
-%C%_test_label_LDADD = $(%C%_LDADD_TEMP)
-%C%_test_button_LDADD = $(%C%_LDADD_TEMP)
-%C%_test_text_line_LDADD = $(%C%_LDADD_TEMP)
-%C%_test_scroll_bar_LDADD = $(%C%_LDADD_TEMP)
-%C%_test_image_view_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_widget_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_label_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_button_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_text_line_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_scroll_bar_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_image_view_LDADD = $(%C%_LDADD_TEMP)
 
