@@ -4,4 +4,4 @@ pathdir="${1/%\/local.mk/}"
 
 pathdir="${pathdir/#\.\//}"
 
-sed -i -e 's|%C%|'"${pathdir//\//_}"'|' -e 's|%D%|'"$pathdir"'|' $1
+sed -i -e 's|%C%|'"${pathdir//\//_}"'|g' -e 's|%D%|'"$pathdir"'|g' $1

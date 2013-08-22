@@ -14,10 +14,10 @@ debug_widget_test_text_line_SOURCES = debug/widget/test_text_line.c
 debug_widget_test_scroll_bar_SOURCES = debug/widget/test_scroll_bar.c
 debug_widget_test_image_view_SOURCES = debug/widget/test_image_view.c
 
-debug_widget_test_widget_LDADD = $(%C%_LDADD_TEMP)
-debug_widget_test_label_LDADD = $(%C%_LDADD_TEMP)
-debug_widget_test_button_LDADD = $(%C%_LDADD_TEMP)
-debug_widget_test_text_line_LDADD = $(%C%_LDADD_TEMP)
-debug_widget_test_scroll_bar_LDADD = $(%C%_LDADD_TEMP)
-debug_widget_test_image_view_LDADD = $(%C%_LDADD_TEMP)
+debug_widget_test_widget_LDADD = $(debug_widget_LDADD_TEMP)
+debug_widget_test_label_LDADD = $(debug_widget_LDADD_TEMP)
+debug_widget_test_button_LDADD = $(debug_widget_LDADD_TEMP)
+debug_widget_test_text_line_LDADD = $(debug_widget_LDADD_TEMP)
+debug_widget_test_scroll_bar_LDADD = $(debug_widget_LDADD_TEMP)
+debug_widget_test_image_view_LDADD = $(debug_widget_LDADD_TEMP)
 
