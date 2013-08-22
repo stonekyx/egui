@@ -33,6 +33,7 @@ AC_DEFINE_UNQUOTED([KBD_EVENT_DEVICE], ["$with_kbd"], [Path to keyboard event de
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
+AM_PROG_CC_C_O
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 
