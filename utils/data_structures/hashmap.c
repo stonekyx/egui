@@ -104,7 +104,7 @@ hashmap_default_probe_func
         return 0;
     }
     src %= hashmap->data_size;
-    while(hashmap->data[src]->value != NULL &&
+    while(hashmap->data[src] &&
             hashmap_key_cmp(&hashmap->data[src]->key, key)) {
         src = (src+incri) % hashmap->data_size;
         incri++;

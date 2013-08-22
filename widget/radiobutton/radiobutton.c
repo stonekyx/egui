@@ -255,7 +255,9 @@ si_t radiobutton_default_callback(addr_t self, addr_t msg)
             break;
         case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
             radiobutton_select(b, m);
-            b->click_callback(b->group_name, b->user_data);
+            if(b->click_callback) {
+                b->click_callback(b->group_name, b->user_data);
+            }
             break;
         default:
             break;
@@ -327,7 +329,7 @@ static si_t radiobutton_list_match(addr_t data)
 static si_t radiobutton_list_find_focus(addr_t data)
 {
     if(!data) return 0;
-    return ((struct radiobutton *)data)->selected;
+    return (*(struct radiobutton **)data)->selected;
 }
 
 static void radiobutton_hashmap_erase(const struct radiobutton *r)
@@ -411,7 +413,11 @@ struct radiobutton* radiobutton_init(const char *group_name, int selected)
         return NULL;
     }
 
-    radiobutton_select(addr, NULL);
+    if(selected) {
+        addr->selected = 1;
+    } else {
+        addr->selected = 0;
+    }
 
     return addr;
 }
@@ -453,9 +459,11 @@ void radiobutton_select(struct radiobutton* c, union message *m)
         struct list_node *data;
         data = list_find(res, radiobutton_list_find_focus);
         if(data) {
-            radiobutton_force_state(data->data, 0);
-            radiobutton_default_widget_repaint(data->data, m);
-            radiobutton_default_widget_show(data->data, m);
+            struct radiobutton *focus;
+            focus = *(struct radiobutton **)data->data;
+            radiobutton_force_state(focus, 0);
+            radiobutton_default_widget_repaint(focus, m);
+            radiobutton_default_widget_show(focus, m);
         }
         radiobutton_force_state(c, 1);
         radiobutton_default_widget_repaint(c, m);

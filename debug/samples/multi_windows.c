@@ -85,6 +85,23 @@ int main()
 
     object_attach_child(OBJECT_POINTER(w2), OBJECT_POINTER(c));
 
+    /* add radiobuttons */
+    {
+        struct radiobutton *r, *s;
+        r = radiobutton_init("test_group", 0);
+        s = radiobutton_init("test_group", 1);
+        radiobutton_set_bounds(r, 20, 20, 13, 13);
+        radiobutton_set_bounds(s, 20, 40, 13, 13);
+        object_attach_child(OBJECT_POINTER(w1), OBJECT_POINTER(r));
+        object_attach_child(OBJECT_POINTER(w1), OBJECT_POINTER(s));
+        r = radiobutton_init("test_group_1", 0);
+        s = radiobutton_init("test_group_1", 0);
+        radiobutton_set_bounds(r, 40, 20, 13, 13);
+        radiobutton_set_bounds(s, 40, 40, -1, -1);
+        object_attach_child(OBJECT_POINTER(w1), OBJECT_POINTER(r));
+        object_attach_child(OBJECT_POINTER(w2), OBJECT_POINTER(s));
+    }
+
     /* 运行 */
     application_exec();
 
