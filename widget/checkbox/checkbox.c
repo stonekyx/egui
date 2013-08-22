@@ -239,7 +239,9 @@ si_t checkbox_default_callback(addr_t self, addr_t msg)
             checkbox_toggle(b);
             checkbox_default_widget_repaint(b, m);
             checkbox_default_widget_show(b, m);
-            b->click_callback(b->user_data);
+            if(b->click_callback) {
+                b->click_callback(b->user_data);
+            }
             break;
         default:
             break;
