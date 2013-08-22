@@ -110,7 +110,7 @@ list_count
     return n;
 }
 
-void *
+struct list_node *
 list_find
 (struct list * l,
  si_t (* comp)(void *))

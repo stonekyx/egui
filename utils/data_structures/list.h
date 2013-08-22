@@ -191,13 +191,14 @@ list_count
  * @return 返回链表中第一个满足 func 的元素所在节点的指针，如果没有返回 NULL。
 **/
 extern
-void *
+struct list_node *
 list_find
 (struct list * l,
  si_t (* func)(void *));
 
 /**
  * 在链表中查找可以插入某个元素的第一个位置
+ * XXX: Operation doesn't match function name
  *
  * 查找可以插入 data 的第一个位置
  * 也就是第一个大于或者等于 data 的元素所在位置
@@ -217,6 +218,7 @@ list_lower_bound
 
 /**
  * 在链表中查找可以插入某个元素的最后一个位置
+ * XXX: Operation doesn't match function name
  *
  * 查找可以插入 data 的最后一个位置
  * 也就是第一个大于 data 的元素所在位置

@@ -231,7 +231,8 @@ library_libdata_structures_la_LIBADD =
 am_library_libdata_structures_la_OBJECTS =  \
 	utils/data_structures/vector.lo utils/data_structures/list.lo \
 	utils/data_structures/stack.lo utils/data_structures/queue.lo \
-	utils/data_structures/tree.lo utils/data_structures/object.lo
+	utils/data_structures/tree.lo utils/data_structures/object.lo \
+	utils/data_structures/hashmap.lo
 library_libdata_structures_la_OBJECTS =  \
 	$(am_library_libdata_structures_la_OBJECTS)
 library_libdata_structures_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
@@ -340,7 +341,7 @@ am_library_libwidget_la_OBJECTS = widget/widget/widget.lo \
 	widget/window/window.lo \
 	widget/window/paint_window_decoration.lo \
 	widget/dialog/dialog.lo widget/icon/icon.lo \
-	widget/checkbox/checkbox.lo
+	widget/checkbox/checkbox.lo widget/radiobutton/radiobutton.lo
 library_libwidget_la_OBJECTS = $(am_library_libwidget_la_OBJECTS)
 library_libwidget_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
@@ -774,12 +775,12 @@ nobase_pkginclude_HEADERS = include/application.h include/base_type.h \
 	utils/data_structures/object.h utils/data_structures/stack.h \
 	utils/data_structures/vector.h utils/data_structures/list.h \
 	utils/data_structures/queue.h utils/data_structures/tree.h \
-	utils/geometry/geometry.h utils/config_parser/config_parser.h \
-	utils/color/color.h comm/egui_uds.h comm/event_listener.h \
-	comm/egui_comm.h comm/message.h comm/packet.h comm/request.h \
-	comm/respond.h comm/external.h event/event.h \
-	client_lib/client_lib.h client_lib/external.h \
-	graph/graph_lower.h graph/graph_engine.h \
+	utils/data_structures/hashmap.h utils/geometry/geometry.h \
+	utils/config_parser/config_parser.h utils/color/color.h \
+	comm/egui_uds.h comm/event_listener.h comm/egui_comm.h \
+	comm/message.h comm/packet.h comm/request.h comm/respond.h \
+	comm/external.h event/event.h client_lib/client_lib.h \
+	client_lib/external.h graph/graph_lower.h graph/graph_engine.h \
 	graph/graph_enumerator.h graph/external.h graph/bitops.h \
 	server_lib/server_lib.h widget/widget/widget.h \
 	widget/button/button.h widget/label/label.h \
@@ -787,9 +788,9 @@ nobase_pkginclude_HEADERS = include/application.h include/base_type.h \
 	widget/text_line/text_line.h widget/image_view/image_view.h \
 	widget/window/window.h widget/dialog/dialog.h \
 	widget/icon/icon.h widget/checkbox/checkbox.h \
-	widget/external.h application/application.h \
-	application/manipulate_window.h application/exec.h \
-	application/external.h
+	widget/radiobutton/radiobutton.h widget/external.h \
+	application/application.h application/manipulate_window.h \
+	application/exec.h application/external.h
 noinst_HEADERS = widget/window/paint_window_decoration.h
 ACLOCAL_AMFLAGS = -I m4
 library_libdata_structures_la_SOURCES = utils/data_structures/vector.c \
@@ -797,7 +798,8 @@ library_libdata_structures_la_SOURCES = utils/data_structures/vector.c \
 								utils/data_structures/stack.c \
 								utils/data_structures/queue.c \
 								utils/data_structures/tree.c \
-								utils/data_structures/object.c
+								utils/data_structures/object.c \
+								utils/data_structures/hashmap.c
 
 library_libdata_structures_la_LDFLAGS = -version-info 1:0:0
 library_libgeometry_la_SOURCES = utils/geometry/geometry.c
@@ -901,7 +903,8 @@ library_libwidget_la_SOURCES = widget/widget/widget.c\
 					   widget/window/paint_window_decoration.c\
 					   widget/dialog/dialog.c\
 					   widget/icon/icon.c\
-					   widget/checkbox/checkbox.c
+					   widget/checkbox/checkbox.c\
+					   widget/radiobutton/radiobutton.c
 
 library_libwidget_la_LIBADD = library/libclient_lib.la library/libgeometry.la library/libcomm.la \
 					  library/libconfig_parser.la library/libdata_structures.la
@@ -1178,6 +1181,9 @@ utils/data_structures/queue.lo: utils/data_structures/$(am__dirstamp) \
 utils/data_structures/tree.lo: utils/data_structures/$(am__dirstamp) \
 	utils/data_structures/$(DEPDIR)/$(am__dirstamp)
 utils/data_structures/object.lo:  \
+	utils/data_structures/$(am__dirstamp) \
+	utils/data_structures/$(DEPDIR)/$(am__dirstamp)
+utils/data_structures/hashmap.lo:  \
 	utils/data_structures/$(am__dirstamp) \
 	utils/data_structures/$(DEPDIR)/$(am__dirstamp)
 
@@ -1503,6 +1509,14 @@ widget/checkbox/$(DEPDIR)/$(am__dirstamp):
 	@: > widget/checkbox/$(DEPDIR)/$(am__dirstamp)
 widget/checkbox/checkbox.lo: widget/checkbox/$(am__dirstamp) \
 	widget/checkbox/$(DEPDIR)/$(am__dirstamp)
+widget/radiobutton/$(am__dirstamp):
+	@$(MKDIR_P) widget/radiobutton
+	@: > widget/radiobutton/$(am__dirstamp)
+widget/radiobutton/$(DEPDIR)/$(am__dirstamp):
+	@$(MKDIR_P) widget/radiobutton/$(DEPDIR)
+	@: > widget/radiobutton/$(DEPDIR)/$(am__dirstamp)
+widget/radiobutton/radiobutton.lo: widget/radiobutton/$(am__dirstamp) \
+	widget/radiobutton/$(DEPDIR)/$(am__dirstamp)
 
 library/libwidget.la: $(library_libwidget_la_OBJECTS) $(library_libwidget_la_DEPENDENCIES) $(EXTRA_library_libwidget_la_DEPENDENCIES) library/$(am__dirstamp)
 	$(AM_V_CCLD)$(library_libwidget_la_LINK) -rpath $(pkglibdir) $(library_libwidget_la_OBJECTS) $(library_libwidget_la_LIBADD) $(LIBS)
@@ -1859,6 +1873,8 @@ mostlyclean-compile:
 	-rm -f widget/label/*.lo
 	-rm -f widget/panel/*.$(OBJEXT)
 	-rm -f widget/panel/*.lo
+	-rm -f widget/radiobutton/*.$(OBJEXT)
+	-rm -f widget/radiobutton/*.lo
 	-rm -f widget/scroll_bar/*.$(OBJEXT)
 	-rm -f widget/scroll_bar/*.lo
 	-rm -f widget/text_line/*.$(OBJEXT)
@@ -1975,6 +1991,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@server_lib/$(DEPDIR)/server_lib.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@utils/color/$(DEPDIR)/color.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@utils/config_parser/$(DEPDIR)/config_parser.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@utils/data_structures/$(DEPDIR)/hashmap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@utils/data_structures/$(DEPDIR)/list.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@utils/data_structures/$(DEPDIR)/object.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@utils/data_structures/$(DEPDIR)/queue.Plo@am__quote@
@@ -1989,6 +2006,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@widget/image_view/$(DEPDIR)/image_view.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widget/label/$(DEPDIR)/label.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widget/panel/$(DEPDIR)/panel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@widget/radiobutton/$(DEPDIR)/radiobutton.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widget/scroll_bar/$(DEPDIR)/scroll_bar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widget/text_line/$(DEPDIR)/text_line.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@widget/widget/$(DEPDIR)/widget.Plo@am__quote@
@@ -2063,6 +2081,7 @@ clean-libtool:
 	-rm -rf widget/image_view/.libs widget/image_view/_libs
 	-rm -rf widget/label/.libs widget/label/_libs
 	-rm -rf widget/panel/.libs widget/panel/_libs
+	-rm -rf widget/radiobutton/.libs widget/radiobutton/_libs
 	-rm -rf widget/scroll_bar/.libs widget/scroll_bar/_libs
 	-rm -rf widget/text_line/.libs widget/text_line/_libs
 	-rm -rf widget/widget/.libs widget/widget/_libs
@@ -2407,6 +2426,8 @@ distclean-generic:
 	-rm -f widget/label/$(am__dirstamp)
 	-rm -f widget/panel/$(DEPDIR)/$(am__dirstamp)
 	-rm -f widget/panel/$(am__dirstamp)
+	-rm -f widget/radiobutton/$(DEPDIR)/$(am__dirstamp)
+	-rm -f widget/radiobutton/$(am__dirstamp)
 	-rm -f widget/scroll_bar/$(DEPDIR)/$(am__dirstamp)
 	-rm -f widget/scroll_bar/$(am__dirstamp)
 	-rm -f widget/text_line/$(DEPDIR)/$(am__dirstamp)
@@ -2428,7 +2449,7 @@ clean-am: clean-binPROGRAMS clean-generic clean-libtool \
 
 distclean: distclean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
-	-rm -rf application/$(DEPDIR) client_lib/$(DEPDIR) comm/$(DEPDIR) debug/comm/$(DEPDIR) debug/config_parser/$(DEPDIR) debug/event/$(DEPDIR) debug/graph/$(DEPDIR) debug/lib/$(DEPDIR) debug/samples/$(DEPDIR) debug/samples/calculator/$(DEPDIR) debug/samples/file_browser/$(DEPDIR) debug/widget/$(DEPDIR) event/$(DEPDIR) graph/graph_engine/$(DEPDIR) graph/graph_engine/font_matrix/$(DEPDIR) graph/graph_lower/$(DEPDIR) server_lib/$(DEPDIR) utils/color/$(DEPDIR) utils/config_parser/$(DEPDIR) utils/data_structures/$(DEPDIR) utils/geometry/$(DEPDIR) widget/button/$(DEPDIR) widget/checkbox/$(DEPDIR) widget/dialog/$(DEPDIR) widget/icon/$(DEPDIR) widget/image_view/$(DEPDIR) widget/label/$(DEPDIR) widget/panel/$(DEPDIR) widget/scroll_bar/$(DEPDIR) widget/text_line/$(DEPDIR) widget/widget/$(DEPDIR) widget/window/$(DEPDIR) window_manager/$(DEPDIR)
+	-rm -rf application/$(DEPDIR) client_lib/$(DEPDIR) comm/$(DEPDIR) debug/comm/$(DEPDIR) debug/config_parser/$(DEPDIR) debug/event/$(DEPDIR) debug/graph/$(DEPDIR) debug/lib/$(DEPDIR) debug/samples/$(DEPDIR) debug/samples/calculator/$(DEPDIR) debug/samples/file_browser/$(DEPDIR) debug/widget/$(DEPDIR) event/$(DEPDIR) graph/graph_engine/$(DEPDIR) graph/graph_engine/font_matrix/$(DEPDIR) graph/graph_lower/$(DEPDIR) server_lib/$(DEPDIR) utils/color/$(DEPDIR) utils/config_parser/$(DEPDIR) utils/data_structures/$(DEPDIR) utils/geometry/$(DEPDIR) widget/button/$(DEPDIR) widget/checkbox/$(DEPDIR) widget/dialog/$(DEPDIR) widget/icon/$(DEPDIR) widget/image_view/$(DEPDIR) widget/label/$(DEPDIR) widget/panel/$(DEPDIR) widget/radiobutton/$(DEPDIR) widget/scroll_bar/$(DEPDIR) widget/text_line/$(DEPDIR) widget/widget/$(DEPDIR) widget/window/$(DEPDIR) window_manager/$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-hdr distclean-libtool distclean-tags
@@ -2476,7 +2497,7 @@ installcheck-am:
 maintainer-clean: maintainer-clean-am
 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
 	-rm -rf $(top_srcdir)/autom4te.cache
-	-rm -rf application/$(DEPDIR) client_lib/$(DEPDIR) comm/$(DEPDIR) debug/comm/$(DEPDIR) debug/config_parser/$(DEPDIR) debug/event/$(DEPDIR) debug/graph/$(DEPDIR) debug/lib/$(DEPDIR) debug/samples/$(DEPDIR) debug/samples/calculator/$(DEPDIR) debug/samples/file_browser/$(DEPDIR) debug/widget/$(DEPDIR) event/$(DEPDIR) graph/graph_engine/$(DEPDIR) graph/graph_engine/font_matrix/$(DEPDIR) graph/graph_lower/$(DEPDIR) server_lib/$(DEPDIR) utils/color/$(DEPDIR) utils/config_parser/$(DEPDIR) utils/data_structures/$(DEPDIR) utils/geometry/$(DEPDIR) widget/button/$(DEPDIR) widget/checkbox/$(DEPDIR) widget/dialog/$(DEPDIR) widget/icon/$(DEPDIR) widget/image_view/$(DEPDIR) widget/label/$(DEPDIR) widget/panel/$(DEPDIR) widget/scroll_bar/$(DEPDIR) widget/text_line/$(DEPDIR) widget/widget/$(DEPDIR) widget/window/$(DEPDIR) window_manager/$(DEPDIR)
+	-rm -rf application/$(DEPDIR) client_lib/$(DEPDIR) comm/$(DEPDIR) debug/comm/$(DEPDIR) debug/config_parser/$(DEPDIR) debug/event/$(DEPDIR) debug/graph/$(DEPDIR) debug/lib/$(DEPDIR) debug/samples/$(DEPDIR) debug/samples/calculator/$(DEPDIR) debug/samples/file_browser/$(DEPDIR) debug/widget/$(DEPDIR) event/$(DEPDIR) graph/graph_engine/$(DEPDIR) graph/graph_engine/font_matrix/$(DEPDIR) graph/graph_lower/$(DEPDIR) server_lib/$(DEPDIR) utils/color/$(DEPDIR) utils/config_parser/$(DEPDIR) utils/data_structures/$(DEPDIR) utils/geometry/$(DEPDIR) widget/button/$(DEPDIR) widget/checkbox/$(DEPDIR) widget/dialog/$(DEPDIR) widget/icon/$(DEPDIR) widget/image_view/$(DEPDIR) widget/label/$(DEPDIR) widget/panel/$(DEPDIR) widget/radiobutton/$(DEPDIR) widget/scroll_bar/$(DEPDIR) widget/text_line/$(DEPDIR) widget/widget/$(DEPDIR) widget/window/$(DEPDIR) window_manager/$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic \
 	maintainer-clean-local

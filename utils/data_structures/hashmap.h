@@ -1,17 +1,13 @@
-/*
- * @file   wbl.external.h
+/**
+ * @file hashmap.h
  *
  * @author Dalian University of Technology
- *
- * @version 2.0
- *
- * @data 2012.02.15
  *
  * @section LICENSE
  *
  * Copyright (C) 2010 Dalian University of Technology
  *
- * This file is part of Egui.
+ * This file is part of EDUGUI.
  *
  * EDUGUI is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,29 +25,34 @@
  * 02110-1301, USA.
  *
  * All rights reserved.
-**/
+ **/
 
-#ifndef _WBL_EXTERNAL_H_
-#define _WBL_EXTERNAL_H_ 1
+# ifndef _HASHMAP_H_
+# define _HASHMAP_H_ 1
 
-#include "button/button.h"
-#include "icon/icon.h"
-#include "label/label.h"
-#include "panel/panel.h"
-#include "scroll_bar/scroll_bar.h"
-#include "text_line/text_line.h"
-#include "widget/widget.h"
-#include "window/window.h"
-#include "dialog/dialog.h"
-#include "image_view/image_view.h"
-#include "checkbox/checkbox.h"
-#include "radiobutton/radiobutton.h"
+# include <base_type.h>
 
-#if 0
+struct hashmap_key;
+struct hashmap_pair;
+struct hashmap;
 
-#include "./dialog/dialog.h"
+typedef ui_t (*hash_func_t)(const struct hashmap_key *key, ui_t prime);
+typedef ui_t (*probe_func_t)(const struct hashmap *hashmap, ui_t src, const struct hashmap_key *key);
 
-#endif
+struct hashmap *hashmap_init(void);
 
-#endif
+si_t hashmap_exit(struct hashmap *);
 
+si_t hashmap_insert(struct hashmap *q, const struct hashmap_pair *data);
+
+struct hashmap_key *
+hashmap_key_generate(const_addr_t key, ui_t key_size);
+
+struct hashmap_pair *
+hashmap_pair_generate(const_addr_t key, ui_t key_size, addr_t value);
+
+addr_t hashmap_find(const struct hashmap *q, struct hashmap_key *key, si_t free_key);
+
+si_t hashmap_erase(struct hashmap *q, struct hashmap_key *key, si_t free_key);
+
+# endif
