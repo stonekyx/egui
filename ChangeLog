@@ -1,3 +1,16 @@
 2013-07-31	Stone Kang	<stonekyx@gmail.com>
 	* configure.ac, Makefile.am: Start using non-recursive automake and
 	autoconf.
+
+2013-08-17	Stone Kang	<stonekyx@gmail.com>
+	* widget/checkbox: New checkbox widget. Default size of checkboxes are
+	taken from Firefox running without a GTK+ theme. Visual layout of a
+	checked checkbox is a 13x13(default) square with an X filled in it. Users
+	can provide a custom callback function which is called at a single mouse
+	click.
+
+2013-07-22	Stone Kang	<stonekyx@gmail.com>
+	* widget/radiobutton: New radiobutton widget. Radio buttons with the same
+	group name are guaranteed to have no simultaneous selections.
+	* util/data_structures/hashmap.{c,h}: New hashmap structure to support the
+	function of radio buttons.
