@@ -207,6 +207,8 @@ si_t widget_absolute_area (struct widget * w, struct rectangle * result)
     struct rectangle temp, parent_area;
     si_t flag = 0;
 
+    *result = w->area;
+
     parent_area.x = 0;
     parent_area.y = 0;
 
@@ -227,23 +229,17 @@ si_t widget_absolute_area (struct widget * w, struct rectangle * result)
             break;
         }
 
-        temp.x = result->x + WIDGET_POINTER(self)->area.x;
-        temp.y = result->y + WIDGET_POINTER(self)->area.y;
+        temp.x = (result->x += WIDGET_POINTER(parent)->area.x);
+        temp.y = (result->y += WIDGET_POINTER(parent)->area.y);
         temp.width = result->width;
         temp.height = result->height;
 
         self = parent;
     }
 
-    if(flag == 1)
-    {
+    if(flag == 1) {
         return -1;
-    }
-    else
-    {
-        result->x += WIDGET_POINTER(self)->area.x;
-        result->y += WIDGET_POINTER(self)->area.y;
-
+    } else {
         return 0;
     }
 }

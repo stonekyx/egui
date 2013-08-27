@@ -60,9 +60,11 @@ struct application_info
     /**
      * 用户应用程序拥有所有窗口向量
      *
-     * 元素是以 struct object node 为根的二叉树
+     * vector中的元素是以 struct object node 为根的二叉树
+     * XXX: 二叉树只有一个根节点，保存三个一样的指针，指向一个
+     * struct window_info
      *
-     * 成员的类型是 struct window_info
+     * 二叉树的成员的类型是 struct window_info
     **/
     struct vector window_info_vector;
 

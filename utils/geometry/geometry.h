@@ -131,7 +131,7 @@ extern si_t area_union (struct rectangle * p, struct rectangle * q, struct recta
  * @param q 第二个区域指针
  * @param result 存放结果的指针
  *
- * @return 成功返回 0，失败返回 -1。
+ * @return 有至少一个像素的交集返回 0，没有返回 -1。
 **/
 extern si_t area_intersection (struct rectangle * p, struct rectangle * q, struct rectangle * result);
 
