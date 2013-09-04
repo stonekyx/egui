@@ -1095,9 +1095,12 @@ utils/data_structures/tree.lo: utils/data_structures/$(am__dirstamp) \
 utils/data_structures/object.lo:  \
 	utils/data_structures/$(am__dirstamp) \
 	utils/data_structures/$(DEPDIR)/$(am__dirstamp)
+<<<<<<< HEAD
 utils/data_structures/cursor.lo:  \
 	utils/data_structures/$(am__dirstamp) \
 	utils/data_structures/$(DEPDIR)/$(am__dirstamp)
+=======
+>>>>>>> e9ad4c975b6da1e3836c7f3424b4cbb85000f8da
 library/libdata_structures.la: $(library_libdata_structures_la_OBJECTS) $(library_libdata_structures_la_DEPENDENCIES) $(EXTRA_library_libdata_structures_la_DEPENDENCIES) library/$(am__dirstamp)
 	$(library_libdata_structures_la_LINK) -rpath $(pkglibdir) $(library_libdata_structures_la_OBJECTS) $(library_libdata_structures_la_LIBADD) $(LIBS)
 event/$(am__dirstamp):
