@@ -37,5 +37,6 @@
 # include "stack.h"
 # include "object.h"
 # include "hashmap.h"
+# include "cursor.h"
 
 # endif

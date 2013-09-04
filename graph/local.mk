@@ -31,6 +31,7 @@ library_libgraph_la_SOURCES = %D%/graph_lower/screen_init.c \
 					  %D%/graph_engine/engine_draw_polygon.c \
 					  %D%/graph_engine/engine_draw_rectangle.c \
 					  %D%/graph_engine/engine_draw_x.c \
+					  %D%/graph_engine/engine_draw_cursor.c \
 					  %D%/graph_engine/engine_fill_arrow.c \
 					  %D%/graph_engine/engine_fill_circle.c \
 					  %D%/graph_engine/engine_fill_ellipse.c \

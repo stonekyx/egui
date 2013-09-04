@@ -37,8 +37,10 @@
 # include "log.h"
 # include "event.h"
 
+#define DEFAULT_CURSOR "../resource/default.cur"
 static struct graphics_device cursor_gd;
 static si_t cursor_gd_handler = (si_t)&cursor_gd;
+static struct cursor cursor;
 
 si_t cursor_init(char* cursor_type)
 {
@@ -63,6 +65,9 @@ si_t cursor_init(char* cursor_type)
 
 	engine_set_area(cursor_gd_handler, 0, 0, 15, 15);
 
+	/* 初始化光标信息 */
+	init_cursor(DEFAULT_CURSOR, &cursor);
+
 	/* 白色 */
 	engine_set_color(cursor_gd_handler, global_color_limit.r_limit, global_color_limit.g_limit, global_color_limit.b_limit, 0);
 
@@ -77,17 +82,12 @@ si_t cursor_init(char* cursor_type)
 si_t cursor_paint()
 {
     /* 设置工作区域 */
-	rectangle_set(&cursor_gd.rectangle, global_wm.new_cursor.x - 7, global_wm.new_cursor.y - 7, 15, 15);
+	rectangle_set(&cursor_gd.rectangle, global_wm.new_cursor.x, global_wm.new_cursor.y , cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight);
     switch(global_wm.cursor_shape)
     {
         case CURSOR_SHAPE_X:
                 /* 黑色 */
-			engine_set_color(cursor_gd_handler, 0, 0, 0, 0);
-            engine_draw_point(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y);
-            engine_draw_x(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y, 3, 3);
-              /* 白色 */
-			engine_set_color(cursor_gd_handler, global_color_limit.r_limit, global_color_limit.g_limit, global_color_limit.b_limit, 0);
-            engine_draw_x(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y, 3, 4);
+			engine_draw_cursor(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y, cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight, &cursor);
             
             break;
 
