@@ -36,5 +36,6 @@
 # include "queue.h"
 # include "stack.h"
 # include "object.h"
+# include "cursor.h"
 
 # endif
