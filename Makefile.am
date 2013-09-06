@@ -12,8 +12,13 @@ noinst_PROGRAMS=
 
 noinst_HEADERS=
 
+nobase_pkgdata_DATA=
+
 ACLOCAL_AMFLAGS= -I m4
 
+AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(pkgdatadir)\""
+
+include $(top_srcdir)/resource/local.mk
 include $(top_srcdir)/include/local.mk
 include $(top_srcdir)/utils/local.mk
 include $(top_srcdir)/comm/local.mk

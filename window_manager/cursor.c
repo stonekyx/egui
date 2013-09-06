@@ -36,8 +36,9 @@
 # include "comm.h"
 # include "log.h"
 # include "event.h"
+# include "config.h"
 
-#define DEFAULT_CURSOR "../resource/default.cur"
+#define DEFAULT_CURSOR PACKAGE_DATA_PATH"/resource/default.cur"
 static struct graphics_device cursor_gd;
 static si_t cursor_gd_handler = (si_t)&cursor_gd;
 static struct cursor cursor;
