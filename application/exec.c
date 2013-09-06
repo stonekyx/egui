@@ -796,9 +796,11 @@ si_t application_exec()
 
 	event_listener_add_read_event(&global_application.app_event_listener, &global_application.uds, NULL, application_event_handler, NULL);
 
+    printf("%lu\n", queue_size(&global_application.message_queue));
 	while(!queue_empty(&global_application.message_queue))
 	{
 		union message* msg = queue_front(&global_application.message_queue);
+        printf("%ld\n", msg->base.type);
 		application_handle_message(msg);
 		queue_pop(&global_application.message_queue);
 	}

@@ -52,6 +52,7 @@ int main()
     struct window * w3;
     struct window * w4;
     struct window * w5;
+    struct radiobutton * r, *s;
 
     /* 初始化用户应用程序 */
     application_init(video_access_mode, app_type, "toplevel_child");
@@ -113,6 +114,13 @@ int main()
     application_add_window(NULL, w5);
     /* 设置主窗口 */
     application_set_main_window(w1);
+
+    r = radiobutton_init("test_group", 0);
+    s = radiobutton_init("test_group", 1);
+    radiobutton_set_bounds(r, 20, 20, 13, 13);
+    radiobutton_set_bounds(s, 20, 40, 13, 13);
+    object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(r));
+    object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(s));
 
     /* 运行 */
     application_exec();
