@@ -29,6 +29,7 @@
 # include "cursor.h"
 
 # include <string.h>
+# include <unistd.h>
 
 # include "window_manager.h"
 # include "graph.h"
@@ -39,6 +40,7 @@
 # include "config.h"
 
 #define DEFAULT_CURSOR PACKAGE_DATA_PATH"/resource/default.cur"
+#define NONINST_DEFAULT_CURSOR "../"PACKAGE_SRC_PATH"/resource/default.cur"
 static struct graphics_device cursor_gd;
 static si_t cursor_gd_handler = (si_t)&cursor_gd;
 static struct cursor cursor;
@@ -67,7 +69,11 @@ si_t cursor_init(char* cursor_type)
 	engine_set_area(cursor_gd_handler, 0, 0, 15, 15);
 
 	/* 初始化光标信息 */
-	init_cursor(DEFAULT_CURSOR, &cursor);
+	if(0 == access(DEFAULT_CURSOR, F_OK)) {
+		init_cursor(DEFAULT_CURSOR, &cursor);
+	} else {
+		init_cursor(NONINST_DEFAULT_CURSOR, &cursor);
+	}
 
 	/* 白色 */
 	engine_set_color(cursor_gd_handler, global_color_limit.r_limit, global_color_limit.g_limit, global_color_limit.b_limit, 0);

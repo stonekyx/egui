@@ -16,7 +16,8 @@ nobase_pkgdata_DATA=
 
 ACLOCAL_AMFLAGS= -I m4
 
-AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(pkgdatadir)\""
+AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(pkgdatadir)\"" \
+			-DPACKAGE_SRC_PATH="\"$(top_srcdir)\""
 
 include $(top_srcdir)/resource/local.mk
 include $(top_srcdir)/include/local.mk
