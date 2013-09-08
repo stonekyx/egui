@@ -180,44 +180,14 @@ void * panel_init(si_t id)
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), id))) {
         return NULL;
     }
 
-    /* struct panel 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct panel";
-    addr->id = id;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化panel样式 */
     panel_init_with_default_style(addr);
@@ -230,14 +200,11 @@ void * panel_init(si_t id)
 
 si_t panel_exit(struct panel * i)
 {
-     graphics_device_exit(i->gd);
 	/*
 	 vector_exit( &(i->widget_vector) );
 	*/	
 
-    free(i);
-
-    return 1;
+    return widget_exit(i);
 }
 
 si_t point_in_area(struct point* point, struct rectangle* area)

@@ -42,95 +42,35 @@
 
 # include "icon.h"
 
+/* TODO load default parameters like other widgets */
+
 void *icon_init(si_t id)
 {
-    eicon * addr;
+    struct icon * addr;
 
     /* 分配存储空间 */
-    addr = (eicon *)malloc(sizeof(eicon));
+    addr = (struct icon *)malloc(sizeof(struct icon));
 
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), id))) {
         return NULL;
     }
-
-    /* struct icon 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct icon";
-    addr->id = id;
 
-    /* 默认工作区域 */
-    addr->area.x = 0;
-    addr->area.y = 0;
-    addr->area.width = 0;
-    addr->area.height = 0;
+	addr->img_field.x = 0;
+	addr->img_field.y = 0;
+	addr->img_field.width = 0;
+	addr->img_field.height = 0;
 
-    /* 默认边界宽度 */
-    addr->border_size = 0;
-
-    /* 默认最大宽度 */
-    addr->maximum_width = 0; /* should use macro */
-    /* 默认最大高度 */
-    addr->maximum_height = 0; /* should use macro */
-    /* 默认最小宽度 */
-    addr->minimum_width = 0;
-    /* 默认最小高度 */
-    addr->minimum_height = 0;
-
-    /* 默认鼠标形状 */
-    addr->cursor = CURSOR_SHAPE_X;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
-
-    /* FIXME: should not be hard code */
-    addr->back_color.r = 255;
-    addr->back_color.g = 255;
-    addr->back_color.b = 255;
-    addr->back_color.a = 0;
-
-    addr->fore_color.r = 0;
-    addr->fore_color.g = 0;
-    addr->fore_color.b = 0;
-    addr->fore_color.a = 0;
-
-	addr->img_feild.x = 0;
-	addr->img_feild.y = 0;
-	addr->img_feild.width = 0;
-	addr->img_feild.height = 0;
-
-	addr->text_feild.x = 0;
-	addr->text_feild.y = 0;
-	addr->text_feild.width = 0;
-	addr->text_feild.height = 0;
+	addr->text_field.x = 0;
+	addr->text_field.y = 0;
+	addr->text_field.width = 0;
+	addr->text_field.height = 0;
 	
 	addr->is_text_visiable = 0;
 	memset(addr->img_path , 0 ,sizeof(char)*255);
@@ -145,7 +85,7 @@ void *icon_init(si_t id)
  * @breif 本函数功能是通过判断
  *
  */
-si_t   icon_update_all_areas ( eicon * ic )
+si_t   icon_update_all_areas ( struct icon * ic )
 {	 
   	struct rectangle area;		
 	/* 总字数 ， 单字宽度，单字高度，每行字数 ,总行数,最后一行的字数 */
@@ -174,23 +114,23 @@ si_t   icon_update_all_areas ( eicon * ic )
         	return -1;
 		}
 
-		ic->text_feild.x = area.x ;
-		ic->text_feild.y = area.y + area.height - ( text_line_num * font_height );
-		ic->text_feild.width = area.width;
-		ic->text_feild.height = text_line_num * font_height ;
+		ic->text_field.x = area.x ;
+		ic->text_field.y = area.y + area.height - ( text_line_num * font_height );
+		ic->text_field.width = area.width;
+		ic->text_field.height = text_line_num * font_height ;
 	
-		ic->img_feild.x = area.x + area.width/4 ; 
-		ic->img_feild.y = area.y  ;
-		ic->img_feild.width = area.width/2 ;
-		ic->img_feild.height = area.height - ic->text_feild.height;
+		ic->img_field.x = area.x + area.width/4 ; 
+		ic->img_field.y = area.y  ;
+		ic->img_field.width = area.width/2 ;
+		ic->img_field.height = area.height - ic->text_field.height;
 		
 	}
 	else
 	{
-		ic->img_feild.x = area.x ; 
-		ic->img_feild.y = area.y ;
-		ic->img_feild.width = area.width ;
-		ic->img_feild.height = area.height ;
+		ic->img_field.x = area.x ; 
+		ic->img_field.y = area.y ;
+		ic->img_field.width = area.width ;
+		ic->img_field.height = area.height ;
 	}
     return 1;
 }
@@ -217,11 +157,11 @@ si_t file_exist(char * file_path)
 
 
 
-si_t icon_draw_img(eicon *ic)
+si_t icon_draw_img(struct icon *ic)
 {
-	set_area(ic->gd, ic->img_feild.x , ic->img_feild.y, ic->img_feild.width  , ic->img_feild.height );
+	set_area(ic->gd, ic->img_field.x , ic->img_field.y, ic->img_field.width  , ic->img_field.height );
 
-	fill_rectangle(ic->gd, ic->img_feild.x , ic->img_feild.y, ic->img_feild.width  , ic->img_feild.height );
+	fill_rectangle(ic->gd, ic->img_field.x , ic->img_field.y, ic->img_field.width  , ic->img_field.height );
 	
 	set_color(ic->gd, ic->back_color.r, ic->back_color.g, ic->back_color.b, ic->back_color.a);
 
@@ -233,7 +173,7 @@ si_t icon_draw_img(eicon *ic)
 	return 1;
 }
 
-si_t icon_show_text(eicon * ic)
+si_t icon_show_text(struct icon * ic)
 {
   	 
 	/* 总字数 ， 单字宽度，单字高度，每行字数 ,总行数,最后一行的字数 */
@@ -262,20 +202,20 @@ si_t icon_show_text(eicon * ic)
 	set_color(ic->gd, ic->fore_color.r, ic->fore_color.g, ic->fore_color.b, ic->fore_color.a);
 
 	/* 设置区域 , 文字区域*/
- 	set_area(ic->gd,  ic->text_feild.x , ic->text_feild.y , ic->text_feild.width , ic->text_feild.height);
+ 	set_area(ic->gd,  ic->text_field.x , ic->text_field.y , ic->text_field.width , ic->text_field.height);
 
 /*	 填充矩形 
-	fill_rectangle(ic->gd,  ic->text_feild.x, ic->text_feild.y, ic->text_feild.width , ic->text_feild.height);
+	fill_rectangle(ic->gd,  ic->text_field.x, ic->text_field.y, ic->text_field.width , ic->text_field.height);
 *  */
 	/* 显示文字 */
 	for( i = 0; i < text_line_num -1; i++ )
 	{
-		show_text(ic->gd, ic->text_feild.x, ic->text_feild.y + i * font_height  , ic->text + i*maxlen ,maxlen);
+		show_text(ic->gd, ic->text_field.x, ic->text_field.y + i * font_height  , ic->text + i*maxlen ,maxlen);
 	}
 
 	show_text(  ic->gd, 
-			    ic->text_feild.x + ( ic->text_feild.width  - last_line_text_num * font_width ) / 2,
-			    ic->text_feild.y + i * font_height  , 
+			    ic->text_field.x + ( ic->text_field.width  - last_line_text_num * font_width ) / 2,
+			    ic->text_field.y + i * font_height  , 
 			    ic->text + i * maxlen ,
 			    last_line_text_num
 			 );
@@ -288,47 +228,43 @@ si_t
 icon_exit
 (struct icon * i)
 {
-    graphics_device_exit(i->gd);
-
-    free(i);
-
-    return 0;
+    return widget_exit(i);
 }
-void  icon_set_img_path(eicon *ic, char * img_path)
+void  icon_set_img_path(struct icon *ic, char * img_path)
 {
 	strcpy(ic->img_path,img_path);
 	return ;
 }
-char* icon_get_img_path(eicon *ic)
+char* icon_get_img_path(struct icon *ic)
 {
 	return ic->img_path;
 }
-void  icon_set_text(eicon *ic, char * text)
+void  icon_set_text(struct icon *ic, char * text)
 {
 	strcpy(ic->text, text);
 	return;
 }
-char* icon_get_text(eicon *ic)
+char* icon_get_text(struct icon *ic)
 {
 	return ic->text;
 }
 
-void  icon_set_type(eicon *ic, si_t type)
+void  icon_set_type(struct icon *ic, si_t type)
 {
 	ic->type = type;
 	return ;
 }
 
-si_t icon_get_type(eicon *ic)
+si_t icon_get_type(struct icon *ic)
 {
 	return ic->type;
 }
-void  icon_set_is_text_visiable(eicon *ic, si_t visiable_model)
+void  icon_set_is_text_visiable(struct icon *ic, si_t visiable_model)
 {
 	ic->is_text_visiable = visiable_model;
 	return ;
 }
-si_t icon_get_is_text_visiable(eicon *ic)
+si_t icon_get_is_text_visiable(struct icon *ic)
 {
 	return ic->is_text_visiable;
 }
@@ -337,7 +273,7 @@ si_t icon_get_is_text_visiable(eicon *ic)
 si_t icon_default_callback(void* self , void* msg )
 {
 	
-    eicon* ic = self;
+    struct icon* ic = self;
     union message * m = msg;
 
     switch(m->base.type)
@@ -370,7 +306,7 @@ si_t icon_default_callback(void* self , void* msg )
 
 
 /* 外部 API */
-si_t icon_repaint(eicon * ic)
+si_t icon_repaint(struct icon * ic)
 {
   	union message msg;
 
@@ -386,7 +322,7 @@ si_t icon_repaint(eicon * ic)
 }
 
 
-si_t icon_default_widget_repaint(eicon* ic , union message * msg)
+si_t icon_default_widget_repaint(struct icon* ic , union message * msg)
 {  
 	icon_update_all_areas( ic );
 
@@ -402,7 +338,7 @@ si_t icon_default_widget_repaint(eicon* ic , union message * msg)
 }
 
 /* 外部API  */
-si_t icon_show(eicon * ic)
+si_t icon_show(struct icon * ic)
 {
   	union message msg;
 
@@ -417,7 +353,7 @@ si_t icon_show(eicon * ic)
 
 }
 /*  */
-si_t icon_default_widget_show(eicon* ic , union message * msg)
+si_t icon_default_widget_show(struct icon* ic , union message * msg)
 {
 	struct rectangle area;
     
@@ -433,7 +369,7 @@ si_t icon_default_widget_show(eicon* ic , union message * msg)
  * 因此，需要将画笔的颜色设置为黑色
  *
  **/
-si_t icon_default_mouse_press(eicon* ic , union message * msg)
+si_t icon_default_mouse_press(struct icon* ic , union message * msg)
 {
 	struct rectangle area;
      
@@ -465,7 +401,7 @@ si_t icon_default_mouse_press(eicon* ic , union message * msg)
  * 因此，需要将画笔的颜色设置为黑色
  *
  **/
-si_t icon_default_mouse_release(eicon* ic , union message * msg)
+si_t icon_default_mouse_release(struct icon* ic , union message * msg)
 {
  	struct rectangle area;   
 
@@ -493,7 +429,7 @@ si_t icon_default_mouse_release(eicon* ic , union message * msg)
 
 }
 
-void icon_set_bounds(eicon* icon, si_t x, si_t y, si_t width , si_t height)
+void icon_set_bounds(struct icon* icon, si_t x, si_t y, si_t width , si_t height)
 {
 	icon->area.x = x;
 	icon->area.y = y;

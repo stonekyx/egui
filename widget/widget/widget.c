@@ -36,20 +36,8 @@
 
 # include "widget.h"
 
-void *widget_init(si_t id)
+void *widget_init_common(struct widget *addr, si_t id)
 {
-    struct widget * addr;
-
-    /* 分配存储空间 */
-    addr = (struct widget *)malloc(sizeof(struct widget));
-
-    if(addr == NULL)
-    {
-        EGUI_PRINT_SYS_ERROR("fail to malloc");
-
-        return NULL;
-    }
-
     /* 申请图形设备 */
     addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
 
@@ -119,14 +107,34 @@ void *widget_init(si_t id)
     /* 默认的回调函数 */
     addr->callback = NULL;
 
+    list_init(&addr->children);
+
     return addr;
 }
 
-si_t widget_exit(struct widget * w)
+void *widget_init(si_t id)
 {
-    graphics_device_exit(w->gd);
+    struct widget * addr;
 
-    free(w);
+    /* 分配存储空间 */
+    addr = (struct widget *)malloc(sizeof(struct widget));
+
+    if(addr == NULL)
+    {
+        EGUI_PRINT_SYS_ERROR("fail to malloc");
+        return NULL;
+    }
+    return widget_init_common(addr, id);
+}
+
+si_t widget_exit(void * w)
+{
+    struct widget *sw = w;
+    list_for_each(&sw->children, (si_t (*)(void*))widget_exit);
+
+    graphics_device_exit(sw->gd);
+
+    free(sw);
 
     return 0;
 }
@@ -140,7 +148,7 @@ si_t widget_absolute_coordinate(struct widget * w, si_t * x, si_t * y)
     y_offset = 0;
 
     self = OBJECT_POINTER(w);
-    while((parent = object_parent(self)) != NULL)
+    while((parent = self->parent) != NULL)
     {
         x_offset += WIDGET_POINTER(self)->area.x;
         y_offset += WIDGET_POINTER(self)->area.y;
@@ -167,7 +175,7 @@ si_t widget_absolute_area_old (struct widget * w, struct rectangle * result)
 
 
     self = OBJECT_POINTER(w);
-    while((parent = object_parent(self)) != NULL)
+    while((parent = self->parent) != NULL)
     {
 	    /*if(area_intersection(&(WIDGET_POINTER(parent)->area),&(WIDGET_POINTER(self)->area), result) == -1)
         {
@@ -218,7 +226,7 @@ si_t widget_absolute_area (struct widget * w, struct rectangle * result)
     temp.height = w->area.height;
 
     self = OBJECT_POINTER(w);
-    while((parent = object_parent(self)) != NULL)
+    while((parent = self->parent) != NULL)
     {
         parent_area.width = WIDGET_POINTER(parent)->area.width;
         parent_area.height = WIDGET_POINTER(parent)->area.height;

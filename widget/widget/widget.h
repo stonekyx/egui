@@ -130,7 +130,12 @@
     /**
      * 处理消息的回调函数
     **/ \
-    si_t (* callback)(void *, void *);
+    si_t (* callback)(void *, void *); \
+    \
+    /**
+     * 子控件列表
+    **/ \
+    struct list children;
 
 struct widget
 {
@@ -152,6 +157,15 @@ struct widget
 extern void *widget_init(si_t id);
 
 /**
+ * @brief 初始化widget结构体的数据
+ *
+ * @details 调用前需要保证已经分配足够的空间
+ *
+ * @return 成功返回widget指针，失败返回NULL
+**/
+extern void *widget_init_common(struct widget *w, si_t id);
+
+/**
  * @brief 使用后清理窗口部件结构体
  *
  * @details
@@ -160,7 +174,7 @@ extern void *widget_init(si_t id);
  *
  * @return 0
 **/
-extern si_t widget_exit(struct widget * w);
+extern si_t widget_exit(void * w);
 
 /**
  * @brief 获得窗口部件的绝对坐标

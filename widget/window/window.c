@@ -585,40 +585,14 @@ struct window* window_init(char* title)
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return addr;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
 
-    /* struct window 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct window";
-    addr->id = 0;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
 
     /* 默认是否是窗口 */
     addr->is_window = 1;
@@ -650,11 +624,7 @@ struct window* window_init(char* title)
 
 si_t window_exit(struct window * w)
 {
-    graphics_device_exit(w->gd);
-
-    free(w);
-
-    return 0;
+    return widget_exit(w);
 }
 
 void window_set_bounds(struct window  *w, si_t x, si_t y, si_t width , si_t height)

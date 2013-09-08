@@ -270,45 +270,19 @@ struct checkbox* checkbox_init(int checked)
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-    if(addr->gd == 0) {
-        free(addr);
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
 
-    /* object 父类的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct checkbox";
-    addr->id = 0;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化checkbox样式 */
     checkbox_init_with_default_style(addr);
 
-    /* 默认的回调函数 */
+    /* checkbox 子类成员 */
     addr->callback = checkbox_default_callback;
-
     addr->checked = checked;
-
     addr->click_callback = NULL;
-
     addr->user_data = NULL;
 
     return addr;
@@ -321,9 +295,7 @@ struct checkbox* checkbox_init(int checked)
    */
 si_t checkbox_exit(struct checkbox * c)
 {
-    graphics_device_exit(c->gd);
-    free(c);
-    return 0;
+    return widget_exit(c);
 }
 
 void checkbox_set_bounds(struct checkbox *c, si_t x, si_t y, si_t width , si_t height)
