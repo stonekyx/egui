@@ -450,7 +450,7 @@ static si_t register_window_handler(addr_t app_ptr, si_t parent_descripter, char
 	/* 更新光标 */
 	cursor_paint();
 
-	/* 返回窗口的句柄 */
+	/* 返回窗口的句柄（描述符） */
 	return (si_t)win_info_ptr;
 }
 

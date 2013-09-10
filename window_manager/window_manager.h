@@ -129,6 +129,7 @@ extern si_t window_manager_get_app_index(struct application_info* ptr);
 
 /**
  * @brief 窗口管理器接受客户端连接的处理函数
+ * 应用程序在此进入服务器记录。
  *
  * @param uds_ptr 窗口管理器的通信句柄
  * @param arg 空
