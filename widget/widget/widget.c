@@ -133,24 +133,24 @@ si_t widget_exit(struct widget * w)
 
 si_t widget_absolute_coordinate(struct widget * w, si_t * x, si_t * y)
 {
-    si_t x_offset, y_offset;
     struct object * self, * parent;
 
-    x_offset = 0;
-    y_offset = 0;
-
     self = OBJECT_POINTER(w);
+    *x = w->area.x;
+    *y = w->area.y;
+    if(w->is_window) {
+        return 0;
+    }
     while((parent = object_parent(self)) != NULL)
     {
-        x_offset += WIDGET_POINTER(self)->area.x;
-        y_offset += WIDGET_POINTER(self)->area.y;
+        *x += WIDGET_POINTER(parent)->area.x;
+        *y += WIDGET_POINTER(parent)->area.y;
 
         self = parent;
+        if(WIDGET_POINTER(parent)->is_window) {
+            break;
+        }
     }
-
-    * x = WIDGET_POINTER(self)->area.x + x_offset;
-    * y = WIDGET_POINTER(self)->area.y + y_offset;
-
     return 0;
 }
 si_t widget_absolute_area_old (struct widget * w, struct rectangle * result)
@@ -209,6 +209,11 @@ si_t widget_absolute_area (struct widget * w, struct rectangle * result)
 
     *result = w->area;
 
+    /* windows always use absolute coordinates. */
+    if(w->is_window) {
+        return 0;
+    }
+
     parent_area.x = 0;
     parent_area.y = 0;
 
@@ -235,6 +240,9 @@ si_t widget_absolute_area (struct widget * w, struct rectangle * result)
         temp.height = result->height;
 
         self = parent;
+        if(WIDGET_POINTER(parent)->is_window) {
+            break;
+        }
     }
 
     if(flag == 1) {

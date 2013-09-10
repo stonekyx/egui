@@ -47,6 +47,9 @@
         // ID
         si_t id;
     };
+    即“左儿子右兄弟表示法”的变形，把左右子结点反过来了，变成了
+    “左兄弟右儿子表示法”。本来还有很多话想说，结果手放到键盘上
+    之后不知道该说什么了...
 */
 /**
  * 对象结构体
@@ -180,17 +183,9 @@ object_tree_iterator_decrement
  struct object * node);
 
 /**
- * @brief 为 obj 对象添加新的子对象 child，添加后为最小的孩子
+ * @brief 与object_insert_child相同，但添加后为最小的孩子
  *
- * @details 子控件只能在父窗口区域内显示。
- *
- * 如果要添加窗口类对象以及它的派生类对象
- * 请使用 application_add_window
- *
- * @param obj 父对象结构体地址，必须不为空
- * @param child 子对象结构体地址
- *
- * @return 0
+ * 注意多叉转二叉的表示法，这两个函数没有问题。
 **/
 extern si_t object_attach_child (struct object * obj, struct object * child);
 

@@ -33,6 +33,22 @@
 
 # include "application.h"
 
+si_t
+button_callback
+(void * btn,
+ void * msg)
+{
+    switch(message_get_type(msg)) {
+        case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
+            puts("hello world!");
+            break;
+        default:
+            button_default_callback(btn, msg);
+            break;
+    }
+    return 0;
+}
+
 /*
     测试顶层窗口和子窗口
 
@@ -100,6 +116,13 @@ int main()
         return -1;
     }
 	window_set_bounds(w5, 500, 300, 448, 200);
+
+    {
+        struct button *b = button_init("click me!");
+        button_set_bounds(b, 50, 50, 150, 50);
+        b->callback = button_callback;
+        object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(b));
+    }
 
     /* 添加顶层窗口 */
     application_add_window(NULL, w1);
