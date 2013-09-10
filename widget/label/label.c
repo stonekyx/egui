@@ -289,7 +289,7 @@ struct label* label_init(char* text)
 
 si_t label_exit(struct label * l)
 {
-    return widget_exit(l);
+    return widget_exit(WIDGET_POINTER(l));
 }
 
 void label_set_bounds(struct label * l, si_t x, si_t y, si_t width , si_t height)

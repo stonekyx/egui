@@ -127,14 +127,19 @@ void *widget_init(si_t id)
     return widget_init_common(addr, id);
 }
 
-si_t widget_exit(void * w)
+static si_t widget_children_exit(void *w)
 {
-    struct widget *sw = w;
-    list_for_each(&sw->children, (si_t (*)(void*))widget_exit);
+    struct widget *sw = *(struct widget **)w;
+    return widget_exit(sw);
+}
 
-    graphics_device_exit(sw->gd);
+si_t widget_exit(struct widget *w)
+{
+    list_for_each(&w->children, widget_children_exit);
 
-    free(sw);
+    graphics_device_exit(w->gd);
+
+    free(w);
 
     return 0;
 }
@@ -387,4 +392,17 @@ si_t get_cursor_enum_from_str(const char * str)
     }
 
     return -1;
+}
+
+static union message *dispatched_message;
+static si_t do_widget_dispatch_message(void *w)
+{
+    struct widget *sw = *(struct widget **)w;
+    return sw->callback(sw, dispatched_message);
+}
+
+si_t widget_dispatch_message(struct widget *w, union message *m)
+{
+    dispatched_message = m;
+    return list_for_each(&w->children, do_widget_dispatch_message);
 }

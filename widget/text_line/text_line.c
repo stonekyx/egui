@@ -1352,7 +1352,7 @@ extern si_t text_line_exit(struct text_line* t)
     if(t->placeholder != NULL)
         free(t->placeholder);
 
-    return widget_exit(t);
+    return widget_exit(WIDGET_POINTER(t));
 }
 
 extern si_t text_line_set_bufsize(struct text_line* t, si_t size)

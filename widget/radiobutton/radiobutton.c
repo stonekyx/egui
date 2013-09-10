@@ -403,7 +403,7 @@ struct radiobutton* radiobutton_init(const char *group_name, int selected)
 si_t radiobutton_exit(struct radiobutton * c)
 {
     radiobutton_hashmap_erase(c);
-    return widget_exit(c);
+    return widget_exit(WIDGET_POINTER(c));
 }
 
 void radiobutton_set_bounds(struct radiobutton *c, si_t x, si_t y, si_t width , si_t height)

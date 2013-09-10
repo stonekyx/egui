@@ -434,5 +434,5 @@ si_t
 dialog_exit
 (struct dialog * d)
 {
-    return widget_exit(d);
+    return widget_exit(WIDGET_POINTER(d));
 }

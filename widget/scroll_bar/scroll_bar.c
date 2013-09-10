@@ -529,7 +529,7 @@ struct scroll_bar* scroll_bar_init(si_t is_vertical, si_t total_len, si_t line_h
 si_t scroll_bar_exit(struct scroll_bar* s)
 {
 	list_exit(&s->subscribe_info_list);
-	return widget_exit(s);
+	return widget_exit(WIDGET_POINTER(s));
 }
 
 void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t))

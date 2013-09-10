@@ -295,7 +295,7 @@ struct checkbox* checkbox_init(int checked)
    */
 si_t checkbox_exit(struct checkbox * c)
 {
-    return widget_exit(c);
+    return widget_exit(WIDGET_POINTER(c));
 }
 
 void checkbox_set_bounds(struct checkbox *c, si_t x, si_t y, si_t width , si_t height)

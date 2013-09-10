@@ -204,7 +204,7 @@ si_t panel_exit(struct panel * i)
 	 vector_exit( &(i->widget_vector) );
 	*/	
 
-    return widget_exit(i);
+    return widget_exit(WIDGET_POINTER(i));
 }
 
 si_t point_in_area(struct point* point, struct rectangle* area)

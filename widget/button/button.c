@@ -416,7 +416,7 @@ struct button* button_init(char* text)
 */
 si_t button_exit(struct button * b)
 {
-    return widget_exit(b);
+    return widget_exit(WIDGET_POINTER(b));
 }
 
 void button_set_bounds(struct button * b, si_t x, si_t y, si_t width , si_t height)

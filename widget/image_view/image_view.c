@@ -271,7 +271,7 @@ struct image_view* image_view_init(char* path)
 */
 si_t image_view_exit(struct image_view * i)
 {
-    return widget_exit(i);
+    return widget_exit(WIDGET_POINTER(i));
 }
 
 void image_view_set_bounds(struct image_view* i, si_t x, si_t y, si_t width, si_t height)

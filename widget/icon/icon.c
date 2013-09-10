@@ -228,7 +228,7 @@ si_t
 icon_exit
 (struct icon * i)
 {
-    return widget_exit(i);
+    return widget_exit(WIDGET_POINTER(i));
 }
 void  icon_set_img_path(struct icon *ic, char * img_path)
 {

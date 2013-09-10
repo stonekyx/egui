@@ -624,7 +624,7 @@ struct window* window_init(char* title)
 
 si_t window_exit(struct window * w)
 {
-    return widget_exit(w);
+    return widget_exit(WIDGET_POINTER(w));
 }
 
 void window_set_bounds(struct window  *w, si_t x, si_t y, si_t width , si_t height)
