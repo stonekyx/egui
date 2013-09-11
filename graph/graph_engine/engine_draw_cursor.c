@@ -30,6 +30,8 @@
 # include "../graph_engine.h"
 #include <data_structures.h>
 
+static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur);
+
 si_t
 engine_draw_cursor
 (si_t graphics_device_handle,
@@ -62,7 +64,7 @@ engine_draw_cursor
     return 0;
 }
 
-void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur)
+static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur)
 {
 	int j;
 
@@ -107,7 +109,7 @@ void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struc
 				cl = cur->andData[t][andos++];
 				for (bit = 0; bit < 8; bit++)
 				{
-					if ((cl >> (7-bit)) & 1 == 1)
+					if (((cl >> (7-bit)) & 1) == 1)
 					{
 						pixel_matrix[i][j*8+bit] = 100;
 					}
@@ -224,9 +226,10 @@ void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struc
 					for(j = 0; j < cur->ciHeader[t].ciWidth; j++)
 					{
 						struct color c;
-						index = cur->xorData[t][xoros];
 						static int seek=7;
-						int l = (index>>seek)&1;
+						int l;
+						index = cur->xorData[t][xoros];
+                        l = (index>>seek)&1;
 
 						c.b = cur->xorData[t][l*4];
 						c.g = cur->xorData[t][l*4+1];

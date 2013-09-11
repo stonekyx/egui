@@ -866,8 +866,6 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 			accumulate_widget_move(message);
 			accumulate_widget_resize(message);
 
-			/* 更新鼠标下面的内容 */
-			screen_flush(global_wm.old_cursor.x - 7, global_wm.old_cursor.y - 7, 15, 15);
 			cursor_paint();
 
 			global_wm.old_cursor = global_wm.new_cursor;
