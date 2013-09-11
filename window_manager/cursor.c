@@ -88,6 +88,11 @@ si_t cursor_init(char* cursor_type)
 
 si_t cursor_paint()
 {
+    if(global_wm.new_cursor.x != global_wm.old_cursor.x ||
+            global_wm.new_cursor.y != global_wm.old_cursor.y) {
+        screen_flush(global_wm.old_cursor.x, global_wm.old_cursor.y,
+                cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight);
+    }
     /* 设置工作区域 */
 	rectangle_set(&cursor_gd.rectangle, global_wm.new_cursor.x, global_wm.new_cursor.y , cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight);
     switch(global_wm.cursor_shape)
