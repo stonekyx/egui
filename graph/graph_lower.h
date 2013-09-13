@@ -263,6 +263,8 @@ extern si_t screen_index_to_color(struct color * c, ui_t * index);
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_set_pixel(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* 功能跟上面一样，但是把像素输出到给定的dst */
+extern si_t screen_set_pixel_r(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y, struct screen *dst);
 
 /**
  * 把一个像素绘制到给定的void数组中
@@ -281,6 +283,8 @@ extern si_t screen_set_pixel(struct screen * s, struct rectangle * a, struct col
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_set_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* 功能跟上面一样，但是把像素输出到给定的dst */
+extern si_t screen_set_pixel_raw_r(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y, void *dst);
 
 /**
  * 获得屏幕上的某一点

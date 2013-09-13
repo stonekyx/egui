@@ -35,7 +35,7 @@
 # include "../graph_lower.h"
 
 si_t
-screen_set_pixel_raw
+screen_set_pixel_raw_r
 (void * video,
  si_t width,
  si_t height,
@@ -43,7 +43,8 @@ screen_set_pixel_raw
  struct rectangle * a,
  struct color * c,
  si_t x,
- si_t y)
+ si_t y,
+ void * dst)
 {
     ui_t offset, color, bit;
     byte_t * addr;
@@ -139,7 +140,7 @@ screen_set_pixel_raw
         /* 开始位在字节内的偏移量 */
         offset = bit & 7;
         /* 字节地址 */
-        addr = (byte_t*)video + (bit >> 3);
+        addr = (byte_t*)dst + (bit >> 3);
 
         if(depth == 1)
         {
@@ -175,15 +176,59 @@ screen_set_pixel_raw
         offset = bit >> 3;
 
         /* 将颜色写入视频缓冲区 */
-        memcpy((void *)((byte_t*)video + offset), (void *)(&color), depth >> 3);
+        memcpy((void *)((byte_t*)dst + offset), (void *)(&color), depth >> 3);
     }
 
     return 0;
 }
 
+si_t
+screen_set_pixel_raw
+(void * video,
+ si_t width,
+ si_t height,
+ si_t depth,
+ struct rectangle * a,
+ struct color * c,
+ si_t x,
+ si_t y)
+{
+    return screen_set_pixel_raw_r(video, width, height, depth, a, c, x, y,
+            video);
+}
+
 /*
     picture element
 */
+si_t
+screen_set_pixel_r
+(struct screen * s,
+ struct rectangle * a,
+ struct color * c,
+ si_t x,
+ si_t y,
+ struct screen * dst)
+{
+    byte_t *video, *video_dst;
+
+    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT) {
+        video = s->memory_addr;
+    } else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER) {
+        video = s->buffer_addr;
+    } else {
+        return -1;
+    }
+    if(dst->video_access_mode == VIDEO_ACCESS_MODE_DIRECT) {
+        video_dst = dst->memory_addr;
+    } else if(dst->video_access_mode == VIDEO_ACCESS_MODE_BUFFER) {
+        video_dst = dst->buffer_addr;
+    } else {
+        return -1;
+    }
+    return screen_set_pixel_raw_r(video, s->width, s->height, s->color_depth,
+            a, c, x, y, video_dst);
+}
+
 si_t
 screen_set_pixel
 (struct screen * s,
@@ -192,21 +237,5 @@ screen_set_pixel
  si_t x,
  si_t y)
 {
-    byte_t * video;
-
-    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-    {
-        video = s->memory_addr;
-    }
-    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-    {
-        video = s->buffer_addr;
-    }
-    else
-    {
-        return -1;
-    }
-
-    return screen_set_pixel_raw(video, s->width, s->height, s->color_depth,
-            a, c, x, y);
+    return screen_set_pixel_r(s, a, c, x, y, s);
 }
