@@ -33,12 +33,54 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
+# include <termios.h>
+# include <fcntl.h>
+# include <sys/stat.h>
 
 # include "comm.h"
 # include "client_lib.h"
 
 # include "exec.h"
 # include "log.h"
+
+static struct termios term;
+
+static si_t term_init(void)
+{
+	struct termios new_term;
+	si_t fd = STDIN_FILENO;
+	if(fd < 0) {
+		EGUI_PRINT_SYS_ERROR("failed to open termios. open()");
+		return -1;
+	}
+
+	if(tcgetattr(fd, &term) < 0) {
+		EGUI_PRINT_SYS_ERROR("failed to get termios attribute. tcgetattr()");
+		return -1;
+	}
+
+    new_term = term;
+	new_term.c_lflag = new_term.c_lflag & ~(ECHO | ECHOE | ECHOK | ECHONL);
+    new_term.c_cflag = new_term.c_cflag | (ICANON);
+
+	if(tcsetattr(fd, TCSAFLUSH, &new_term) < 0) {
+		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
+		return -1;
+	}
+
+	return 0;
+}
+
+static void term_restore(void)
+{
+	si_t fd = STDIN_FILENO;
+	if(fd < 0) {
+		EGUI_PRINT_SYS_ERROR("failed to open termios. open()");
+	}
+	if(tcsetattr(fd, TCSAFLUSH, &term) < 0) {
+		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
+	}
+}
 
 struct application global_application;
 
@@ -115,6 +157,8 @@ si_t application_init(si_t video_access_mode, si_t application_type, char* name)
 	global_application.desktop_ptr = NULL;
 	global_application.desktop_msg_handler = NULL;
 
+    term_init();
+
     return 0;
 }
 
@@ -161,6 +205,8 @@ si_t application_exit()
     uds_exit(&global_application.uds);
 
 	free(global_application.name);
+
+    term_restore();
 
     return 0;
 }

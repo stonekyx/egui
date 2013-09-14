@@ -54,7 +54,7 @@ struct termios term;
  **/
 si_t terminal_init()
 {
-	struct termios new_term = term;
+	struct termios new_term;
 	si_t fd = open((char*)ctermid(NULL), O_RDONLY);
 	if(fd < 0)
 	{
@@ -68,13 +68,16 @@ si_t terminal_init()
 		return -1;
 	}
 
+    new_term = term;
 	new_term.c_lflag = term.c_lflag & ~( ECHO | ECHOE | ECHOK | ECHONL);
+    new_term.c_cflag = new_term.c_cflag | ( ICANON );
 
 	if(tcsetattr(fd, TCSAFLUSH, &new_term) < 0)
 	{
 		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
 		return -1;
 	}
+    close(fd);
 
 	return 0;
 }
@@ -94,6 +97,7 @@ void terminal_exit()
 	{
 		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
 	}
+    close(fd);
 }
 
 /**
