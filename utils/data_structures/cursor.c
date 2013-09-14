@@ -157,8 +157,8 @@ void read_and_xor_data(char *path, struct cursor* cur)
 
 	for ( i=0; i<cur->cfHeader.cfNum; i++)
 	{
-		int xorSize;
-		int andSize;
+		int xorSize = 0;
+		int andSize = 0;
 		/* 24位和32位光标文件的xor和and位图的数据大小*/
 		if (cur->biHeader[i].biBitCount == 24 || cur->biHeader[i].biBitCount == 32)
 		{
