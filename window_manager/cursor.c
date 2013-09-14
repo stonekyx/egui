@@ -45,8 +45,6 @@ static struct graphics_device cursor_gd;
 static si_t cursor_gd_handler = (si_t)&cursor_gd;
 static struct cursor cursor;
 
-static struct screen cursor_buffer;
-
 si_t cursor_init(char* cursor_type)
 {
 	global_wm.old_cursor.x = global_screen.width  >> 1;
@@ -65,15 +63,8 @@ si_t cursor_init(char* cursor_type)
 	}
 
 	cursor_gd.screen = global_screen;
-	cursor_gd.screen.video_access_mode = VIDEO_ACCESS_MODE_DIRECT;
-	cursor_gd.screen.buffer_addr = NULL;
-
-    cursor_buffer = global_screen;
-    /* Normally this have no effect, but we need to make sure
-     * that the buffer doesn't get directly printed, even if the
-     * global_screen changes to use direct mode someday. */
-    cursor_buffer.video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
-    cursor_buffer.buffer_addr = malloc(global_screen.size);
+	cursor_gd.screen.video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
+	cursor_gd.screen.buffer_addr = malloc(global_screen.size);
 
 	engine_set_area(cursor_gd_handler, 0, 0, 15, 15);
 
@@ -114,7 +105,7 @@ si_t cursor_paint()
         EGUI_PRINT_ERROR("Error in area union code");
         return -1;
     }
-    screen_cpy_area(cursor_buffer.buffer_addr, global_screen.buffer_addr,
+    screen_cpy_area(cursor_gd.screen.buffer_addr, global_screen.buffer_addr,
             refarea.x, refarea.y,
             refarea.x, refarea.y,
             refarea.width, refarea.height);
@@ -124,7 +115,7 @@ si_t cursor_paint()
     {
         case CURSOR_SHAPE_X:
                 /* 黑色 */
-			engine_draw_cursor(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y, cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight, &cursor, &cursor_buffer);
+			engine_draw_cursor(cursor_gd_handler, global_wm.new_cursor.x, global_wm.new_cursor.y, cursor.ciHeader[0].ciWidth, cursor.ciHeader[0].ciHeight, &cursor);
             
             break;
 
@@ -134,7 +125,7 @@ si_t cursor_paint()
         default:
             break;
     }
-    screen_cpy_area(global_screen.memory_addr, cursor_buffer.buffer_addr,
+    screen_cpy_area(global_screen.memory_addr, cursor_gd.screen.buffer_addr,
             refarea.x, refarea.y,
             refarea.x, refarea.y,
             refarea.width, refarea.height);
