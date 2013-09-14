@@ -522,7 +522,7 @@ extern si_t engine_draw_ellipse(si_t graphics_device_handle, si_t x, si_t y, si_
  * @return 0
 **/
 extern si_t engine_draw_x(si_t graphics_device_handle, si_t x, si_t y, si_t a, si_t b);
-extern si_t engine_draw_cursor(si_t graphics_device_handle, si_t x, si_t y, si_t a, si_t b, struct cursor *cur, struct screen *dst);
+extern si_t engine_draw_cursor(si_t graphics_device_handle, si_t x, si_t y, si_t a, si_t b, struct cursor* cur);
 
 /**
  * 绘制箭头

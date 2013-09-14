@@ -30,7 +30,7 @@
 # include "../graph_engine.h"
 #include <data_structures.h>
 
-static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur, struct screen *dst);
+static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur);
 
 si_t
 engine_draw_cursor
@@ -39,8 +39,7 @@ engine_draw_cursor
  si_t y,
  si_t a,
  si_t b,
- struct cursor *cur,
- struct screen *dst)
+ struct cursor* cur)
 {
     struct graphics_device * gd;
 
@@ -59,13 +58,13 @@ engine_draw_cursor
 
     if(a != 0 && b != 0)
 	{
-		draw_cursor(dst,&gd->rectangle, x, y, cur, dst);
+		draw_cursor(&gd->screen,&gd->rectangle, x, y, cur);
 	}
 
     return 0;
 }
 
-static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur, struct screen *dst)
+static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y, struct cursor *cur)
 {
 	int j;
 
@@ -143,7 +142,7 @@ static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y
 					if(cur->biHeader[t].biBitCount == 32)
 						xoros++;
 
-					screen_set_pixel_r(s, rect, &c, x+j, y+i , dst);
+					screen_set_pixel(s, rect, &c, x+j, y+i );
 				}
 			}
 		}
@@ -179,13 +178,13 @@ static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y
 						c.r = cur->xorData[t][l*4+2];
 						c.a = pixel_matrix[i][j];
 
-						screen_set_pixel_r(s, rect, &c, x+j, y+i, dst);
+						screen_set_pixel(s, rect, &c, x+j, y+i);
 						j++;
 						c.b = cur->xorData[t][r*4];
 						c.g = cur->xorData[t][r*4+1];
 						c.r = cur->xorData[t][r*4+2];
 						c.a = pixel_matrix[i][j];
-						screen_set_pixel_r(s, rect, &c, x+j, y+i, dst);
+						screen_set_pixel(s, rect, &c, x+j, y+i);
 					}
 				}
 			}
@@ -213,7 +212,7 @@ static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y
 						c.g = cur->xorData[t][l*4+1];
 						c.r = cur->xorData[t][l*4+2];
 						c.a = pixel_matrix[i][j];
-						screen_set_pixel_r(s, rect, &c, x+j, y+i, dst);
+						screen_set_pixel(s, rect, &c, x+j, y+i);
 					}
 				}
 			}
@@ -239,7 +238,7 @@ static void draw_cursor(struct screen* s, struct rectangle* rect, si_t x, si_t y
 						c.g = l*255;
 						c.r = l*255;
 						c.a = pixel_matrix[i][j];
-						screen_set_pixel_r(s, rect, &c, x+j, y+i, dst);
+						screen_set_pixel(s, rect, &c, x+j, y+i);
 
 						seek--;
 						if(seek == -1)
