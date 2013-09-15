@@ -53,6 +53,8 @@ int main()
     /* 运行 */
     application_exec();
 
+    application_exit();
+
     return 0;
 }
 

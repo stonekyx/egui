@@ -1140,11 +1140,11 @@ static si_t text_line_default_keybd_press(struct text_line* t, union message* ms
     /**
      * decode input
      **/
-    if(text_line_is_keybd_type_number(t))
+    if(!input_char && text_line_is_keybd_type_number(t))
     {
         input_char = keybd_code_to_char_number(msg->keybd.code);
     }
-    if(text_line_is_keybd_type_letter(t))
+    if(!input_char && text_line_is_keybd_type_letter(t))
     {
         input_char = keybd_code_to_char_letter(msg->keybd.code);
     }
@@ -1401,7 +1401,6 @@ extern si_t text_line_set_bufsize(struct text_line* t, si_t size)
     }
 
     * (t->buf) = '\0';
-    t->buf ++;
     t->buf_size = size;
 
     t->ruler_cur = t->ruler_line_start = t->show_start = t->buf;
