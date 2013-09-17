@@ -45,9 +45,14 @@
     WIDGET_DEFINITION \
     \
     /**
+     * numeric attributes
+     **/ \
+    si_t maxval, minval, value; \
+    \
+    /**
      * textbox
      **/ \
-    struct text_line *number; \
+    struct text_line *text_number; \
     \
     /**
      * increase button
@@ -139,7 +144,7 @@ extern void spinbox_show(struct spinbox* b);
  *
  * @return 0
 **/
-extern struct spinbox* spinbox_init(char* text);
+extern struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval);
 
 /**
  * @brief 使用后清理窗口部件结构体

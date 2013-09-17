@@ -37,6 +37,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
+# include <widget.h>
 
 # include "spinbox.h"
 
@@ -51,8 +52,8 @@ static struct spinbox_style spinbox_default_style =
     /* 默认工作区域 */
     0,  /* .area_x */
     0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+    100,  /* .area_width */
+    50,  /* .area_height */
 
     /* 默认边界宽度 */
     1,  /* .border_size */
@@ -78,9 +79,6 @@ static struct spinbox_style spinbox_default_style =
     0,  /* .fore_color_g */
     0,  /* .fore_color_b */
     0,  /* .fore_color_a */
-
-    /* 默认字体 */
-    FONT_MATRIX_08, /* .font */
 };
 
 /**
@@ -108,50 +106,41 @@ static si_t spinbox_init_with_default_style(struct spinbox * b)
         if(config_parser_init(SPINBOX_STYLE_FILE, &parser) != 0)
         {
             EGUI_PRINT_ERROR("fail to init spinbox style from config file %s.", SPINBOX_STYLE_FILE);
+        } else {
 
-            return -1;
+            /* 从配置读取各项配置,赋予style指针 */
+            config_parser_get_int(&parser, "area_x", &(style->area_x));
+            config_parser_get_int(&parser, "area_y", &(style->area_y));
+            config_parser_get_int(&parser, "area_width", &(style->area_width));
+            config_parser_get_int(&parser, "area_height", &(style->area_height));
+
+            config_parser_get_int(&parser, "border_size", &(style->border_size));
+
+            config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
+            config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
+            config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
+            config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
+
+            config_parser_get_str(&parser, "cursor", tmp_str);
+            if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
+            {
+                style->cursor = tmp_int;
+            }
+
+            config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
+            config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
+            config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
+            config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
+
+            config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
+            config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
+            config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
+            config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
+
+            /* 退出配置处理器 */
+            config_parser_exit(&parser);
+            style->flag = 1;
         }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        tmp_int = -1;
-        memset(tmp_str, 0, TMP_ARRAY_SIZE);
-        config_parser_get_str(&parser, "font", tmp_str);
-        if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0)
-        {
-            style->font = tmp_int;
-        }
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
     }
 
     /* 用spinbox默认样式初始化spinbox各样式属性 */
@@ -179,8 +168,6 @@ static si_t spinbox_init_with_default_style(struct spinbox * b)
     b->fore_color.b = style->fore_color_b;
     b->fore_color.a = style->fore_color_a;
 
-    b->font = style->font;
-
     return 0;
 }
 
@@ -199,38 +186,10 @@ static si_t spinbox_default_widget_show(struct spinbox * b, union message * msg)
     return 0;
 }
 
-static void _paint_spinbox(struct spinbox* b, si_t is_pressed, struct rectangle* area, int x, int y)
+static void _paint_spinbox(struct spinbox* b, struct rectangle* area, int x, int y)
 {
-	/* 背景色 */
-	set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-	/* spinbox 背景 */
-	fill_rectangle(b->gd, area->x, area->y, area->width, area->height);
-
-	if(is_pressed)
-	{
-		/* 前景色 */
-		set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-	}
-
-	/* spinbox 右边框和下边框 */
-	draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-	draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-
-	/* 前景色 */
-	set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-	/* spinbox 显示的字 */
-	set_font(b->gd, b->font);
-	show_text(b->gd, x + b->border_size, y + b->border_size, b->text, strlen(b->text));
-
-	if(is_pressed)
-	{
-		/* 背景色 */
-		set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-	}
-
-	/* spinbox 上边框和左边框 */
-	draw_line(b->gd, x, y, x + b->area.width - 1, y);
-	draw_line(b->gd, x, y, x, y + b->area.height - 1);
+    /* I think nothing should be done here,
+     * otherwise everything will be done twice. */
 }
 
 static si_t spinbox_default_widget_repaint(struct spinbox * b, union message * msg)
@@ -248,92 +207,40 @@ static si_t spinbox_default_widget_repaint(struct spinbox * b, union message * m
     /* 设置区域 */
     set_area(b->gd, area.x, area.y, area.width, area.height);
 
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* spinbox 背景 */
-    fill_rectangle(b->gd, area.x, area.y, area.width, area.height);
-    /* spinbox 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* spinbox 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-	/* spinbox 显示的字 */
-    set_font(b->gd, b->font);
-    show_text(b->gd, x + b->border_size, y + b->border_size, b->text, strlen(b->text));
-    /* spinbox 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* spinbox 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
-	_paint_spinbox(b, 0, &area, x, y);
+	_paint_spinbox(b, &area, x, y);
 
     return 0;
 }
 
-static si_t spinbox_default_mouse_press(struct spinbox * b, union message * msg)
+static void spinbox_value_change(struct spinbox *s, si_t delta)
 {
-    struct rectangle area;
-    si_t x, y;
-
-    /* 获得左上角的绝对坐标 */
-    widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);
-
-    /* 获得绝对的工作区域 */
-    /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
-
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-    /* 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-	_paint_spinbox(b, 1, &area, x, y);
-
-    return 0;
+    if(!s) {
+        return;
+    }
+    if((s->minval != -1 && s->value+delta < s->minval) ||
+            (s->maxval != -1 && s->value+delta > s->maxval)) {
+        return;
+    }
+    s->value += delta;
 }
 
-static si_t spinbox_default_mouse_release(struct spinbox * b, union message * msg)
+static si_t spinbox_button_callback(addr_t self, addr_t msg)
 {
-    struct rectangle area;
-    si_t x, y;
-
-    /* 获得左上角的绝对坐标 */
-    widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);
-
-    /* 获得绝对的工作区域 */
-    /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
-
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* spinbox 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* spinbox 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-    /* spinbox 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* spinbox 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
-	_paint_spinbox(b, 0, &area, x, y);
-
+    struct button *b = self;
+    union message *m = msg;
+    si_t delta = 0;
+    if(!strcmp(b->text, "v")) {
+        delta = -1;
+    } else if(!strcmp(b->text, "^")) {
+        delta = 1;
+    }
+    switch(m->base.type) {
+        case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
+            spinbox_value_change(SPINBOX_POINTER(b->custom_data), delta);
+            break;
+        default:
+            return button_default_callback(self, msg);
+    }
     return 0;
 }
 
@@ -350,16 +257,6 @@ si_t spinbox_default_callback(addr_t self, addr_t msg)
             break;
 
         case MESSAGE_TYPE_WIDGET_SHOW:
-            spinbox_default_widget_show(b, m);
-            break;
-
-        case MESSAGE_TYPE_MOUSE_PRESS:
-            spinbox_default_mouse_press(b, m);
-            spinbox_default_widget_show(b, m);
-            break;
-
-        case MESSAGE_TYPE_MOUSE_RELEASE:
-            spinbox_default_mouse_release(b, m);
             spinbox_default_widget_show(b, m);
             break;
 
@@ -380,7 +277,7 @@ void spinbox_show(struct spinbox* b)
 	widget_show(WIDGET_POINTER(b));
 }
 
-struct spinbox* spinbox_init(char* text)
+struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
 {
     struct spinbox * addr;
 
@@ -434,7 +331,31 @@ struct spinbox* spinbox_init(char* text)
     /* 默认的回调函数 */
     addr->callback = spinbox_default_callback;
 
-	addr->text = text;
+    addr->maxval = maxval;
+    addr->minval = minval;
+    addr->value = initval;
+
+    /* 25 should be enough for 64-bit integers. */
+    addr->text_number = text_line_init(25, 0);
+    text_line_set_bounds(addr->text_number,
+            0, 0,
+            addr->area.width-addr->area.height, addr->area.height);
+    addr->button_up = button_init("^");
+    addr->button_up->custom_data = addr;
+    addr->button_up->callback = spinbox_button_callback;
+    button_set_bounds(addr->button_up,
+            addr->area.width-addr->area.height+1, 0,
+            addr->area.height, addr->area.height/2);
+    addr->button_down = button_init("v");
+    addr->button_down->custom_data = addr;
+    addr->button_down->callback = spinbox_button_callback;
+    button_set_bounds(addr->button_down,
+            addr->area.width-addr->area.height+1, addr->area.height/2+1,
+            addr->area.height, addr->area.height/2);
+
+    object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->text_number));
+    object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->button_up));
+    object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->button_down));
 
     return addr;
 }
@@ -446,6 +367,10 @@ struct spinbox* spinbox_init(char* text)
 */
 si_t spinbox_exit(struct spinbox * b)
 {
+    text_line_exit(b->text_number);
+    button_exit(b->button_up);
+    button_exit(b->button_down);
+
     graphics_device_exit(b->gd);
 
     free(b);
@@ -456,6 +381,15 @@ si_t spinbox_exit(struct spinbox * b)
 void spinbox_set_bounds(struct spinbox * b, si_t x, si_t y, si_t width , si_t height)
 {
 	widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
+    text_line_set_bounds(b->text_number,
+            0, 0,
+            b->area.width-b->area.height, b->area.height);
+    button_set_bounds(b->button_up,
+            b->area.width-b->area.height+1, 0,
+            b->area.height, b->area.height/2);
+    button_set_bounds(b->button_down,
+            b->area.width-b->area.height+1, b->area.height/2+1,
+            b->area.height, b->area.height/2);
 }
 
 void spinbox_set_color(struct spinbox* b, struct color* fcolor, struct color* bcolor)
@@ -465,5 +399,5 @@ void spinbox_set_color(struct spinbox* b, struct color* fcolor, struct color* bc
 
 void spinbox_set_font(struct spinbox* b, si_t font)
 {
-	b->font = font;
+    text_line_set_font(b->text_number, font);
 }

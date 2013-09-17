@@ -436,6 +436,8 @@ struct button* button_init(char* text)
 
 	addr->text = text;
 
+    addr->custom_data = NULL;
+
     return addr;
 }
 

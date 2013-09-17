@@ -46,6 +46,7 @@
 #include "image_view/image_view.h"
 #include "checkbox/checkbox.h"
 #include "radiobutton/radiobutton.h"
+#include "spinbox/spinbox.h"
 
 #if 0
 
