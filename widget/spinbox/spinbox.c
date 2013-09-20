@@ -53,7 +53,7 @@ static struct spinbox_style spinbox_default_style =
     0,  /* .area_x */
     0,  /* .area_y */
     100,  /* .area_width */
-    50,  /* .area_height */
+    30,  /* .area_height */
 
     /* 默认边界宽度 */
     1,  /* .border_size */
@@ -212,16 +212,39 @@ static si_t spinbox_default_widget_repaint(struct spinbox * b, union message * m
     return 0;
 }
 
-static void spinbox_value_change(struct spinbox *s, si_t delta)
+static si_t spinbox_value_change(struct spinbox *s, si_t delta)
 {
     if(!s) {
-        return;
+        return 0;
     }
     if((s->minval != -1 && s->value+delta < s->minval) ||
             (s->maxval != -1 && s->value+delta > s->maxval)) {
-        return;
+        return 0;
     }
     s->value += delta;
+    if(atoi(text_line_get_buf(s->text_number)) != s->value) {
+        sprintf(text_line_get_buf(s->text_number), "%ld", s->value);
+        text_line_repaint(s->text_number);
+        text_line_show(s->text_number);
+    }
+    return 1;
+}
+
+static void spinbox_text_event_handler(struct widget *subscriber, struct widget *publisher, si_t event)
+{
+    struct spinbox *self = SPINBOX_POINTER(subscriber);
+    struct text_line *text = TEXT_LINE_POINTER(publisher);
+    switch(event) {
+        case TEXT_LINE_EVENT_CURRENT_CHANGE:
+            if(!spinbox_value_change(self,
+                        atoi(text_line_get_buf(text))-self->value)) {
+                /* sync with text failed */
+                spinbox_value_change(self, 0); /* refresh text */
+            }
+            break;
+        default:
+            break;
+    }
 }
 
 static si_t spinbox_button_callback(addr_t self, addr_t msg)
@@ -352,6 +375,12 @@ struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
     button_set_bounds(addr->button_down,
             addr->area.width-addr->area.height+1, addr->area.height/2+1,
             addr->area.height, addr->area.height/2);
+
+    text_line_set_keybd_type(addr->text_number, TEXT_LINE_KEYBOARD_TYPE_NUMBER);
+    sprintf(text_line_get_buf(addr->text_number),
+            "%ld", addr->value);
+    text_line_register_move_handler(addr->text_number, WIDGET_POINTER(addr),
+            TEXT_LINE_EVENT_CURRENT_CHANGE, spinbox_text_event_handler);
 
     object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->text_number));
     object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->button_up));
