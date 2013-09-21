@@ -48,30 +48,31 @@
  */
 struct window_style window_default_style = 
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-	{0, 0, 0, 0},
+        /* 默认工作区域 */
+        0, 0, 0, 0,
 
-    /* 默认边界宽度 */
-    /* FIXME:不应hard code */
-    3,  /* .border_size */
+        /* 默认边界宽度 */
+        3,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-	{0, 0, 255, 0},	/* .back_color */
+        /* 默认背景色 */
+        0, 0, 255, 0,	/* .back_color */
 
-    /* 默认前景色 */
-	{0, 0, 0, 0},  /* fore_color */
+        /* 默认前景色 */
+        0, 0, 0, 0,  /* fore_color */
+    },
 
     /* 默认是否可以最大化/最小化/全屏 */
     1,  /* .maximize_enable */
@@ -82,25 +83,24 @@ struct window_style window_default_style =
     3,  /* .frame_size */
     30, /* .title_bar_size */
 
-	/** 默认窗口边框颜色 **/
-	{0x46, 0xa5, 0xe5, 50},	/* .frame_color */
+    /** 默认窗口边框颜色 **/
+    {0x46, 0xa5, 0xe5, 50},	/* .frame_color */
 
-	/** 菜单栏背景色 **/
-	{0x18, 0x29, 0x45, 50},	/* .menu_bar_backcolor */
+    /** 菜单栏背景色 **/
+    {0x18, 0x29, 0x45, 50},	/* .menu_bar_backcolor */
 
-	/** 菜单栏边框色 **/
-	{0xcb, 0xf3, 0xfb, 50},	/* .menu_bar_frame_color */
+    /** 菜单栏边框色 **/
+    {0xcb, 0xf3, 0xfb, 50},	/* .menu_bar_frame_color */
 
-	/** 标题栏字体颜色 **/
-	{0xcc, 0xff, 0x99, 0},	/* .title_bar_font_color */
+    /** 标题栏字体颜色 **/
+    {0xcc, 0xff, 0x99, 0},	/* .title_bar_font_color */
 
-	/** 标题栏字体大小 **/
-	FONT_MATRIX_12	/* .title_font */
+    /** 标题栏字体大小 **/
+    FONT_MATRIX_12	/* .title_font */
 };
 
 /**
  * @brief 用window全局样式对象初始化window对象
- * XXX: Bound to fail.
  *
  * @param style window样式对象指针
  * @param w window指针
@@ -109,107 +109,76 @@ struct window_style window_default_style =
  **/
 static si_t window_init_with_default_style(struct window * w)
 {
-    /* window全局样式对象指针 */
-    struct window_style * style = &window_default_style;
+    char *config_path = get_config_path("window.cfg");
+    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
+    si_t tmp_int;
+    struct widget_style_entry extra[] = {
+        {.key="maximize_enable", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.maximize_enable)},
+        {.key="minimize_enable", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.minimize_enable)},
+        {.key="is_full_screen", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.is_full_screen)},
 
-    /* 如果window全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-		char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-		si_t tmp_int = -1;
-        struct config_parser parser;
-        const char *WINDOW_STYLE_FILE = get_config_path("window.cfg");
+        {.key="frame_size", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.frame_size)},
+        {.key="title_bar_size", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.title_bar_size)},
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(WINDOW_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init window style from config file %s.", WINDOW_STYLE_FILE);
-            return -1;
-        }
+        {.key="frame_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.frame_color.r)},
+        {.key="frame_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.frame_color.g)},
+        {.key="frame_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.frame_color.b)},
+        {.key="frame_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.frame_color.a)},
 
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area.x));
-        config_parser_get_int(&parser, "area_y", &(style->area.y));
-        config_parser_get_int(&parser, "area_width", &(style->area.width));
-        config_parser_get_int(&parser, "area_height", &(style->area.height));
+        {.key="menu_bar_backcolor_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_backcolor.r)},
+        {.key="menu_bar_backcolor_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_backcolor.g)},
+        {.key="menu_bar_backcolor_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_backcolor.b)},
+        {.key="menu_bar_backcolor_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_backcolor.a)},
 
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
+        {.key="menu_bar_frame_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_frame_color.r)},
+        {.key="menu_bar_frame_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_frame_color.g)},
+        {.key="menu_bar_frame_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_frame_color.b)},
+        {.key="menu_bar_frame_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.menu_bar_frame_color.a)},
 
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
+        {.key="title_bar_font_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.title_bar_font_color.r)},
+        {.key="title_bar_font_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.title_bar_font_color.g)},
+        {.key="title_bar_font_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.title_bar_font_color.b)},
+        {.key="title_bar_font_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(window_default_style.title_bar_font_color.a)},
 
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
+        {.key="title_font", .type=WIDGET_STYLE_TYPE_STR, .val=tmp_str},
+    };
 
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color.r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color.g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color.b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color.a));
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(w), &window_default_style.common,
+            extra, sizeof(extra)/sizeof(extra[0]));
+    free(config_path);
 
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color.r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color.g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color.b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color.a));
-
-        config_parser_get_int(&parser, "maximize_enable", &(style->maximize_enable));
-        config_parser_get_int(&parser, "minimize_enable", &(style->minimize_enable));
-        config_parser_get_int(&parser, "is_full_screen", &(style->is_full_screen));
-
-        config_parser_get_int(&parser, "frame_size", &(style->frame_size));
-        config_parser_get_int(&parser, "title_bar_size", &(style->title_bar_size));
-
-		config_parser_get_int(&parser, "frame_color_r", &(style->frame_color.r));
-		config_parser_get_int(&parser, "frame_color_g", &(style->frame_color.g));
-		config_parser_get_int(&parser, "frame_color_b", &(style->frame_color.b));
-		config_parser_get_int(&parser, "frame_color_a", &(style->frame_color.a));
-
-		config_parser_get_int(&parser, "menu_bar_backcolor_r", &(style->menu_bar_backcolor.r));
-		config_parser_get_int(&parser, "menu_bar_backcolor_g", &(style->menu_bar_backcolor.g));
-		config_parser_get_int(&parser, "menu_bar_backcolor_b", &(style->menu_bar_backcolor.b));
-		config_parser_get_int(&parser, "menu_bar_backcolor_a", &(style->menu_bar_backcolor.a));
-
-		config_parser_get_int(&parser, "menu_bar_frame_color_r", &(style->menu_bar_frame_color.r));
-		config_parser_get_int(&parser, "menu_bar_frame_color_g", &(style->menu_bar_frame_color.g));
-		config_parser_get_int(&parser, "menu_bar_frame_color_b", &(style->menu_bar_frame_color.b));
-		config_parser_get_int(&parser, "menu_bar_frame_color_a", &(style->menu_bar_frame_color.a));
-
-		config_parser_get_int(&parser, "title_bar_font_color_r", &(style->title_bar_font_color.r));
-		config_parser_get_int(&parser, "title_bar_font_color_g", &(style->title_bar_font_color.g));
-		config_parser_get_int(&parser, "title_bar_font_color_b", &(style->title_bar_font_color.b));
-		config_parser_get_int(&parser, "title_bar_font_color_a", &(style->title_bar_font_color.a));
-
-		config_parser_get_int(&parser, "title_font", &(style->title_font));
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
+    if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0) {
+        window_default_style.title_font = tmp_int;
     }
 
     /* 用window默认样式初始化window各样式属性 */
-	w->area = style->area;
+    w->minimize_enable = window_default_style.minimize_enable;
+    w->maximize_enable = window_default_style.maximize_enable;
+    w->is_full_screen = window_default_style.is_full_screen;
 
-    w->border_size = style->border_size;
-
-    w->maximum_width = style->maximum_width;
-    w->minimum_width = style->minimum_width;
-    w->maximum_height = style->maximum_height;
-    w->minimum_height = style->minimum_height;
-
-    w->minimize_enable = style->minimize_enable;
-    w->maximize_enable = style->maximize_enable;
-    w->is_full_screen = style->is_full_screen;
-
-    w->cursor = style->cursor;
-
-    w->back_color = style->back_color;
-    w->fore_color = style->fore_color;
-
-    return 0;
+    return res;
 }
 
 static si_t window_default_widget_show(struct window * w, union message * msg)

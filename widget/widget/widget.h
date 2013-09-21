@@ -137,10 +137,73 @@ struct widget
     WIDGET_DEFINITION
 };
 
+struct widget_style
+{
+    /* 一个标志 */
+    si_t flag;
+
+    /* 工作区域 */
+    si_t area_x;
+    si_t area_y;
+    si_t area_width;
+    si_t area_height;
+
+    /* 边界宽度 */
+    si_t border_size;
+
+    /* 高度&宽度 */
+    si_t maximum_width;
+    si_t minimum_width;
+    si_t maximum_height;
+    si_t minimum_height;
+
+    /* 鼠标形状 */
+    si_t cursor;
+
+    /* 背景色 */
+    si_t back_color_r;
+    si_t back_color_g;
+    si_t back_color_b;
+    si_t back_color_a;
+
+    /* 前景色 */
+    si_t fore_color_r;
+    si_t fore_color_g;
+    si_t fore_color_b;
+    si_t fore_color_a;
+};
+
+enum widget_style_type
+{
+    WIDGET_STYLE_TYPE_INT,
+    WIDGET_STYLE_TYPE_STR,
+    WIDGET_STYLE_TYPE_FLOAT,
+};
+
+struct widget_style_entry
+{
+    const char *key;
+    enum widget_style_type type;
+    addr_t val;
+};
+
 /**
  * 将地址强制转换成 struct widget *
 **/
 # define WIDGET_POINTER(addr) ((struct widget *)(addr))
+
+/**
+ * @brief 用widget全局样式对象初始化widget对象
+ *
+ * @param path 配置文件路径
+ * @param w widget指针
+ * @param style widget样式对象指针
+ * @param extra 其他需要初始化的属性列表，可以为NULL
+ * @param extralen extra列表的长度
+ *
+ * @return 成功返回0，否则返回-1
+ **/
+extern si_t widget_init_with_default_style(const char *path, struct widget * w, struct widget_style *style, struct widget_style_entry extra[], ui_t extralen);
 
 /**
  * @brief 使用前设置窗口部件结构体

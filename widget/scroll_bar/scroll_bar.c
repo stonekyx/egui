@@ -39,56 +39,54 @@
 
 #define TMP_ARRAY_SIZE 256
 
-/* 滚动条样式全局对象 */
+/* 滚动条样式全局对象. This is not hard-coding. */
 static struct scroll_bar_style scroll_bar_default_style = 
 {
-	0,  /* .flag */
+    {
+        0,  /* .flag */
 
-	/* 默认工作区域 */
-	0,      /* .area_x */
-	0,      /* .area_y */
-	0,      /* .area_width */
-	0,      /* .area_height */
+        /* 默认工作区域 */
+        0,      /* .area_x */
+        0,      /* .area_y */
+        0,      /* .area_width */
+        0,      /* .area_height */
 
-	/* 默认边界宽度 */
-	1,      /* .border_size */
+        /* 默认边界宽度 */
+        1,      /* .border_size */
 
-	/* 默认宽度/高度 */
-	0,      /* .maximum_width */
-	0,      /* .minimum_width */
-	0,      /* .maximum_height */
-	0,      /* .minimum_height */
+        /* 默认宽度/高度 */
+        0,      /* .maximum_width */
+        0,      /* .minimum_width */
+        0,      /* .maximum_height */
+        0,      /* .minimum_height */
 
-	/* 默认鼠标形状 */
-	CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-	/* 背景色 */
-	/* FIXME:should not be hard code */
-	0xcb,	/* .back_color_r */
-	0xf3,	/* .back_color_g */
-	0xfb,	/* .back_color_b */
-	0,      /* .back_color_a */
+        /* 背景色 */
+        0xcb,	/* .back_color_r */
+        0xf3,	/* .back_color_g */
+        0xfb,	/* .back_color_b */
+        0,      /* .back_color_a */
 
-	/* 前景色 */
-	/* FIXME:should not be hard code */
-	0x46,   /* .fore_color_r */
-	0xa5,   /* .fore_color_g */
-	0xe5,   /* .fore_color_b */
-	0,      /* .fore_color_a */
+        /* 前景色 */
+        0x46,   /* .fore_color_r */
+        0xa5,   /* .fore_color_g */
+        0xe5,   /* .fore_color_b */
+        0,      /* .fore_color_a */
+    },
 
-	/* outterframe颜色 */
-	/* FIXME:should not be hard code */
-	120,    /* .outterframe_color_r */
-	120,    /* .outterframe_color_g */
-	120,    /* .outterframe_color_b */
-	0,      /* .outterframe_color_a */
+    /* outterframe颜色 */
+    120,    /* .outterframe_color_r */
+    120,    /* .outterframe_color_g */
+    120,    /* .outterframe_color_b */
+    0,      /* .outterframe_color_a */
 
-	/* innerframe颜色 */
-	/* FIXME:should not be hard code */
-	0x18,   /* .innerframe_color_r */
-	0x29,   /* .innerframe_color_g */
-	0x45,   /* .innerframe_color_b */
-	0,      /* .innerframe_color_a */
+    /* innerframe颜色 */
+    0x18,   /* .innerframe_color_r */
+    0x29,   /* .innerframe_color_g */
+    0x45,   /* .innerframe_color_b */
+    0,      /* .innerframe_color_a */
 };
 
 /**
@@ -101,106 +99,44 @@ static struct scroll_bar_style scroll_bar_default_style =
  **/
 static si_t scroll_bar_init_with_default_style(struct scroll_bar * sb)
 {
-	char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-	si_t tmp_int = -1;
-	/* scroll_bar全局样式对象指针 */
-	struct scroll_bar_style * style = &scroll_bar_default_style;
+    static struct widget_style_entry extra[] = {
+        {.key="outterframe_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.outterframe_color_r)},
+        {.key="outterframe_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.outterframe_color_g)},
+        {.key="outterframe_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.outterframe_color_b)},
+        {.key="outterframe_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.outterframe_color_a)},
 
-	/* 如果scroll_bar全局样式对象尚未加载配置 */
-	if(!style->flag)
-	{
-		struct config_parser parser;
-        const char *SCROLL_BAR_STYLE_FILE = get_config_path("scroll_bar.cfg");
+        {.key="innerframe_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.innerframe_color_r)},
+        {.key="innerframe_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.innerframe_color_g)},
+        {.key="innerframe_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.innerframe_color_b)},
+        {.key="innerframe_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(scroll_bar_default_style.innerframe_color_a)},
+    };
+    char *config_path = get_config_path("scroll_bar.cfg");
+    si_t res;
 
-		/* 初始化配置处理器 */
-		if(config_parser_init(SCROLL_BAR_STYLE_FILE, &parser) != 0)
-		{
-			EGUI_PRINT_ERROR("fail to init scroll_bar style from config file %s.", SCROLL_BAR_STYLE_FILE);
+    res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(sb), &scroll_bar_default_style.common,
+            extra, sizeof(extra)/sizeof(extra[0]));
+    free(config_path);
 
-			return -1;
-		}
+    sb->outterframe_color.r = scroll_bar_default_style.outterframe_color_r;
+    sb->outterframe_color.g = scroll_bar_default_style.outterframe_color_g;
+    sb->outterframe_color.b = scroll_bar_default_style.outterframe_color_b;
+    sb->outterframe_color.a = scroll_bar_default_style.outterframe_color_a;
 
-		/* 从配置读取各项配置,赋予style指针 */
-		config_parser_get_int(&parser, "area_x", &(style->area_x));
-		config_parser_get_int(&parser, "area_y", &(style->area_y));
-		config_parser_get_int(&parser, "area_width", &(style->area_width));
-		config_parser_get_int(&parser, "area_height", &(style->area_height));
+    sb->innerframe_color.r = scroll_bar_default_style.innerframe_color_r;
+    sb->innerframe_color.g = scroll_bar_default_style.innerframe_color_g;
+    sb->innerframe_color.b = scroll_bar_default_style.innerframe_color_b;
+    sb->innerframe_color.a = scroll_bar_default_style.innerframe_color_a;
 
-		config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-		config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-		config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-		config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-		config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-		config_parser_get_str(&parser, "cursor", tmp_str);
-		if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-		{
-			style->cursor = tmp_int;
-		}
-
-		config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-		config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-		config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-		config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-		config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-		config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-		config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-		config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-		config_parser_get_int(&parser, "outterframe_color_r", &(style->outterframe_color_r));
-		config_parser_get_int(&parser, "outterframe_color_g", &(style->outterframe_color_g));
-		config_parser_get_int(&parser, "outterframe_color_b", &(style->outterframe_color_b));
-		config_parser_get_int(&parser, "outterframe_color_a", &(style->outterframe_color_a));
-
-		config_parser_get_int(&parser, "innerframe_color_r", &(style->innerframe_color_r));
-		config_parser_get_int(&parser, "innerframe_color_g", &(style->innerframe_color_g));
-		config_parser_get_int(&parser, "innerframe_color_b", &(style->innerframe_color_b));
-		config_parser_get_int(&parser, "innerframe_color_a", &(style->innerframe_color_a));
-
-		/* 退出配置处理器 */
-		config_parser_exit(&parser);
-		style->flag = 1;
-	}
-
-	/* 用scroll_bar默认样式初始化scroll_bar各样式属性 */
-	sb->area.x = style->area_x;
-	sb->area.y = style->area_y;
-	sb->area.width = style->area_width;
-	sb->area.height = style->area_height;
-
-	sb->border_size = style->border_size;
-
-	sb->maximum_width = style->maximum_width;
-	sb->minimum_width = style->minimum_width;
-	sb->maximum_height = style->maximum_height;
-	sb->minimum_height = style->minimum_height;
-
-	sb->cursor = style->cursor;
-
-	sb->back_color.r = style->back_color_r;
-	sb->back_color.g = style->back_color_g;
-	sb->back_color.b = style->back_color_b;
-	sb->back_color.a = style->back_color_a;
-
-	sb->fore_color.r = style->fore_color_r;
-	sb->fore_color.g = style->fore_color_g;
-	sb->fore_color.b = style->fore_color_b;
-	sb->fore_color.a = style->fore_color_a;
-
-	sb->outterframe_color.r = style->outterframe_color_r;
-	sb->outterframe_color.g = style->outterframe_color_g;
-	sb->outterframe_color.b = style->outterframe_color_b;
-	sb->outterframe_color.a = style->outterframe_color_a;
-
-	sb->innerframe_color.r = style->innerframe_color_r;
-	sb->innerframe_color.g = style->innerframe_color_g;
-	sb->innerframe_color.b = style->innerframe_color_b;
-	sb->innerframe_color.a = style->innerframe_color_a;
-
-
-	return 0;
+    return res;
 }
 
 static si_t scroll_bar_default_widget_show(struct scroll_bar* s, union message* msg)

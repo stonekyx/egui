@@ -45,39 +45,40 @@
 /* 按钮样式全局对象 */
 static struct image_view_style image_view_default_style =
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        0,  /* .area_width */
+        0,  /* .area_height */
 
-    /* 默认边界宽度 */
-    1,  /* .border_size */
+        /* 默认边界宽度 */
+        1,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    255,    /* .back_color_r */
-    255,    /* .back_color_g */
-    0,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        255,    /* .back_color_r */
+        255,    /* .back_color_g */
+        0,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    0,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
+        /* 默认前景色 */
+        0,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    }
 };
 
 /**
@@ -89,85 +90,14 @@ static struct image_view_style image_view_default_style =
  **/
 static si_t image_view_init_with_default_style(struct image_view * iv)
 {
-    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-    si_t tmp_int = -1;
-    /* image_view全局样式对象指针 */
-    struct image_view_style * style = &image_view_default_style;
+    char *config_path = get_config_path("image_view.cfg");
 
-    /* 如果image_view全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *IMAGE_VIEW_STYLE_FILE = get_config_path("image_view.cfg");
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(iv), &image_view_default_style.common,
+            NULL, 0);
+    free(config_path);
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(IMAGE_VIEW_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init image_view style from config file %s.", IMAGE_VIEW_STYLE_FILE);
-
-            return -1;
-        }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
-    }
-
-    /* 用image_view默认样式初始化image_view各样式属性 */
-    iv->area.x = style->area_x;
-    iv->area.y = style->area_y;
-    iv->area.width = style->area_width;
-    iv->area.height = style->area_height;
-
-    iv->border_size = style->border_size;
-
-    iv->maximum_width = style->maximum_width;
-    iv->minimum_width = style->minimum_width;
-    iv->maximum_height = style->maximum_height;
-    iv->minimum_height = style->minimum_height;
-
-    iv->cursor = style->cursor;
-
-    iv->back_color.r = style->back_color_r;
-    iv->back_color.g = style->back_color_g;
-    iv->back_color.b = style->back_color_b;
-    iv->back_color.a = style->back_color_a;
-
-    iv->fore_color.r = style->fore_color_r;
-    iv->fore_color.g = style->fore_color_g;
-    iv->fore_color.b = style->fore_color_b;
-    iv->fore_color.a = style->fore_color_a;
-
-    return 0;
+    return res;
 }
 
 static si_t image_view_default_widget_show(struct image_view * i, union message * msg)

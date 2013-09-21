@@ -45,40 +45,41 @@
 /* 按钮样式全局对象 */
 static struct button_style button_default_style =
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        0,  /* .area_width */
+        0,  /* .area_height */
 
-    /* 默认边界宽度 */
-    1,  /* .border_size */
+        /* 默认边界宽度 */
+        1,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    0,    /* .back_color_r */
-    255,    /* .back_color_g */
-    0,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        /* FIXME:不应该hard code */
+        0,    /* .back_color_r */
+        255,    /* .back_color_g */
+        0,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    255,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
-
+        /* 默认前景色 */
+        255,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    },
     /* 默认字体 */
     FONT_MATRIX_08, /* .font */
 };
@@ -94,94 +95,25 @@ static struct button_style button_default_style =
 static si_t button_init_with_default_style(struct button * b)
 {
     char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-    si_t tmp_int = -1;
-    /* button全局样式对象指针 */
-    struct button_style * style = &button_default_style;
+    si_t tmp_int;
+    struct widget_style_entry extra[] = {
+        {.key="font", .type=WIDGET_STYLE_TYPE_STR, .val=tmp_str},
+    };
+    char *config_path = get_config_path("button.cfg");
 
-    /* 如果button全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *BUTTON_STYLE_FILE = get_config_path("button.cfg");
+    /* warnings are expected when no configuration file is available */
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(b), &button_default_style.common,
+            extra, sizeof(extra)/sizeof(extra[0]));
+    free(config_path);
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(BUTTON_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init button style from config file %s.", BUTTON_STYLE_FILE);
-
-            return -1;
-        }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        tmp_int = -1;
-        memset(tmp_str, 0, TMP_ARRAY_SIZE);
-        config_parser_get_str(&parser, "font", tmp_str);
-        if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0)
-        {
-            style->font = tmp_int;
-        }
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
+    if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0) {
+        button_default_style.font = tmp_int;
     }
 
-    /* 用button默认样式初始化button各样式属性 */
-    b->area.x = style->area_x;
-    b->area.y = style->area_y;
-    b->area.width = style->area_width;
-    b->area.height = style->area_height;
+    b->font = button_default_style.font;
 
-    b->border_size = style->border_size;
-
-    b->maximum_width = style->maximum_width;
-    b->minimum_width = style->minimum_width;
-    b->maximum_height = style->maximum_height;
-    b->minimum_height = style->minimum_height;
-
-    b->cursor = style->cursor;
-
-    b->back_color.r = style->back_color_r;
-    b->back_color.g = style->back_color_g;
-    b->back_color.b = style->back_color_b;
-    b->back_color.a = style->back_color_a;
-
-    b->fore_color.r = style->fore_color_r;
-    b->fore_color.g = style->fore_color_g;
-    b->fore_color.b = style->fore_color_b;
-    b->fore_color.a = style->fore_color_a;
-
-    b->font = style->font;
-
-    return 0;
+    return res;
 }
 
 static si_t button_default_widget_show(struct button * b, union message * msg) 

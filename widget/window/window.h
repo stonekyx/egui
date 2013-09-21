@@ -107,29 +107,7 @@ struct window
 /*  窗口样式结构体 */
 struct window_style
 {
-    /* 一个标志 */
-    si_t flag;
-
-    /* 工作区域 */
-    struct rectangle area;
-
-    /* 边界宽度 */
-    si_t border_size;
-
-    /* 高度&宽度 */
-    si_t maximum_width;
-    si_t minimum_width;
-    si_t maximum_height;
-    si_t minimum_height;
-
-    /* 鼠标形状 */
-    si_t cursor;
-
-    /* 背景色 */
-    struct color back_color;
-
-    /* 前景色 */
-    struct color fore_color;
+    struct widget_style common;
 
     /* 是否可以最大化/最小化/全屏 */
     si_t maximize_enable;

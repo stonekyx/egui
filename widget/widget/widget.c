@@ -36,9 +36,184 @@
 
 # include "widget.h"
 
+# define TMP_ARRAY_SIZE 256
+
+struct widget_style widget_default_style = 
+{
+    /* 初始化，默认未访问 */
+    0,  /* .flag */
+
+    /* 默认工作区域 */
+    0,  /* .area_x */
+    0,  /* .area_y */
+    0,  /* .area_width */
+    0,  /* .area_height */
+
+    /* 默认边界宽度 */
+    0,  /* .border_size */
+
+    /* 默认宽度&高度 */
+    0,  /* .maximum_width */
+    0,  /* .minimum_width */
+    0,  /* .maximum_height */
+    0,  /* .minimum_height */
+
+    /* 默认鼠标形状 */
+    CURSOR_SHAPE_X, /* .cursor */
+
+    /* 默认背景色 */
+    255,    /* .back_color_r */
+    255,    /* .back_color_g */
+    255,  /* .back_color_b */
+    0,  /* .back_color_a */
+
+    /* 默认前景色 */
+    0,  /* .fore_color_r */
+    0,  /* .fore_color_g */
+    0,  /* .fore_color_b */
+    0,  /* .fore_color_a */
+};
+
+static si_t widget_init_extra_entry(struct config_parser *parser, struct widget_style_entry *entry)
+{
+    si_t res = 0;
+    switch(entry->type) {
+        case WIDGET_STYLE_TYPE_INT:
+            if(-1 == config_parser_get_int(parser,
+                        entry->key, (si_t*)entry->val)) {
+                res = -1;
+            }
+            break;
+        case WIDGET_STYLE_TYPE_STR:
+            if(-1 == config_parser_get_str(parser,
+                        entry->key, (char*)entry->val)) {
+                res = -1;
+            }
+            break;
+        case WIDGET_STYLE_TYPE_FLOAT:
+            if(-1 == config_parser_get_float(parser,
+                        entry->key, (float*)entry->val)) {
+                res = -1;
+            }
+            break;
+        default:
+            break;
+    }
+    return res;
+}
+
+static si_t widget_init_extra_with_default_style(struct config_parser *parser, struct widget_style_entry extra[], ui_t extralen)
+{
+    struct widget_style_entry *entry;
+    si_t res = 0;
+    for(entry = extra; entry<extra+extralen; entry++) {
+        if(-1 == widget_init_extra_entry(parser, entry)) {
+            res = -1;
+        }
+    }
+    return res;
+}
+
+/**
+ * @brief 用widget全局样式对象初始化widget对象
+ *
+ * @param path 配置文件路径
+ * @param w widget指针
+ * @param style widget样式对象指针
+ * @param extra 其他需要初始化的属性列表，可以为NULL
+ * @param extralen extra列表的长度
+ *
+ * @return 成功返回0，否则返回-1
+ **/
+si_t widget_init_with_default_style(const char *path, struct widget * w, struct widget_style *style, struct widget_style_entry extra[], ui_t extralen)
+{
+    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
+    si_t tmp_int = -1;
+    si_t res = 0;
+
+    /* 如果widget全局样式对象尚未加载配置 */
+    if(!style->flag)
+    {
+        struct config_parser parser;
+
+        /* 初始化配置处理器 */
+        if(!path || config_parser_init(path, &parser) != 0)
+        {
+            EGUI_PRINT_ERROR("fail to init widget style from config file %s.", path);
+            res = -1;
+        } else {
+
+            /* 从配置读取各项配置,赋予style指针 */
+            config_parser_get_int(&parser, "area_x", &(style->area_x));
+            config_parser_get_int(&parser, "area_y", &(style->area_y));
+            config_parser_get_int(&parser, "area_width", &(style->area_width));
+            config_parser_get_int(&parser, "area_height", &(style->area_height));
+
+            config_parser_get_int(&parser, "border_size", &(style->border_size));
+
+            config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
+            config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
+            config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
+            config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
+
+            config_parser_get_str(&parser, "cursor", tmp_str);
+            if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
+            {
+                style->cursor = tmp_int;
+            }
+
+            config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
+            config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
+            config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
+            config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
+
+            config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
+            config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
+            config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
+            config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
+
+            if(-1 == widget_init_extra_with_default_style(&parser, extra, extralen)) {
+                res = -1;
+            }
+
+            /* 退出配置处理器 */
+            config_parser_exit(&parser);
+        }
+        style->flag = 1;
+    }
+
+    /* 用widget默认样式初始化widget各样式属性 */
+    w->area.x = style->area_x;
+    w->area.y = style->area_y;
+    w->area.width = style->area_width;
+    w->area.height = style->area_height;
+
+    w->border_size = style->border_size;
+
+    w->maximum_width = style->maximum_width;
+    w->minimum_width = style->minimum_width;
+    w->maximum_height = style->maximum_height;
+    w->minimum_height = style->minimum_height;
+
+    w->cursor = style->cursor;
+
+    w->back_color.r = style->back_color_r;
+    w->back_color.g = style->back_color_g;
+    w->back_color.b = style->back_color_b;
+    w->back_color.a = style->back_color_a;
+
+    w->fore_color.r = style->fore_color_r;
+    w->fore_color.g = style->fore_color_g;
+    w->fore_color.b = style->fore_color_b;
+    w->fore_color.a = style->fore_color_a;
+
+    return res;
+}
+
 void *widget_init(si_t id)
 {
     struct widget * addr;
+    char *config_path;
 
     /* 分配存储空间 */
     addr = (struct widget *)malloc(sizeof(struct widget));
@@ -70,27 +245,6 @@ void *widget_init(si_t id)
     addr->name = "struct widget";
     addr->id = id;
 
-    /* 默认工作区域 */
-    addr->area.x = 0;
-    addr->area.y = 0;
-    addr->area.width = 0;
-    addr->area.height = 0;
-
-    /* 默认边界宽度 */
-    addr->border_size = 0;
-
-    /* 默认最大宽度 */
-    addr->maximum_width = 0; /* should use macro */
-    /* 默认最大高度 */
-    addr->maximum_height = 0; /* should use macro */
-    /* 默认最小宽度 */
-    addr->minimum_width = 0;
-    /* 默认最小高度 */
-    addr->minimum_height = 0;
-
-    /* 默认鼠标形状 */
-    addr->cursor = CURSOR_SHAPE_X;
-
     /* 默认是否能处理键盘输入消息 */
     addr->input_enable = 0;
 
@@ -106,16 +260,11 @@ void *widget_init(si_t id)
     /* 默认是否是窗口 */
     addr->is_window = 0;
 
-    addr->back_color.r = 255;
-    addr->back_color.g = 255;
-    addr->back_color.b = 255;
-    addr->back_color.a = 0;
+    widget_init_with_default_style(
+            config_path = get_config_path("widget.cfg"),
+            addr, &widget_default_style, NULL, 0);
+    free(config_path);
 
-    addr->fore_color.r = 0;
-    addr->fore_color.g = 0;
-    addr->fore_color.b = 0;
-    addr->fore_color.a = 0;
-	
     /* 默认的回调函数 */
     addr->callback = NULL;
 
@@ -153,53 +302,6 @@ si_t widget_absolute_coordinate(struct widget * w, si_t * x, si_t * y)
     }
     return 0;
 }
-si_t widget_absolute_area_old (struct widget * w, struct rectangle * result)
-{
-    struct object * self, * parent;
-    struct rectangle  off_set_area;
-
-    si_t flag = 0;
-
-	off_set_area.x = 0;
-	off_set_area.y = 0;
-	off_set_area.width = 0;
-	off_set_area.height = 0;
-
-
-    self = OBJECT_POINTER(w);
-    while((parent = object_parent(self)) != NULL)
-    {
-	    /*if(area_intersection(&(WIDGET_POINTER(parent)->area),&(WIDGET_POINTER(self)->area), result) == -1)
-        {
-            flag = 1;
-            break;
-        }*/
-
-		result->x = WIDGET_POINTER(self)->area.x;	
-		result->y = WIDGET_POINTER(self)->area.y;
-
-
-		off_set_area.x += result->x ;
-		off_set_area.y += result->y ;
-        self = parent;
-    }
-
-    if(flag == 1)
-    {
-        return -1;
-    }
-    else
-    {
-		
-        result->x = WIDGET_POINTER(self)->area.x + off_set_area.x;
-        result->y = WIDGET_POINTER(self)->area.y + off_set_area.y;
-		result->width = w->area.width;
-		result->height = w->area.height;
-		
-        return 0;
-    }
-}
-
 
 si_t widget_absolute_area (struct widget * w, struct rectangle * result)
 {
