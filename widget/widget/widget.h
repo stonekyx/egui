@@ -34,8 +34,6 @@
 # include "comm.h"
 # include "graph.h"
 
-# include "data_structures.h" 
-
 /**
  * 窗口部件结构体
 **/
@@ -130,12 +128,7 @@
     /**
      * 处理消息的回调函数
     **/ \
-    si_t (* callback)(void *, void *); \
-    \
-    /**
-     * 子控件列表
-    **/ \
-    struct list children;
+    si_t (* callback)(void *, void *);
 
 struct widget
 {
@@ -310,15 +303,5 @@ extern si_t get_font_enum_from_str(const char * str);
  * @return 成功返回str对应鼠标形状的枚举值,否则返回-1
  **/
 extern si_t get_cursor_enum_from_str(const char * str);
-
-/**
- * @brief 将消息分发到子控件
- *
- * @param w 父控件指针
- *        m 消息指针
- *
- * @return 返回分发动作的结果（参见list.c: list_for_each()）
- **/
-extern si_t widget_dispatch_message(struct widget *w, union message *m);
 
 # endif
