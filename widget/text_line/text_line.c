@@ -1221,43 +1221,17 @@ struct text_line* text_line_init(si_t bufsize, si_t cur_line)
     if((addr = (struct text_line*)malloc(sizeof(struct text_line))) == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
 
-    /* struct text_line 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct text_line";
-    addr->id = 0;
 
     /* 默认是否能处理键盘输入消息 */
     addr->input_enable = 1;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化text_line样式 */
     text_line_init_with_default_style(addr);
@@ -1308,17 +1282,13 @@ struct text_line* text_line_init(si_t bufsize, si_t cur_line)
 
 extern si_t text_line_exit(struct text_line* t)
 {
-    graphics_device_exit(t->gd);
-
     if(t->buf != NULL)
         free(t->buf);
 
     if(t->placeholder != NULL)
         free(t->placeholder);
 
-    free(t);
-
-    return 0;
+    return widget_exit(WIDGET_POINTER(t));
 }
 
 extern si_t text_line_set_bufsize(struct text_line* t, si_t size)

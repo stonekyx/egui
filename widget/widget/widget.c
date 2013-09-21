@@ -225,6 +225,16 @@ void *widget_init(si_t id)
         return NULL;
     }
 
+    widget_init_with_default_style(
+            config_path = get_config_path("widget.cfg"),
+            addr, &widget_default_style, NULL, 0);
+    free(config_path);
+
+    return widget_init_common(addr, id);
+}
+
+void *widget_init_common(struct widget *addr, si_t id)
+{
     /* 申请图形设备 */
     addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
 
@@ -259,11 +269,6 @@ void *widget_init(si_t id)
 
     /* 默认是否是窗口 */
     addr->is_window = 0;
-
-    widget_init_with_default_style(
-            config_path = get_config_path("widget.cfg"),
-            addr, &widget_default_style, NULL, 0);
-    free(config_path);
 
     /* 默认的回调函数 */
     addr->callback = NULL;

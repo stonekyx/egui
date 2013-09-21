@@ -130,7 +130,12 @@
     /**
      * 处理消息的回调函数
     **/ \
-    si_t (* callback)(void *, void *);
+    si_t (* callback)(void *, void *); \
+    \
+    /**
+     * 子控件列表
+    **/ \
+    struct list children;
 
 struct widget
 {
@@ -215,6 +220,15 @@ extern si_t widget_init_with_default_style(const char *path, struct widget * w, 
 extern void *widget_init(si_t id);
 
 /**
+ * @brief 初始化widget结构体的数据
+ *
+ * @details 调用前需要保证已经分配足够的空间
+ *
+ * @return 成功返回widget指针，失败返回NULL
+**/
+extern void *widget_init_common(struct widget *w, si_t id);
+
+/**
  * @brief 使用后清理窗口部件结构体
  *
  * @details
@@ -296,5 +310,15 @@ extern si_t get_font_enum_from_str(const char * str);
  * @return 成功返回str对应鼠标形状的枚举值,否则返回-1
  **/
 extern si_t get_cursor_enum_from_str(const char * str);
+
+/**
+ * @brief 将消息分发到子控件
+ *
+ * @param w 父控件指针
+ *        m 消息指针
+ *
+ * @return 返回分发动作的结果（参见list.c: list_for_each()）
+ **/
+extern si_t widget_dispatch_message(struct widget *w, union message *m);
 
 # endif

@@ -422,38 +422,17 @@ struct scroll_bar* scroll_bar_init(si_t is_vertical, si_t total_len, si_t line_h
 		return NULL;
 	}
 
-	/* 申请图形设备 */
-	addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
+        return NULL;
+    }
 
-	/* 申请失败 */
-	if(addr->gd == 0)
-	{
-		/* 释放存储空间 */
-		free(addr);
-		return NULL;
-	}
-
-	/* struct scroll_bar 的成员 */
-	addr->parent = NULL;
-	addr->lchild = NULL;
-	addr->rchild = NULL;
 	addr->name = "struct scroll_bar";
-	addr->id = 0;
-
-	/* 默认是否能处理键盘输入消息 */
-	addr->input_enable = 0;
-
-	/* 默认是否可以刷新 */
-	addr->update_enable = 1;
 
 	/* 默认是否可见 */
 	addr->visible = 0;
 
 	/* 默认是否拥有键盘焦点*/
 	addr->keybd_focus = 1;
-
-	/* 默认是否是窗口 */
-	addr->is_window = 0;
 
 	/* 用全局样式对象初始化scroll_bar样式 */
 	scroll_bar_init_with_default_style(addr);
@@ -485,9 +464,8 @@ struct scroll_bar* scroll_bar_init(si_t is_vertical, si_t total_len, si_t line_h
 
 si_t scroll_bar_exit(struct scroll_bar* s)
 {
-	graphics_device_exit(s->gd);
 	list_exit(&s->subscribe_info_list);
-	return 0;
+	return widget_exit(WIDGET_POINTER(s));
 }
 
 void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t))

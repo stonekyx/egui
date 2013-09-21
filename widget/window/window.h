@@ -50,7 +50,9 @@
     WIDGET_DEFINITION \
     \
     /**
-     * 窗口描述符
+     * 窗口描述符，实际上就是window_info结构的指针，
+     * 由服务器端作为register_window的结果返回，
+     * 并在application_add_window()中被填写
      **/ \
     si_t descriptor; \
     \

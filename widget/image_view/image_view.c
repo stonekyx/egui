@@ -173,52 +173,21 @@ struct image_view* image_view_init(char* path)
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
 
-    /* struct image_view 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct image_view";
-    addr->id = 0;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化image_view样式 */
     image_view_init_with_default_style(addr);
 
     addr->path = path;
-
 	/* 默认各种居中 */
     addr->align = ALIGN_HORIZONTAL_TYPE_CENTER | ALIGN_VERTICAL_TYPE_CENTER;
-
     /* 默认的回调函数 */
     addr->callback = image_view_default_callback;
 
@@ -232,11 +201,7 @@ struct image_view* image_view_init(char* path)
 */
 si_t image_view_exit(struct image_view * i)
 {
-    graphics_device_exit(i->gd);
-
-    free(i);
-
-    return 0;
+    return widget_exit(WIDGET_POINTER(i));
 }
 
 void image_view_set_bounds(struct image_view* i, si_t x, si_t y, si_t width, si_t height)
