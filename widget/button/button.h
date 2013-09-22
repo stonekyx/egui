@@ -52,7 +52,12 @@
     /**
      * 字体
     **/ \
-    si_t font;
+    si_t font; \
+    \
+    /**
+     * extra data
+     **/ \
+    addr_t custom_data;
 
 struct button
 {

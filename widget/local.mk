@@ -12,7 +12,8 @@ library_libwidget_la_SOURCES = %D%/widget/widget.c\
 					   %D%/dialog/dialog.c\
 					   %D%/icon/icon.c\
 					   %D%/checkbox/checkbox.c\
-					   %D%/radiobutton/radiobutton.c
+					   %D%/radiobutton/radiobutton.c\
+					   %D%/spinbox/spinbox.c
 
 noinst_HEADERS += %D%/window/paint_window_decoration.h
 
@@ -28,6 +29,7 @@ nobase_pkginclude_HEADERS += %D%/widget/widget.h\
 							 %D%/icon/icon.h\
 							 %D%/checkbox/checkbox.h\
 							 %D%/radiobutton/radiobutton.h\
+							 %D%/spinbox/spinbox.h\
 							 %D%/external.h
 
 library_libwidget_la_LIBADD = library/libclient_lib.la library/libgeometry.la library/libcomm.la \
