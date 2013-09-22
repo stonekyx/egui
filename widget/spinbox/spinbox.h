@@ -62,11 +62,32 @@
     /**
      * decrease button
      **/ \
-    struct button *button_down;
+    struct button *button_down; \
+    \
+    /**
+     * listeners of our events
+     **/ \
+    struct list subscribe_info_list;
 
 struct spinbox
 {
     SPINBOX_DEFINITION
+};
+
+typedef void (*spinbox_event_handler)(struct widget *subscriber, struct widget *publisher, si_t event);
+
+enum spinbox_event_type
+{
+    SPINBOX_CURRENT_CHANGE,
+    SPINBOX_EVENT_ALL
+};
+
+struct spinbox_subscribe_info
+{
+    struct widget *subscriber;
+    struct widget *publisher;
+    si_t event;
+    spinbox_event_handler handler;
 };
 
 /* spinbox样式结构体 */

@@ -43,6 +43,8 @@
 
 # define TMP_ARRAY_SIZE 256
 
+static si_t do_handle_event(void *subscribe_info);
+
 /* spinbox样式全局对象 */
 static struct spinbox_style spinbox_default_style =
 {
@@ -222,6 +224,9 @@ static si_t spinbox_value_change(struct spinbox *s, si_t delta)
         return 0;
     }
     s->value += delta;
+    if(delta) {
+        list_for_each(&s->subscribe_info_list, do_handle_event);
+    }
     if(atoi(text_line_get_buf(s->text_number)) != s->value) {
         sprintf(text_line_get_buf(s->text_number), "%ld", s->value);
         text_line_repaint(s->text_number);
@@ -386,6 +391,8 @@ struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
     object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->button_up));
     object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->button_down));
 
+    list_init(&addr->subscribe_info_list);
+
     return addr;
 }
 
@@ -396,6 +403,7 @@ struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
 */
 si_t spinbox_exit(struct spinbox * b)
 {
+    list_exit(&b->subscribe_info_list);
     text_line_exit(b->text_number);
     button_exit(b->button_up);
     button_exit(b->button_down);
@@ -429,4 +437,28 @@ void spinbox_set_color(struct spinbox* b, struct color* fcolor, struct color* bc
 void spinbox_set_font(struct spinbox* b, si_t font)
 {
     text_line_set_font(b->text_number, font);
+}
+
+/* ---------------------------------------------------------- */
+/*                         events                             */
+/* ---------------------------------------------------------- */
+static si_t event_to_be_dispatched;
+static si_t do_handle_event(void *subscribe_info)
+{
+    struct spinbox_subscribe_info *si = subscribe_info;
+    if(si->event == SPINBOX_EVENT_ALL ||
+            si->event == event_to_be_dispatched) {
+        si->handler(si->subscriber, si->publisher, event_to_be_dispatched);
+    }
+    return 0;
+}
+
+void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, spinbox_event_handler handler)
+{
+    struct spinbox_subscribe_info si;
+    si.subscriber = sub;
+    si.publisher = WIDGET_POINTER(pub);
+    si.event = event;
+    si.handler = handler;
+    list_push_back(&pub->subscribe_info_list, &si, sizeof(si));
 }
