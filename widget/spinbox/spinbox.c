@@ -48,39 +48,40 @@ static si_t do_handle_event(void *subscribe_info);
 /* spinbox样式全局对象 */
 static struct spinbox_style spinbox_default_style =
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    100,  /* .area_width */
-    30,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        100,  /* .area_width */
+        30,  /* .area_height */
 
-    /* 默认边界宽度 */
-    1,  /* .border_size */
+        /* 默认边界宽度 */
+        1,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    0,    /* .back_color_r */
-    255,    /* .back_color_g */
-    0,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        0,    /* .back_color_r */
+        255,    /* .back_color_g */
+        0,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    255,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
+        /* 默认前景色 */
+        255,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    }
 };
 
 /**
@@ -93,84 +94,14 @@ static struct spinbox_style spinbox_default_style =
  **/
 static si_t spinbox_init_with_default_style(struct spinbox * b)
 {
-    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-    si_t tmp_int = -1;
-    /* spinbox全局样式对象指针 */
-    struct spinbox_style * style = &spinbox_default_style;
+    char *config_path = get_config_path("spinbox.cfg");
 
-    /* 如果spinbox全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *SPINBOX_STYLE_FILE = get_config_path("spinbox.cfg");
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(b), &spinbox_default_style.common,
+            NULL, 0);
+    free(config_path);
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(SPINBOX_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init spinbox style from config file %s.", SPINBOX_STYLE_FILE);
-        } else {
-
-            /* 从配置读取各项配置,赋予style指针 */
-            config_parser_get_int(&parser, "area_x", &(style->area_x));
-            config_parser_get_int(&parser, "area_y", &(style->area_y));
-            config_parser_get_int(&parser, "area_width", &(style->area_width));
-            config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-            config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-            config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-            config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-            config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-            config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-            config_parser_get_str(&parser, "cursor", tmp_str);
-            if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-            {
-                style->cursor = tmp_int;
-            }
-
-            config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-            config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-            config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-            config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-            config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-            config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-            config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-            config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-            /* 退出配置处理器 */
-            config_parser_exit(&parser);
-            style->flag = 1;
-        }
-    }
-
-    /* 用spinbox默认样式初始化spinbox各样式属性 */
-    b->area.x = style->area_x;
-    b->area.y = style->area_y;
-    b->area.width = style->area_width;
-    b->area.height = style->area_height;
-
-    b->border_size = style->border_size;
-
-    b->maximum_width = style->maximum_width;
-    b->minimum_width = style->minimum_width;
-    b->maximum_height = style->maximum_height;
-    b->minimum_height = style->minimum_height;
-
-    b->cursor = style->cursor;
-
-    b->back_color.r = style->back_color_r;
-    b->back_color.g = style->back_color_g;
-    b->back_color.b = style->back_color_b;
-    b->back_color.a = style->back_color_a;
-
-    b->fore_color.r = style->fore_color_r;
-    b->fore_color.g = style->fore_color_g;
-    b->fore_color.b = style->fore_color_b;
-    b->fore_color.a = style->fore_color_a;
-
-    return 0;
+    return res;
 }
 
 static si_t spinbox_default_widget_show(struct spinbox * b, union message * msg) 
@@ -319,39 +250,11 @@ struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(NULL == (addr = widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
-
     /* struct spinbox 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct spinbox";
-    addr->id = 0;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化spinbox样式 */
     spinbox_init_with_default_style(addr);
@@ -404,15 +307,12 @@ struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
 si_t spinbox_exit(struct spinbox * b)
 {
     list_exit(&b->subscribe_info_list);
+
     text_line_exit(b->text_number);
     button_exit(b->button_up);
     button_exit(b->button_down);
 
-    graphics_device_exit(b->gd);
-
-    free(b);
-
-    return 0;
+    return widget_exit(WIDGET_POINTER(b));
 }
 
 void spinbox_set_bounds(struct spinbox * b, si_t x, si_t y, si_t width , si_t height)
