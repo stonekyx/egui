@@ -174,4 +174,15 @@ extern void spinbox_set_color(struct spinbox* b, struct color* fcolor, struct co
  **/
 extern void spinbox_set_font(struct spinbox* b, si_t font);
 
+/**
+ * @brief 注册事件监听函数
+ *
+ * @param pub 发布者（也就是要监听的spinbox）
+ * @param sub 接收者（传给处理函数，用于辨识是哪个控件要接收。
+ *            因为处理函数显然也是写在某个控件的源文件中的。）
+ * @param event 要监听的事件，全部事件都要的话可以传入某个特别的宏，
+ *              见该文件前面部分。
+ * @param handler 处理函数，当指定事件发生时会被调用
+ **/
+extern void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, spinbox_event_handler handler);
 # endif
