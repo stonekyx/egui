@@ -131,7 +131,7 @@ extern void spinbox_show(struct spinbox* b);
  *
  * @return 0
 **/
-extern struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval);
+extern struct spinbox* spinbox_init(si_t minval, si_t maxval, si_t initval);
 
 /**
  * @brief 使用后清理窗口部件结构体

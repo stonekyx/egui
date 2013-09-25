@@ -104,7 +104,7 @@ int main()
     
     {
         struct spinbox *s;
-        s = spinbox_init(-1, -1, 0);
+        s = spinbox_init(0, 5, 0);
         spinbox_set_bounds(s, 60, 60, -1, -1);
         object_attach_child(OBJECT_POINTER(w2), OBJECT_POINTER(s));
     }

@@ -150,8 +150,8 @@ static si_t spinbox_value_change(struct spinbox *s, si_t delta)
     if(!s) {
         return 0;
     }
-    if((s->minval != -1 && s->value+delta < s->minval) ||
-            (s->maxval != -1 && s->value+delta > s->maxval)) {
+    if(s->minval<=s->maxval &&
+            (s->value+delta < s->minval || s->value+delta > s->maxval)) {
         return 0;
     }
     s->value += delta;
@@ -160,6 +160,11 @@ static si_t spinbox_value_change(struct spinbox *s, si_t delta)
     }
     if(atoi(text_line_get_buf(s->text_number)) != s->value) {
         sprintf(text_line_get_buf(s->text_number), "%ld", s->value);
+        if(s->text_number->ruler_cur >
+                s->text_number->buf + strlen(s->text_number->buf)) {
+            s->text_number->ruler_cur =
+                s->text_number->buf + strlen(s->text_number->buf);
+        }
         text_line_repaint(s->text_number);
         text_line_show(s->text_number);
     }
@@ -236,7 +241,7 @@ void spinbox_show(struct spinbox* b)
 	widget_show(WIDGET_POINTER(b));
 }
 
-struct spinbox* spinbox_init(si_t maxval, si_t minval, si_t initval)
+struct spinbox* spinbox_init(si_t minval, si_t maxval, si_t initval)
 {
     struct spinbox * addr;
 
