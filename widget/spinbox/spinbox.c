@@ -176,11 +176,18 @@ static void spinbox_text_event_handler(struct widget *subscriber, struct widget 
     struct spinbox *self = SPINBOX_POINTER(subscriber);
     struct text_line *text = TEXT_LINE_POINTER(publisher);
     switch(event) {
+        si_t new_value;
         case TEXT_LINE_EVENT_CURRENT_CHANGE:
-            if(!spinbox_value_change(self,
-                        atoi(text_line_get_buf(text))-self->value)) {
+            new_value = atoi(text_line_get_buf(text));
+            if(!spinbox_value_change(self, new_value-self->value)) {
                 /* sync with text failed */
-                spinbox_value_change(self, 0); /* refresh text */
+                if(self->minval <= self->maxval) {
+                    if(new_value < self->minval) {
+                        spinbox_value_change(self, self->minval-self->value);
+                    } else {
+                        spinbox_value_change(self, self->maxval-self->value);
+                    }
+                }
             }
             break;
         default:
