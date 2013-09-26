@@ -849,7 +849,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 						global_wm.new_cursor.y + message->mouse.value;
 				} else {
 					global_wm.new_cursor.y =
-						message->mouse.value/MOUSE_RESOLUTION*
+						(double)message->mouse.value/MOUSE_RESOLUTION*
 						global_screen.height;
 				}
 
