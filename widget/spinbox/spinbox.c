@@ -296,6 +296,7 @@ struct spinbox* spinbox_init(si_t minval, si_t maxval, si_t initval)
             addr->area.width-addr->area.height+1, addr->area.height/2+1,
             addr->area.height, addr->area.height/2);
 
+    text_line_clear_keybd_type(addr->text_number);
     text_line_set_keybd_type(addr->text_number, TEXT_LINE_KEYBOARD_TYPE_NUMBER);
     sprintf(text_line_get_buf(addr->text_number),
             "%ld", addr->value);
