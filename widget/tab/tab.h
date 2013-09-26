@@ -35,12 +35,7 @@
 
 # include "../widget/widget.h"
 
-struct tab_page
-{
-    WIDGET_DEFINITION
-    struct button *page_head;
-    struct list widgets;
-};
+# include "tab_page.h"
 
 /**
  * 窗口部件结构体

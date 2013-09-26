@@ -67,15 +67,15 @@ static struct tab_style tab_default_style =
         CURSOR_SHAPE_X, /* .cursor */
 
         /* 默认背景色 */
-        0,    /* .back_color_r */
-        255,    /* .back_color_g */
-        0,  /* .back_color_b */
+        221,  /* .back_color_r */
+        221,  /* .back_color_g */
+        255,  /* .back_color_b */
         0,  /* .back_color_a */
 
         /* 默认前景色 */
-        255,  /* .fore_color_r */
-        0,  /* .fore_color_g */
-        0,  /* .fore_color_b */
+        75,  /* .fore_color_r */
+        105,  /* .fore_color_g */
+        131,  /* .fore_color_b */
         0,  /* .fore_color_a */
     }
 };
@@ -167,7 +167,7 @@ void tab_show(struct tab* b)
 	widget_show(WIDGET_POINTER(b));
 }
 
-struct tab* tab_init(si_t minval, si_t maxval, si_t initval)
+struct tab* tab_init(void)
 {
     struct tab * addr;
 
@@ -203,6 +203,9 @@ struct tab* tab_init(si_t minval, si_t maxval, si_t initval)
 */
 si_t tab_exit(struct tab * b)
 {
+    while(list_size(&b->pages)>0) {
+        tab_remove_page(0);
+    }
     return widget_exit(WIDGET_POINTER(b));
 }
 
