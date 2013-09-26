@@ -141,10 +141,14 @@ static si_t basic_mouse(struct input_device * self, union message * m)
 
         return 0;
     }
-    else if(ie.type == EV_REL)
+    else if(ie.type == EV_REL || ie.type == EV_ABS)
     {
         /* 消息类型 */
-        m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE;
+        if(ie.type == EV_REL) {
+            m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE;
+        } else {
+            m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE_POINT;
+        }
         /* 偏移多少 */
         m->mouse.value = ie.value;
 

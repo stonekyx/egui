@@ -68,6 +68,8 @@ enum __message_type__
 
     /** 鼠标移动 **/
     MESSAGE_TYPE_MOUSE_MOVE,
+    /** 鼠标绝对坐标移动（与上面的区别类似 結標淡希 和 白井黒子） **/
+    MESSAGE_TYPE_MOUSE_MOVE_POINT,
     /** 鼠标进入一个区域 **/
     MESSAGE_TYPE_MOUSE_ENTER,
     /** 鼠标离开一个区域 **/
