@@ -826,7 +826,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
 					global_wm.new_cursor.x = global_wm.new_cursor.x + message->mouse.value;
 				} else {
-					global_wm.new_cursor.x = message->mouse.value;
+					global_wm.new_cursor.x = message->mouse.value/32768.0*global_screen.width;
 				}
 
 				if(global_wm.new_cursor.x < 0)
@@ -843,7 +843,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
 					global_wm.new_cursor.y = global_wm.new_cursor.y + message->mouse.value;
 				} else {
-					global_wm.new_cursor.y = message->mouse.value;
+					global_wm.new_cursor.y = message->mouse.value/32768.0*global_screen.height;
 				}
 
 				if(global_wm.new_cursor.y < 0)
