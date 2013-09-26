@@ -818,11 +818,16 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 			}
 		}
 		/* 绘制鼠标并且更新光标的坐标 */
-		else if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE)
+		else if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE ||
+				message->base.type == MESSAGE_TYPE_MOUSE_MOVE_POINT)
 		{
 			if(message->mouse.code == INPUT_CODE_MOUSE_X_OFFSET)
 			{
-				global_wm.new_cursor.x = global_wm.new_cursor.x + message->mouse.value;
+				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
+					global_wm.new_cursor.x = global_wm.new_cursor.x + message->mouse.value;
+				} else {
+					global_wm.new_cursor.x = message->mouse.value;
+				}
 
 				if(global_wm.new_cursor.x < 0)
 				{
@@ -832,19 +837,14 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				{
 					global_wm.new_cursor.x = global_screen.width - 1;
 				}
-
-				accumulate_widget_move(message);
-				accumulate_widget_resize(message);
-
-				/* 更新鼠标下面的内容 */
-				screen_flush(global_wm.old_cursor.x - 7, global_wm.old_cursor.y - 7, 15, 15);
-				cursor_paint();
-
-				global_wm.old_cursor = global_wm.new_cursor;
 			}
 			else if(message->mouse.code == INPUT_CODE_MOUSE_Y_OFFSET)
 			{
-				global_wm.new_cursor.y = global_wm.new_cursor.y + message->mouse.value;
+				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
+					global_wm.new_cursor.y = global_wm.new_cursor.y + message->mouse.value;
+				} else {
+					global_wm.new_cursor.y = message->mouse.value;
+				}
 
 				if(global_wm.new_cursor.y < 0)
 				{
@@ -854,16 +854,16 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				{
 					global_wm.new_cursor.y = global_screen.height - 1;
 				}
-
-				accumulate_widget_move(message);
-				accumulate_widget_resize(message);
-
-				/* 更新鼠标下面的内容 */
-				screen_flush(global_wm.old_cursor.x - 7, global_wm.old_cursor.y - 7, 15, 15);
-				cursor_paint();
-
-				global_wm.old_cursor = global_wm.new_cursor;
 			}
+
+			accumulate_widget_move(message);
+			accumulate_widget_resize(message);
+
+			/* 更新鼠标下面的内容 */
+			screen_flush(global_wm.old_cursor.x - 7, global_wm.old_cursor.y - 7, 15, 15);
+			cursor_paint();
+
+			global_wm.old_cursor = global_wm.new_cursor;
 		}
 		/* 删除已分发的消息 */
 		list_pop_front(&(global_wm.message_list));
