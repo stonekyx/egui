@@ -195,6 +195,7 @@ static char keybd_code_to_char_number(si_t code)
     case INPUT_CODE_KEYBD_KP_9:
         return '9';
     case INPUT_CODE_KEYBD_KP_SUB:
+    case INPUT_CODE_KEYBD_SUB:
         return '-';
     case INPUT_CODE_KEYBD_KP_4:
         return '4';
