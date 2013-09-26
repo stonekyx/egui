@@ -5,6 +5,7 @@
 
 # include "event.h"
 # include "log.h"
+# include "config.h"
 
 static si_t deal_with_mouse(struct input_device * self, struct list* msg_list);
 static si_t mouse_exit(struct input_device * self);
@@ -141,14 +142,10 @@ static si_t basic_mouse(struct input_device * self, union message * m)
 
         return 0;
     }
-    else if(ie.type == EV_REL || ie.type == EV_ABS)
+    else if(ie.type == EV_REL)
     {
         /* 消息类型 */
-        if(ie.type == EV_REL) {
-            m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE;
-        } else {
-            m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE_POINT;
-        }
+        m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE;
         /* 偏移多少 */
         m->mouse.value = ie.value;
 
@@ -168,6 +165,34 @@ static si_t basic_mouse(struct input_device * self, union message * m)
                 break;
         }
 
+        return 0;
+    } else if(ie.type == EV_ABS) {
+        static struct input_absinfo absinfo_x, absinfo_y, absinfo_wheel;
+        static int init_flag = 0;
+        const struct input_absinfo *absinfo_use;
+        if(!init_flag) {
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_X), &absinfo_x);
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_Y), &absinfo_y);
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_WHEEL), &absinfo_wheel);
+            init_flag = 1;
+        }
+        m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE_POINT;
+        switch(ie.code) {
+            case ABS_X:
+                m->mouse.code = INPUT_CODE_MOUSE_X_OFFSET;
+                absinfo_use = &absinfo_x;
+            case ABS_Y:
+                m->mouse.code = INPUT_CODE_MOUSE_Y_OFFSET;
+                absinfo_use = &absinfo_y;
+            case ABS_WHEEL:
+                m->mouse.code = INPUT_CODE_MOUSE_Z_OFFSET;
+                absinfo_use = &absinfo_wheel;
+            default:
+                break;
+        }
+        m->mouse.value =
+            (ie.value-absinfo_use->minimum)/
+            (double)(absinfo_use->maximum-absinfo_use->minimum)*MOUSE_RESOLUTION;
         return 0;
     } else if(ie.type == EV_MSC){
         if(ie.code == MSC_SCAN) { /* physical mapping of a key, ignoring */
