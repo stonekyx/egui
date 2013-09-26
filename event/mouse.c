@@ -181,12 +181,15 @@ static si_t basic_mouse(struct input_device * self, union message * m)
             case ABS_X:
                 m->mouse.code = INPUT_CODE_MOUSE_X_OFFSET;
                 absinfo_use = &absinfo_x;
+                break;
             case ABS_Y:
                 m->mouse.code = INPUT_CODE_MOUSE_Y_OFFSET;
                 absinfo_use = &absinfo_y;
+                break;
             case ABS_WHEEL:
                 m->mouse.code = INPUT_CODE_MOUSE_Z_OFFSET;
                 absinfo_use = &absinfo_wheel;
+                break;
             default:
                 break;
         }
