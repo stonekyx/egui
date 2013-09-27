@@ -191,6 +191,15 @@ static si_t basic_mouse(struct input_device * self, union message * m)
                 absinfo_use = &absinfo_wheel;
                 break;
             default:
+                /* There are other kinds of signals like ABS_PRESSURE,
+                 * which is related to touchpads or touch screens.
+                 *
+                 * Besides, Linux 3.10.10 and later versions give ABS signals
+                 * even for touchpad on laptops, making the control harder
+                 * in our project. We should consider separating this part
+                 * from the server, making it into a plugin, so we can write
+                 * other kinds of handlers. */
+                return 1;
                 break;
         }
         m->mouse.value =
