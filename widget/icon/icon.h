@@ -55,8 +55,8 @@
  * 这里 / 代表Egui工程根目录。
  *
  *@param is_text_visiable 图标是否显示文本内容。
- *@param text_feild 图标中的文本区域，即图标中 文本的画布区域。
- *@param img_feild  图标中的图片区域，即图标中 图片的画布区域。
+ *@param text_field 图标中的文本区域，即图标中 文本的画布区域。
+ *@param img_field  图标中的图片区域，即图标中 图片的画布区域。
  *
 */
 struct icon
@@ -68,13 +68,10 @@ struct icon
 	si_t type;
 	si_t is_text_visiable;
 	
-	struct rectangle text_feild;
-	struct rectangle img_feild;
+	struct rectangle text_field;
+	struct rectangle img_field;
 
 };
-typedef struct icon eicon;
-
-
 
 /**
  * 将地址强制转换成 struct icon *
@@ -82,19 +79,19 @@ typedef struct icon eicon;
 # define ICON_POINTER(addr) ((struct icon *)(addr))
 
 
-extern void  icon_set_img_path(eicon *ic, char * img_path);
-extern char* icon_get_img_path(eicon *ic);
+extern void  icon_set_img_path(struct icon *ic, char * img_path);
+extern char* icon_get_img_path(struct icon *ic);
 
-extern void  icon_set_text(eicon *ic, char * text);
-extern char* icon_get_text(eicon *ic);
+extern void  icon_set_text(struct icon *ic, char * text);
+extern char* icon_get_text(struct icon *ic);
 
 
 
-extern void  icon_set_type(eicon *ic, si_t type);
-extern si_t  icon_get_type(eicon *ic);
+extern void  icon_set_type(struct icon *ic, si_t type);
+extern si_t  icon_get_type(struct icon *ic);
 
-extern void  icon_set_is_text_visiable(eicon *ic, si_t visiable_model);
-extern si_t  icon_get_is_text_visiable(eicon *ic);
+extern void  icon_set_is_text_visiable(struct icon *ic, si_t visiable_model);
+extern si_t  icon_get_is_text_visiable(struct icon *ic);
 
 
 
@@ -121,7 +118,7 @@ extern void * icon_init(si_t id);
  *
  * @return 0
 **/
-extern si_t icon_exit (eicon * ic);
+extern si_t icon_exit (struct icon * ic);
 
 /**
  * 绘制窗口部件
@@ -130,23 +127,23 @@ extern si_t icon_exit (eicon * ic);
  *
  * @return 0
 **/
-extern void icon_set_bounds(eicon *ic, si_t x, si_t y, si_t width , si_t height);
+extern void icon_set_bounds(struct icon *ic, si_t x, si_t y, si_t width , si_t height);
 
 extern si_t icon_repaint(struct icon * i);
-extern si_t icon_default_widget_repaint(eicon* ic , union message * msg);
+extern si_t icon_default_widget_repaint(struct icon* ic , union message * msg);
 
 
 extern si_t icon_show_text(struct icon * i);
 
 extern si_t icon_show(struct icon * i);
-extern si_t icon_default_widget_show(eicon* ic , union message * msg);
+extern si_t icon_default_widget_show(struct icon* ic , union message * msg);
 
 
 
-extern si_t icon_default_mouse_press(eicon* ic , union message * msg);
+extern si_t icon_default_mouse_press(struct icon* ic , union message * msg);
 
 
 
-extern si_t icon_default_mouse_release(eicon* ic , union message * msg);
+extern si_t icon_default_mouse_release(struct icon* ic , union message * msg);
 
 # endif

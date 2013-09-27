@@ -45,39 +45,40 @@
 /* panel样式全局对象 */
 static struct panel_style panel_default_style =
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        0,  /* .area_width */
+        0,  /* .area_height */
 
-    /* 默认边界宽度 */
-    0,  /* .border_size */
+        /* 默认边界宽度 */
+        0,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    255,    /* .back_color_r */
-    255,    /* .back_color_g */
-    255,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        255,    /* .back_color_r */
+        255,    /* .back_color_g */
+        255,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    0,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
+        /* 默认前景色 */
+        0,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    }
 };
 
 /**
@@ -90,85 +91,14 @@ static struct panel_style panel_default_style =
  **/
 static si_t panel_init_with_default_style(struct panel * p)
 {
-    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-    si_t tmp_int = -1;
-    /* panel全局样式对象指针 */
-    struct panel_style * style = &panel_default_style;
+    char *config_path = get_config_path("panel.cfg");
 
-    /* 如果panel全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *PANEL_STYLE_FILE = get_config_path("panel.cfg");
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(p), &panel_default_style.common,
+            NULL, 0);
+    free(config_path);
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(PANEL_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init panel style from config file %s.", PANEL_STYLE_FILE);
-
-            return -1;
-        }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
-    }
-
-    /* 用panel默认样式初始化panel各样式属性 */
-    p->area.x = style->area_x;
-    p->area.y = style->area_y;
-    p->area.width = style->area_width;
-    p->area.height = style->area_height;
-
-    p->border_size = style->border_size;
-
-    p->maximum_width = style->maximum_width;
-    p->minimum_width = style->minimum_width;
-    p->maximum_height = style->maximum_height;
-    p->minimum_height = style->minimum_height;
-
-    p->cursor = style->cursor;
-
-    p->back_color.r = style->back_color_r;
-    p->back_color.g = style->back_color_g;
-    p->back_color.b = style->back_color_b;
-    p->back_color.a = style->back_color_a;
-
-    p->fore_color.r = style->fore_color_r;
-    p->fore_color.g = style->fore_color_g;
-    p->fore_color.b = style->fore_color_b;
-    p->fore_color.a = style->fore_color_a;
-
-    return 0;
+    return res;
 }
 void * panel_init(si_t id)
 {
@@ -180,44 +110,14 @@ void * panel_init(si_t id)
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), id))) {
         return NULL;
     }
 
-    /* struct panel 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct panel";
-    addr->id = id;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化panel样式 */
     panel_init_with_default_style(addr);
@@ -230,14 +130,11 @@ void * panel_init(si_t id)
 
 si_t panel_exit(struct panel * i)
 {
-     graphics_device_exit(i->gd);
 	/*
 	 vector_exit( &(i->widget_vector) );
 	*/	
 
-    free(i);
-
-    return 1;
+    return widget_exit(WIDGET_POINTER(i));
 }
 
 si_t point_in_area(struct point* point, struct rectangle* area)

@@ -44,39 +44,41 @@
 /* 文本行样式全局对象 */
 static struct text_line_style text_line_default_style =
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        0,  /* .area_width */
+        0,  /* .area_height */
 
-    /* 默认边界宽度 */
-    1,  /* .border_size */
+        /* 默认边界宽度 */
+        1,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    255,    /* .back_color_r */
-    255,    /* .back_color_g */
-    255,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        /* FIXME:不应该hard code */
+        255,    /* .back_color_r */
+        255,    /* .back_color_g */
+        255,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    0,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
+        /* 默认前景色 */
+        0,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    },
 
     /* 默认边框颜色 */
     0xcb,  /* .frame_color_r */
@@ -99,103 +101,37 @@ static si_t text_line_init_with_default_style(struct text_line * tl)
 {
     char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
     si_t tmp_int = -1;
-    /* text_line全局样式对象指针 */
-    struct text_line_style * style = &text_line_default_style;
+    char *config_path = get_config_path("text_line.cfg");
+    struct widget_style_entry extra[] = {
+        {.key="frame_color_r", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(text_line_default_style.frame_color_r)},
+        {.key="frame_color_g", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(text_line_default_style.frame_color_g)},
+        {.key="frame_color_b", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(text_line_default_style.frame_color_b)},
+        {.key="frame_color_a", .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(text_line_default_style.frame_color_a)},
+        {.key="font", .type=WIDGET_STYLE_TYPE_STR,
+            .val=&(text_line_default_style.font)},
+    };
 
-    /* 如果text_line全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *TEXT_LINE_STYLE_FILE = get_config_path("text_line_style.cfg");
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(tl), &text_line_default_style.common,
+            extra, sizeof(extra)/sizeof(extra[0]));
+    free(config_path);
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(TEXT_LINE_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init text_line style from config file %s.", TEXT_LINE_STYLE_FILE);
-
-            return -1;
-        }
-
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        config_parser_get_int(&parser, "frame_color_r", &(style->frame_color_r));
-        config_parser_get_int(&parser, "frame_color_g", &(style->frame_color_g));
-        config_parser_get_int(&parser, "frame_color_b", &(style->frame_color_b));
-        config_parser_get_int(&parser, "frame_color_a", &(style->frame_color_a));
-
-        tmp_int = -1;
-        memset(tmp_str, 0, TMP_ARRAY_SIZE);
-        config_parser_get_str(&parser, "font", tmp_str);
-        if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0)
-        {
-            style->font = tmp_int;
-        }
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
+    if((tmp_int = get_font_enum_from_str(tmp_str)) >= 0) {
+        text_line_default_style.font = tmp_int;
     }
 
-    /* 用text_line默认样式初始化text_line各样式属性 */
-    tl->area.x = style->area_x;
-    tl->area.y = style->area_y;
-    tl->area.width = style->area_width;
-    tl->area.height = style->area_height;
+    tl->frame_color.r = text_line_default_style.frame_color_r;
+    tl->frame_color.g = text_line_default_style.frame_color_g;
+    tl->frame_color.b = text_line_default_style.frame_color_b;
+    tl->frame_color.a = text_line_default_style.frame_color_a;
 
-    tl->border_size = style->border_size;
+    tl->font = text_line_default_style.font;
 
-    tl->maximum_width = style->maximum_width;
-    tl->minimum_width = style->minimum_width;
-    tl->maximum_height = style->maximum_height;
-    tl->minimum_height = style->minimum_height;
-
-    tl->cursor = style->cursor;
-
-    tl->back_color.r = style->back_color_r;
-    tl->back_color.g = style->back_color_g;
-    tl->back_color.b = style->back_color_b;
-    tl->back_color.a = style->back_color_a;
-
-    tl->fore_color.r = style->fore_color_r;
-    tl->fore_color.g = style->fore_color_g;
-    tl->fore_color.b = style->fore_color_b;
-    tl->fore_color.a = style->fore_color_a;
-
-    tl->frame_color.r = style->frame_color_r;
-    tl->frame_color.g = style->frame_color_g;
-    tl->frame_color.b = style->frame_color_b;
-    tl->frame_color.a = style->frame_color_a;
-
-    tl->font = style->font;
-
-    return 0;
+    return res;
 }
 
 /* declaration of static functions {{{ */
@@ -259,6 +195,7 @@ static char keybd_code_to_char_number(si_t code)
     case INPUT_CODE_KEYBD_KP_9:
         return '9';
     case INPUT_CODE_KEYBD_KP_SUB:
+    case INPUT_CODE_KEYBD_SUB:
         return '-';
     case INPUT_CODE_KEYBD_KP_4:
         return '4';
@@ -1285,43 +1222,17 @@ struct text_line* text_line_init(si_t bufsize, si_t cur_line)
     if((addr = (struct text_line*)malloc(sizeof(struct text_line))) == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return NULL;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
 
-    /* struct text_line 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct text_line";
-    addr->id = 0;
 
     /* 默认是否能处理键盘输入消息 */
     addr->input_enable = 1;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
-    addr->is_window = 0;
 
     /* 用全局样式对象初始化text_line样式 */
     text_line_init_with_default_style(addr);
@@ -1372,17 +1283,13 @@ struct text_line* text_line_init(si_t bufsize, si_t cur_line)
 
 extern si_t text_line_exit(struct text_line* t)
 {
-    graphics_device_exit(t->gd);
-
     if(t->buf != NULL)
         free(t->buf);
 
     if(t->placeholder != NULL)
         free(t->placeholder);
 
-    free(t);
-
-    return 0;
+    return widget_exit(WIDGET_POINTER(t));
 }
 
 extern si_t text_line_set_bufsize(struct text_line* t, si_t size)

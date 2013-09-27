@@ -39,6 +39,7 @@
 # include "window_info.h"
 # include "window_info_iterator.h"
 # include "log.h"
+# include "config.h"
 
 /* 记录鼠标的左键是否按下 */
 static si_t title_bar_press = 0;
@@ -824,9 +825,12 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 			if(message->mouse.code == INPUT_CODE_MOUSE_X_OFFSET)
 			{
 				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
-					global_wm.new_cursor.x = global_wm.new_cursor.x + message->mouse.value;
+					global_wm.new_cursor.x =
+						global_wm.new_cursor.x + message->mouse.value;
 				} else {
-					global_wm.new_cursor.x = message->mouse.value;
+					global_wm.new_cursor.x =
+						(double)message->mouse.value/MOUSE_RESOLUTION*
+						global_screen.width;
 				}
 
 				if(global_wm.new_cursor.x < 0)
@@ -841,9 +845,12 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 			else if(message->mouse.code == INPUT_CODE_MOUSE_Y_OFFSET)
 			{
 				if(message->base.type == MESSAGE_TYPE_MOUSE_MOVE) {
-					global_wm.new_cursor.y = global_wm.new_cursor.y + message->mouse.value;
+					global_wm.new_cursor.y =
+						global_wm.new_cursor.y + message->mouse.value;
 				} else {
-					global_wm.new_cursor.y = message->mouse.value;
+					global_wm.new_cursor.y =
+						(double)message->mouse.value/MOUSE_RESOLUTION*
+						global_screen.height;
 				}
 
 				if(global_wm.new_cursor.y < 0)

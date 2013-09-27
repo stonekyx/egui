@@ -5,6 +5,7 @@
 
 # include "event.h"
 # include "log.h"
+# include "config.h"
 
 static si_t deal_with_mouse(struct input_device * self, struct list* msg_list);
 static si_t mouse_exit(struct input_device * self);
@@ -168,6 +169,46 @@ static si_t basic_mouse(struct input_device * self, union message * m)
                 break;
         }
 
+        return 0;
+    } else if(ie.type == EV_ABS) {
+        static struct input_absinfo absinfo_x, absinfo_y, absinfo_wheel;
+        static int init_flag = 0;
+        const struct input_absinfo *absinfo_use;
+        if(!init_flag) {
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_X), &absinfo_x);
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_Y), &absinfo_y);
+            ioctl(self->uds.sock_fd, EVIOCGABS(ABS_WHEEL), &absinfo_wheel);
+            init_flag = 1;
+        }
+        m->mouse.type = MESSAGE_TYPE_MOUSE_MOVE_POINT;
+        switch(ie.code) {
+            case ABS_X:
+                m->mouse.code = INPUT_CODE_MOUSE_X_OFFSET;
+                absinfo_use = &absinfo_x;
+                break;
+            case ABS_Y:
+                m->mouse.code = INPUT_CODE_MOUSE_Y_OFFSET;
+                absinfo_use = &absinfo_y;
+                break;
+            case ABS_WHEEL:
+                m->mouse.code = INPUT_CODE_MOUSE_Z_OFFSET;
+                absinfo_use = &absinfo_wheel;
+                break;
+            default:
+                /* There are other kinds of signals like ABS_PRESSURE,
+                 * which is related to touchpads or touch screens.
+                 *
+                 * Besides, Linux 3.10.10 and later versions give ABS signals
+                 * even for touchpad on laptops, making the control harder
+                 * in our project. We should consider separating this part
+                 * from the server, making it into a plugin, so we can write
+                 * other kinds of handlers. */
+                return 1;
+                break;
+        }
+        m->mouse.value =
+            (ie.value-absinfo_use->minimum)/
+            (double)(absinfo_use->maximum-absinfo_use->minimum)*MOUSE_RESOLUTION;
         return 0;
     } else if(ie.type == EV_MSC){
         if(ie.code == MSC_SCAN) { /* physical mapping of a key, ignoring */

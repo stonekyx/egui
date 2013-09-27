@@ -44,40 +44,42 @@
 /* dialog样式全局对象 */
 static struct dialog_style dialog_default_style = 
 {
-    /* 初始化，默认未访问 */
-    0,  /* .flag */
+    {
+        /* 初始化，默认未访问 */
+        0,  /* .flag */
 
-    /* 默认工作区域 */
-    0,  /* .area_x */
-    0,  /* .area_y */
-    0,  /* .area_width */
-    0,  /* .area_height */
+        /* 默认工作区域 */
+        0,  /* .area_x */
+        0,  /* .area_y */
+        0,  /* .area_width */
+        0,  /* .area_height */
 
-    /* 默认边界宽度 */
-    /* FIXME:不应hard code */
-    3,  /* .border_size */
+        /* 默认边界宽度 */
+        /* FIXME:不应hard code */
+        3,  /* .border_size */
 
-    /* 默认宽度&高度 */
-    0,  /* .maximum_width */
-    0,  /* .minimum_width */
-    0,  /* .maximum_height */
-    0,  /* .minimum_height */
+        /* 默认宽度&高度 */
+        0,  /* .maximum_width */
+        0,  /* .minimum_width */
+        0,  /* .maximum_height */
+        0,  /* .minimum_height */
 
-    /* 默认鼠标形状 */
-    CURSOR_SHAPE_X, /* .cursor */
+        /* 默认鼠标形状 */
+        CURSOR_SHAPE_X, /* .cursor */
 
-    /* 默认背景色 */
-    /* FIXME:不应该hard code */
-    0,    /* .back_color_r */
-    255,    /* .back_color_g */
-    0,  /* .back_color_b */
-    0,  /* .back_color_a */
+        /* 默认背景色 */
+        /* FIXME:不应该hard code */
+        0,    /* .back_color_r */
+        255,    /* .back_color_g */
+        0,  /* .back_color_b */
+        0,  /* .back_color_a */
 
-    /* 默认前景色 */
-    0,  /* .fore_color_r */
-    0,  /* .fore_color_g */
-    0,  /* .fore_color_b */
-    0,  /* .fore_color_a */
+        /* 默认前景色 */
+        0,  /* .fore_color_r */
+        0,  /* .fore_color_g */
+        0,  /* .fore_color_b */
+        0,  /* .fore_color_a */
+    },
 
     /* 默认是否可以最大化/最小化/全屏 */
     0,  /* .maximize_enable */
@@ -99,97 +101,35 @@ static struct dialog_style dialog_default_style =
  **/
 static si_t dialog_init_with_default_style(struct dialog * d)
 {
-    char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
-    si_t tmp_int = -1;
-    /* dialog全局样式对象指针 */
-    struct dialog_style * style = &dialog_default_style;
+    static struct widget_style_entry extra[] = {
+        {.key="maximize_enable",    .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(dialog_default_style.maximize_enable)},
+        {.key="minimize_enable",    .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(dialog_default_style.minimize_enable)},
+        {.key="is_full_screen",     .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(dialog_default_style.is_full_screen)},
 
-    /* 如果dialog全局样式对象尚未加载配置 */
-    if(!style->flag)
-    {
-        struct config_parser parser;
-        const char *DIALOG_STYLE_FILE = get_config_path("dialog.cfg");
+        {.key="frame_size",         .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(dialog_default_style.frame_size)},
+        {.key="title_bar_size",     .type=WIDGET_STYLE_TYPE_INT,
+            .val=&(dialog_default_style.title_bar_size)},
+    };
+    char *config_path = get_config_path("dialog.cfg");
 
-        /* 初始化配置处理器 */
-        if(config_parser_init(DIALOG_STYLE_FILE, &parser) != 0)
-        {
-            EGUI_PRINT_ERROR("fail to init dialog style from config file %s.", DIALOG_STYLE_FILE);
+    si_t res = widget_init_with_default_style(config_path,
+            WIDGET_POINTER(d), &dialog_default_style.common,
+            extra, sizeof(extra)/sizeof(extra[0]));
+    free(config_path);
 
-            return -1;
-        }
+    d->maximize_enable = dialog_default_style.maximize_enable;
+    d->minimize_enable = dialog_default_style.minimize_enable;
+    d->is_full_screen = dialog_default_style.is_full_screen;
+    /*TODO: check the following code.
+     * d->frame_size = dialog_default_style.frame_size;
+     * d->title_bar_size = dialog_default_style.title_bar_size;
+     */
 
-        /* 从配置读取各项配置,赋予style指针 */
-        config_parser_get_int(&parser, "area_x", &(style->area_x));
-        config_parser_get_int(&parser, "area_y", &(style->area_y));
-        config_parser_get_int(&parser, "area_width", &(style->area_width));
-        config_parser_get_int(&parser, "area_height", &(style->area_height));
-
-        config_parser_get_int(&parser, "border_size", &(style->border_size));
-
-        config_parser_get_int(&parser, "maximum_width", &(style->maximum_width));
-        config_parser_get_int(&parser, "minimum_width", &(style->minimum_width));
-        config_parser_get_int(&parser, "maximum_height", &(style->maximum_height));
-        config_parser_get_int(&parser, "minimum_height", &(style->minimum_height));
-
-        config_parser_get_str(&parser, "cursor", tmp_str);
-        if((tmp_int = get_cursor_enum_from_str(tmp_str)) >= 0)
-        {
-            style->cursor = tmp_int;
-        }
-
-
-        config_parser_get_int(&parser, "back_color_r", &(style->back_color_r));
-        config_parser_get_int(&parser, "back_color_g", &(style->back_color_g));
-        config_parser_get_int(&parser, "back_color_b", &(style->back_color_b));
-        config_parser_get_int(&parser, "back_color_a", &(style->back_color_a));
-
-        config_parser_get_int(&parser, "fore_color_r", &(style->fore_color_r));
-        config_parser_get_int(&parser, "fore_color_g", &(style->fore_color_g));
-        config_parser_get_int(&parser, "fore_color_b", &(style->fore_color_b));
-        config_parser_get_int(&parser, "fore_color_a", &(style->fore_color_a));
-
-        config_parser_get_int(&parser, "maximize_enable", &(style->maximize_enable));
-        config_parser_get_int(&parser, "minimize_enable", &(style->minimize_enable));
-        config_parser_get_int(&parser, "is_full_screen", &(style->is_full_screen));
-
-        config_parser_get_int(&parser, "frame_size", &(style->frame_size));
-        config_parser_get_int(&parser, "title_bar_size", &(style->title_bar_size));
-
-        /* 退出配置处理器 */
-        config_parser_exit(&parser);
-        style->flag = 1;
-    }
-
-    /* 用dialog默认样式初始化dialog各样式属性 */
-    d->area.x = style->area_x;
-    d->area.y = style->area_y;
-    d->area.width = style->area_width;
-    d->area.height = style->area_height;
-
-    d->border_size = style->border_size;
-
-    d->maximum_width = style->maximum_width;
-    d->minimum_width = style->minimum_width;
-    d->maximum_height = style->maximum_height;
-    d->minimum_height = style->minimum_height;
-
-    d->cursor = style->cursor;
-
-    d->back_color.r = style->back_color_r;
-    d->back_color.g = style->back_color_g;
-    d->back_color.b = style->back_color_b;
-    d->back_color.a = style->back_color_a;
-
-    d->fore_color.r = style->fore_color_r;
-    d->fore_color.g = style->fore_color_g;
-    d->fore_color.b = style->fore_color_b;
-    d->fore_color.a = style->fore_color_a;
-
-    d->maximize_enable = style->maximize_enable;
-    d->minimize_enable = style->minimize_enable;
-    d->is_full_screen = style->is_full_screen;
-
-    return 0;
+    return res;
 }
 
 si_t
@@ -403,42 +343,14 @@ void * dialog_init(si_t id)
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
-
         return addr;
     }
 
-    /* 申请图形设备 */
-    addr->gd = graphics_device_init(0, 0, 0, 0, 0, 0 ,0 ,0 ,0);
-
-    /* 申请失败 */
-    if(addr->gd == 0)
-    {
-        /* 释放存储空间 */
-        free(addr);
-
+    if(!(addr=widget_init_common(WIDGET_POINTER(addr), id))) {
         return NULL;
     }
 
-    /* struct dialog 的成员 */
-    addr->parent = NULL;
-    addr->lchild = NULL;
-    addr->rchild = NULL;
     addr->name = "struct dialog";
-    addr->id = id;
-
-    /* 默认是否能处理键盘输入消息 */
-    addr->input_enable = 0;
-
-    /* 默认是否可以刷新 */
-    addr->update_enable = 1;
-
-    /* 默认是否可见 */
-    addr->visible = 1;
-
-    /* 默认是否拥有键盘焦点*/
-    addr->keybd_focus = 0;
-
-    /* 默认是否是窗口 */
     addr->is_window = 1;
 
     /* 默认是否是模态 */
@@ -462,9 +374,5 @@ si_t
 dialog_exit
 (struct dialog * d)
 {
-    graphics_device_exit(d->gd);
-
-    free(d);
-
-    return 0;
+    return widget_exit(WIDGET_POINTER(d));
 }

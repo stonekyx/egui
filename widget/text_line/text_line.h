@@ -122,38 +122,7 @@ struct text_line
 /* text_line style struct */
 struct text_line_style
 {
-    /* a flag :) */
-    si_t flag;
-
-    /* working area */
-    si_t area_x;
-    si_t area_y;
-    si_t area_width;
-    si_t area_height;
-
-    /* border size */
-    si_t border_size;
-
-    /* width & height */
-    si_t maximum_width;
-    si_t minimum_width;
-    si_t maximum_height;
-    si_t minimum_height;
-
-    /* cursor shape */
-    si_t cursor;
-
-    /* back color */
-    si_t back_color_r;
-    si_t back_color_g;
-    si_t back_color_b;
-    si_t back_color_a;
-
-    /* fore color */
-    si_t fore_color_r;
-    si_t fore_color_g;
-    si_t fore_color_b;
-    si_t fore_color_a;
+    struct widget_style common;
 
     /* frame color */
     si_t frame_color_r;

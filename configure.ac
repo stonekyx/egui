@@ -30,6 +30,18 @@ AS_IF([test "$with_mouse"],
 AC_DEFINE_UNQUOTED([MOUSE_EVENT_DEVICE], ["$with_mouse"], [Path to mouse event device.])
 AC_DEFINE_UNQUOTED([KBD_EVENT_DEVICE], ["$with_kbd"], [Path to keyboard event device.])
 
+# Mouse-moving resolution on EV_ABS events
+AC_ARG_WITH([mouse-resolution],
+            AS_HELP_STRING([--with-mouse-resolution=NUMBER],
+                           [specify mouse moving resolution for some devices. Bigger number means higher resolution.]),
+            [],
+            []
+            )
+AS_IF([test "$with_mouse_resolution"],
+      [],
+      [let with_mouse_resolution=65536])
+AC_DEFINE_UNQUOTED([MOUSE_RESOLUTION], [$with_mouse_resolution], [Mouse-moving resolution.])
+
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
