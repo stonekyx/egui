@@ -98,7 +98,7 @@ int main()
         application_exit();
         return -1;
     }
-	window_set_bounds(w3, 400, 200, 448, 200);
+	window_set_bounds(w3, 400, 200, 600, 600);
 
     w4 = window_init("child-2");
     /* 申请失败 */
@@ -153,6 +153,18 @@ int main()
     radiobutton_set_bounds(s, 20, 40, 13, 13);
     object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(r));
     object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(s));
+
+    {
+        struct panel *p = panel_init(0);
+        struct button *pb = button_init("button in panel");
+        struct checkbox *pcb = checkbox_init(0);
+        panel_set_bounds(p, 5, 5, 500, 500);
+        button_set_bounds(pb, 5, 5, 200, 50);
+        checkbox_set_bounds(pcb, 210, 5, -1, -1);
+        object_attach_child(OBJECT_POINTER(w3), OBJECT_POINTER(p));
+        object_attach_child(OBJECT_POINTER(p), OBJECT_POINTER(pb));
+        object_attach_child(OBJECT_POINTER(p), OBJECT_POINTER(pcb));
+    }
 
     /* 运行 */
     application_exec();
