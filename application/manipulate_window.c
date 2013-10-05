@@ -142,10 +142,10 @@ si_t application_add_window(struct window * parent, struct window * window)
 			 * in C89 standard, snprintf() is NOT included in <stdio.h>
 			 * so you have to use sprintf, which may be dangerous. be careful
 			 **/
-			sprintf(window->icon_path, "%s/.icons/%s.bmp", global_application.icon_root_path, global_application.name);
+			sprintf(window->icon_path, "%s/icons/%s.bmp", global_application.icon_root_path, global_application.name);
 			if(access(window->icon_path, R_OK) == -1)
 			{
-				sprintf(window->icon_path, "%s/.icons/default.bmp", global_application.icon_root_path);
+				sprintf(window->icon_path, "%s/icons/default.bmp", global_application.icon_root_path);
 			}
 		}
 

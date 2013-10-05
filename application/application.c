@@ -39,6 +39,7 @@
 
 # include "comm.h"
 # include "client_lib.h"
+# include "config_parser.h"
 
 # include "exec.h"
 # include "log.h"
@@ -89,7 +90,7 @@ static si_t application_load_config()
 	/**
 	 * TODO load config from file
 	 **/
-	global_application.icon_root_path = "/home/guitest/EgPro";
+	global_application.icon_root_path = get_config_path("");
 	global_application.server_path = "/tmp/server";
 	return 0;
 }
@@ -205,12 +206,14 @@ si_t application_exit()
     uds_exit(&global_application.uds);
 
 	free(global_application.name);
+    free(global_application.icon_root_path);
 
     term_restore();
 
     return 0;
 }
 
+/* XXX Not using */
 si_t application_quit()
 {
     si_t i, n;

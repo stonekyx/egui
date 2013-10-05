@@ -29,17 +29,15 @@
 
 # include <assert.h>
 # include <stdio.h>
+# include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
 
-# include <style.h>
-# include <enumerator.h>
 # include <geometry.h>
-# include <message.h>
 # include <comm.h>
 # include <application.h>
-# include <wclib.h>
-# include <wblib.h>
+# include <widget.h>
+# include <config_parser.h>
 
 /*
     测试 eicon
@@ -47,14 +45,15 @@
 int main()
 {
     si_t video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
-    ewindow * w;
-    eicon * ic;
+    struct window * w;
+    struct icon * ic;
+    char *img_path;
 
     /* 初始化用户应用程序 */
-    application_init(video_access_mode, "eicon");
+    application_init(video_access_mode, APPLICATION_TYPE_NORMAL, "eicon");
 
     /* 申请窗口 */
-    w = window_init(1);
+    w = window_init("window with old-style eicon");
     /* 申请失败 */
     if(w == NULL)
     {
@@ -62,7 +61,6 @@ int main()
         return -1;
     }
 	window_set_bounds(w,300,100,500,200);
-    w->title = "window with eicon";
     w->minimize_enable = 1;
     w->maximize_enable = 1;
     w->callback = window_default_callback;
@@ -77,7 +75,8 @@ int main()
     }
     icon_set_bounds(ic ,50,50,100,120);
 	icon_set_text(ic,"ehello");
-	icon_set_img_path(ic,"/home/orange/Egui2.0/img/2.bmp");
+	icon_set_img_path(ic,img_path=get_config_path("img/2.bmp"));
+	free(img_path);
 	icon_set_is_text_visiable(ic ,1);
     ic->callback = icon_default_callback;
 
