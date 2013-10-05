@@ -125,6 +125,15 @@ int main()
         object_attach_child(OBJECT_POINTER(w4), OBJECT_POINTER(b));
     }
 
+    /*
+     * Window structure illustraion:
+     *           app
+     *          / | \
+     *  (main)w1 w5 w2
+     *              / \
+     *             w3  w4
+     */
+
     /* 添加顶层窗口 */
     application_add_window(NULL, w1);
     /* 添加顶层窗口 */
