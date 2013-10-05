@@ -54,6 +54,8 @@ AC_CHECK_HEADERS([fcntl.h limits.h stddef.h stdlib.h string.h sys/ioctl.h sys/so
 # Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_PID_T
 
+AC_LANG([C])
+
 my_save_cflags="$CFLAGS"
 CFLAGS="-std=c99 -pedantic -Wall -g"
 AC_MSG_CHECKING([whether CC supports -std=c99 -pedantic -Wall -g])
@@ -75,6 +77,18 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
                 )
 AC_SUBST([AM_CPPFLAGS])
 CFLAGS="$my_save_cflags"
+
+# Checks for __attribute__((packed))
+AC_MSG_CHECKING([whether CC supports __attribute__((packed))])
+AC_RUN_IFELSE([
+               AC_LANG_SOURCE([[struct test_t{char c; long l;}__attribute__((packed));
+                               int main(){
+                               return sizeof(struct test_t)!=sizeof(char)+sizeof(long);}
+                               ]])
+               ],
+               [echo "test program returned $?"],
+               [AC_MSG_FAILURE([test program returned $?])]
+               )
 
 # Checks for library functions.
 AC_FUNC_FORK

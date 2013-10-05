@@ -116,7 +116,7 @@ struct bitmap_head
      * ui32_t
     **/
     ui32_t bhOffBits;
-};
+} __attribute__((packed));
 
 struct bitmap_info
 {
