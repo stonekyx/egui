@@ -283,6 +283,10 @@ si_t panel_default_widget_show(struct panel* pnl , union message * msg)
 	set_area( pnl->gd, area.x, area.y, area.width, area.height );
 	update( pnl->gd );
 
+	/* When called from default_callback with another type of message,
+	 * passing it to sub-widgets may intrigue other actions. */
+	msg->base.type = MESSAGE_TYPE_WIDGET_SHOW;
+
 	/*  绘制panel子控件的区域 */
 	tree = OBJECT_POINTER(pnl);
 	node = tree->rchild;
