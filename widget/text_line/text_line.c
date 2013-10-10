@@ -1392,7 +1392,7 @@ extern si_t text_line_is_keybd_type_password(struct text_line* t)
     return t->keybd_type & TEXT_LINE_KEYBOARD_TYPE_PASSWORD;
 }
 
-extern void text_line_register_move_handler(struct text_line* t, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t))
+extern void text_line_register_move_handler(struct text_line* t, struct widget* w, si_t event, widget_event_handler handler)
 {
     struct text_line_subscribe_info si;
     si.subscriber = w;

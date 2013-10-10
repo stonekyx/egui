@@ -162,7 +162,7 @@ struct text_line_subscribe_info
      * the function that would be called when event happen
      * the three parameters are: the subscriber, the publisher, the event
      **/
-    void(* handler)(struct widget*, struct widget*, si_t);
+    widget_event_handler handler;
 };
 
 enum TEXT_LINE_EVENT
@@ -313,7 +313,7 @@ extern si_t text_line_is_keybd_type_password(struct text_line* t);
 /**
  * @brief 注册对
  **/
-extern void text_line_register_move_handler(struct text_line* s, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t));
+extern void text_line_register_move_handler(struct text_line* s, struct widget* w, si_t event, widget_event_handler handler);
 
 /**
  * @brief 更新光标的位置

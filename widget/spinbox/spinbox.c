@@ -366,7 +366,7 @@ static si_t do_handle_event(void *subscribe_info)
     return 0;
 }
 
-void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, spinbox_event_handler handler)
+void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, widget_event_handler handler)
 {
     struct spinbox_subscribe_info si;
     si.subscriber = sub;

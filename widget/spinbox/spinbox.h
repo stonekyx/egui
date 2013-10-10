@@ -74,8 +74,6 @@ struct spinbox
     SPINBOX_DEFINITION
 };
 
-typedef void (*spinbox_event_handler)(struct widget *subscriber, struct widget *publisher, si_t event);
-
 enum spinbox_event_type
 {
     SPINBOX_CURRENT_CHANGE,
@@ -87,7 +85,7 @@ struct spinbox_subscribe_info
     struct widget *subscriber;
     struct widget *publisher;
     si_t event;
-    spinbox_event_handler handler;
+    widget_event_handler handler;
 };
 
 /* spinbox样式结构体 */
@@ -184,5 +182,5 @@ extern void spinbox_set_font(struct spinbox* b, si_t font);
  *              见该文件前面部分。
  * @param handler 处理函数，当指定事件发生时会被调用
  **/
-extern void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, spinbox_event_handler handler);
+extern void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, widget_event_handler handler);
 # endif

@@ -468,7 +468,7 @@ si_t scroll_bar_exit(struct scroll_bar* s)
 	return widget_exit(WIDGET_POINTER(s));
 }
 
-void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t))
+void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, widget_event_handler handler)
 {
 	struct subscribe_info si;
 	si.subscriber = w;

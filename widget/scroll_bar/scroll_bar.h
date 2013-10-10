@@ -141,7 +141,7 @@ struct subscribe_info
      * the function that would be called when event happen
      * the three parameters are: the subscriber, the publisher, the event
      **/
-    void(* handler)(struct widget*, struct widget*, si_t);
+    widget_event_handler handler;
 };
 
 
@@ -263,7 +263,7 @@ extern void scroll_bar_update_offset(struct scroll_bar* s, si_t offset);
  * @param event 移动事件
  * @param handler 处理函数
  **/
-extern void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, void(* handler)(struct widget*, struct widget*, si_t));
+extern void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, widget_event_handler handler);
 
 /**
  * @brief 设置scroll_bar的位置
