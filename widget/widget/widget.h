@@ -185,6 +185,8 @@ struct widget_style_entry
     addr_t val;
 };
 
+typedef void (*widget_event_handler)(struct widget *subscriber, struct widget *publisher, si_t event);
+
 /**
  * 将地址强制转换成 struct widget *
 **/
