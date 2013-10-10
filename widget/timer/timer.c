@@ -29,10 +29,11 @@
 
 # include <unistd.h>
 # include <widget.h>
+# include <time.h>
+# include <signal.h>
+# include <sys/types.h>
 
 # include "timer.h"
-
-# define TMP_ARRAY_SIZE 256
 
 static si_t do_handle_event(void *subscribe_info);
 
@@ -64,6 +65,19 @@ struct timer* timer_init(si_t id)
 
     list_init(&addr->subscribe_info_list);
 
+    {
+        union sigval sigval = {
+            .sival_ptr = &addr->subscribe_info_list
+        };
+        const static struct sigevent event = {
+            .sigev_notify = SIGEV_THREAD,
+            .sigev_value = sigval,
+            .sigev_notify_function = do_handle_event,
+            .sigev_notify_attributes = NULL,
+        };
+        timer_create(CLOCK_MONOTONIC, &event, &addr->timer);
+    }
+
     return addr;
 }
 
@@ -79,23 +93,33 @@ si_t timer_exit(struct timer * b)
     return 0;
 }
 
+void timer_set_time(struct timer *timer, const struct itimerspec *value)
+{
+    timer->its = value;
+}
+
+void timer_run(struct timer *timer)
+{
+    timer_settime(timer->timer, 0, &timer->its, NULL);
+}
+
 /* ---------------------------------------------------------- */
 /*                         events                             */
 /* ---------------------------------------------------------- */
-static si_t event_to_be_dispatched;
-static si_t do_handle_event(void *subscribe_info)
+static void do_handle_event(union sigval subscribe_info)
 {
-    struct timer_subscribe_info *si = subscribe_info;
-    if(si->event == TIMER_EVENT_ALL ||
-            si->event == event_to_be_dispatched) {
-        si->handler(si->subscriber, si->publisher, event_to_be_dispatched);
+    struct list *subscribe_info_list = subscribe_info.sival_ptr;
+    struct list_node *pos;
+    list_for_each_macro(pos, subscribe_info_list) {
+        struct widget_subscribe_info *si =
+            pos->data;
+        si->handler(si->subscriber, si->publisher, TIMER_EVENT_ALL);
     }
-    return 0;
 }
 
 void timer_register_event_handler(struct timer *pub, struct widget *sub, si_t event, timer_event_handler handler)
 {
-    struct timer_subscribe_info si;
+    struct widget_subscribe_info si;
     si.subscriber = sub;
     si.publisher = WIDGET_POINTER(pub);
     si.event = event;

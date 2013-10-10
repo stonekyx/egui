@@ -30,15 +30,29 @@
 # ifndef _TIMER_H_
 # define _TIMER_H_ 1
 
+# include <time.h>
+
 # include "../widget/widget.h"
 
 struct timer {
     struct widget widget;
+    struct list subscribe_info_list;
     timer_t timer;
+    struct itimerspec its;
+};
+
+enum timer_event_type {
+    TIMER_EVENT_ALL
 };
 
 struct timer* timer_init(si_t id);
 
-void timer_register_event_handler(struct timer *pub, struct widget *sub, si_t event, timer_event_handler handler);
+si_t timer_exit(struct timer * b);
+
+void timer_register_event_handler(struct timer *pub, struct widget *sub, si_t event, widget_event_handler handler);
+
+void timer_set_time(struct timer *timer, const struct itimerspec *value);
+
+void timer_run(struct timer *timer);
 
 # endif
