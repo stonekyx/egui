@@ -121,31 +121,6 @@ struct scroll_bar_style
 };
 
 /**
- * subscriber is the widget that observe specific event occurs on specific widget(publisher)
- **/
-struct subscribe_info
-{
-    /**
-     * the widget that subscribe events
-     **/
-    struct widget* subscriber;
-    /**
-     * the widget that publish event
-     **/
-    struct widget* publisher;
-    /**
-     * the event to be observed
-     **/
-    si_t event;
-    /**
-     * the function that would be called when event happen
-     * the three parameters are: the subscriber, the publisher, the event
-     **/
-    widget_event_handler handler;
-};
-
-
-/**
  * cast address to struct text_line pointer
  **/
 # define SCROLL_BAR_POINTER(addr) ((struct scroll_bar*)(addr))

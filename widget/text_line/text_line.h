@@ -141,30 +141,6 @@ enum TEXT_LINE_KEYBOARD_TYPE
     TEXT_LINE_KEYBOARD_TYPE_PASSWORD = 4
 };
 
-/**
- * subscriber is the widget that observe specific event occurs on specific widget(publisher)
- **/
-struct text_line_subscribe_info
-{
-    /**
-     * the widget that subscribe events
-     **/
-    struct widget* subscriber;
-    /**
-     * the widget that publish event
-     **/
-    struct widget* publisher;
-    /**
-     * the event to be observed
-     **/
-    si_t event;
-    /**
-     * the function that would be called when event happen
-     * the three parameters are: the subscriber, the publisher, the event
-     **/
-    widget_event_handler handler;
-};
-
 enum TEXT_LINE_EVENT
 {
     /**

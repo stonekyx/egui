@@ -242,7 +242,7 @@ static si_t scroll_bar_default_widget_repaint(struct scroll_bar* s, union messag
 static si_t event_to_be_dispatched;
 static si_t do_handle_event(void* subscribe_info)
 {
-	struct subscribe_info* si = (struct subscribe_info*)subscribe_info;
+	struct widget_subscribe_info* si = (struct widget_subscribe_info*)subscribe_info;
 	if(si->event == SCROLL_BAR_EVENT_ALL || si->event == event_to_be_dispatched)
 		si->handler(si->subscriber, si->publisher, event_to_be_dispatched);
 	return 0;
@@ -470,12 +470,12 @@ si_t scroll_bar_exit(struct scroll_bar* s)
 
 void scroll_bar_register_move_handler(struct scroll_bar* s, struct widget* w, si_t event, widget_event_handler handler)
 {
-	struct subscribe_info si;
+	struct widget_subscribe_info si;
 	si.subscriber = w;
 	si.publisher = WIDGET_POINTER(s);
 	si.event = event;
 	si.handler = handler;
-	list_push_back(&s->subscribe_info_list, &si, sizeof(struct subscribe_info));
+	list_push_back(&s->subscribe_info_list, &si, sizeof(struct widget_subscribe_info));
 }
 
 void scroll_bar_set_horizonal(struct scroll_bar* s)

@@ -80,14 +80,6 @@ enum spinbox_event_type
     SPINBOX_EVENT_ALL
 };
 
-struct spinbox_subscribe_info
-{
-    struct widget *subscriber;
-    struct widget *publisher;
-    si_t event;
-    widget_event_handler handler;
-};
-
 /* spinbox样式结构体 */
 struct spinbox_style
 {

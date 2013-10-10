@@ -188,6 +188,30 @@ struct widget_style_entry
 typedef void (*widget_event_handler)(struct widget *subscriber, struct widget *publisher, si_t event);
 
 /**
+ * subscriber is the widget that observe specific event occurs on specific widget(publisher)
+ **/
+struct widget_subscribe_info
+{
+    /**
+     * the widget that subscribe events
+     **/
+    struct widget* subscriber;
+    /**
+     * the widget that publish event
+     **/
+    struct widget* publisher;
+    /**
+     * the event to be observed
+     **/
+    si_t event;
+    /**
+     * the function that would be called when event happen
+     * the three parameters are: the subscriber, the publisher, the event
+     **/
+    widget_event_handler handler;
+};
+
+/**
  * 将地址强制转换成 struct widget *
 **/
 # define WIDGET_POINTER(addr) ((struct widget *)(addr))

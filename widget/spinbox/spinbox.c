@@ -358,7 +358,7 @@ void spinbox_set_font(struct spinbox* b, si_t font)
 static si_t event_to_be_dispatched;
 static si_t do_handle_event(void *subscribe_info)
 {
-    struct spinbox_subscribe_info *si = subscribe_info;
+    struct widget_subscribe_info *si = subscribe_info;
     if(si->event == SPINBOX_EVENT_ALL ||
             si->event == event_to_be_dispatched) {
         si->handler(si->subscriber, si->publisher, event_to_be_dispatched);
@@ -368,7 +368,7 @@ static si_t do_handle_event(void *subscribe_info)
 
 void spinbox_register_move_handler(struct spinbox *pub, struct widget *sub, si_t event, widget_event_handler handler)
 {
-    struct spinbox_subscribe_info si;
+    struct widget_subscribe_info si;
     si.subscriber = sub;
     si.publisher = WIDGET_POINTER(pub);
     si.event = event;

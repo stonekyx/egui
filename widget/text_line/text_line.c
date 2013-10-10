@@ -296,7 +296,7 @@ static char keybd_code_to_char_letter(si_t code)
 static si_t event_to_be_dispatched;
 static si_t do_handle_event(void* subscribe_info)
 {
-    struct text_line_subscribe_info* si = (struct text_line_subscribe_info*)subscribe_info;
+    struct widget_subscribe_info* si = (struct widget_subscribe_info*)subscribe_info;
     if(si->event == TEXT_LINE_EVENT_ALL || si->event == event_to_be_dispatched)
         si->handler(si->subscriber, si->publisher, event_to_be_dispatched);
     return 0;
@@ -1394,12 +1394,12 @@ extern si_t text_line_is_keybd_type_password(struct text_line* t)
 
 extern void text_line_register_move_handler(struct text_line* t, struct widget* w, si_t event, widget_event_handler handler)
 {
-    struct text_line_subscribe_info si;
+    struct widget_subscribe_info si;
     si.subscriber = w;
     si.publisher = WIDGET_POINTER(t);
     si.event = event;
     si.handler = handler;
-    list_push_back(&t->subscribe_info_list, &si, sizeof(struct text_line_subscribe_info));
+    list_push_back(&t->subscribe_info_list, &si, sizeof(struct widget_subscribe_info));
 }
 
 /**
