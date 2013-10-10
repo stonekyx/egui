@@ -5,7 +5,8 @@ noinst_PROGRAMS += %D%/multi_windows\
 				   %D%/pop_up_window\
 				   %D%/single_window\
 				   %D%/toplevel_child\
-				   %D%/editerbasic
+				   %D%/editerbasic\
+				   %D%/timer
 
 %C%_multi_windows_SOURCES = %D%/multi_windows.c
 %C%_shutdown_SOURCES = %D%/shutdown.c
@@ -13,6 +14,7 @@ noinst_PROGRAMS += %D%/multi_windows\
 %C%_single_window_SOURCES = %D%/single_window.c
 %C%_toplevel_child_SOURCES = %D%/toplevel_child.c
 %C%_editerbasic_SOURCES = %D%/editerbasic.c
+%C%_timer_SOURCES = %D%/timer.c
 
 %C%_multi_windows_LDADD = $(debug_samples_LDADD_TEMP)
 %C%_shutdown_LDADD = $(debug_samples_LDADD_TEMP)
@@ -20,6 +22,7 @@ noinst_PROGRAMS += %D%/multi_windows\
 %C%_single_window_LDADD = $(debug_samples_LDADD_TEMP)
 %C%_toplevel_child_LDADD = $(debug_samples_LDADD_TEMP)
 %C%_editerbasic_LDADD = $(debug_samples_LDADD_TEMP)
+%C%_timer_LDADD = $(debug_samples_LDADD_TEMP)
 
 include $(top_srcdir)/debug/samples/calculator/local.mk
 include $(top_srcdir)/debug/samples/file_browser/local.mk

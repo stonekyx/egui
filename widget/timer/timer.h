@@ -30,6 +30,9 @@
 # ifndef _TIMER_H_
 # define _TIMER_H_ 1
 
+/* For the use of struct itimerspec */
+# define _POSIX_C_SOURCE 199309L
+
 # include <time.h>
 
 # include "../widget/widget.h"

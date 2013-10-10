@@ -34,6 +34,7 @@
 #ifndef _WBL_EXTERNAL_H_
 #define _WBL_EXTERNAL_H_ 1
 
+#include "timer/timer.h"
 #include "button/button.h"
 #include "icon/icon.h"
 #include "label/label.h"
