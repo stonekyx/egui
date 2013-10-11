@@ -1,23 +1,29 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <widget.h>
 
-void event_handler(struct widget *pub, struct widget *sub, si_t event)
+void event_handler(struct widget *sub, struct widget *pub, si_t event)
 {
     puts("hello world");
+    timer_run(TIMER_POINTER(pub));
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     struct timer *timer = timer_init(0);
-    struct itimerspec its = {
-        .it_value = {
-            .tv_sec=0,
-            .tv_nsec=300000000
-        }
+    struct timespec ts = {
+        .tv_sec=0,
+        .tv_nsec=0
     };
-    timer_set_time(timer, &its);
-    timer_register_event_handler(WIDGET_POINTER(timer), NULL, TIMER_EVENT_ALL, event_handler);
+    if(argc<3) {
+        printf("Usage: %s <sec> <nsec>\n", argv[0]);
+        exit(1);
+    }
+    ts.tv_sec = atoi(argv[1]);
+    ts.tv_nsec = atoi(argv[2]);
+    timer_set_time(timer, &ts);
+    timer_register_event_handler(timer, NULL, TIMER_EVENT_ALL, event_handler);
     timer_run(timer);
     sleep(10);
     return 0;

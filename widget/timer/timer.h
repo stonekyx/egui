@@ -30,23 +30,23 @@
 # ifndef _TIMER_H_
 # define _TIMER_H_ 1
 
-/* For the use of struct itimerspec */
-# define _POSIX_C_SOURCE 199309L
+# include "../widget/widget.h"
 
 # include <time.h>
 
-# include "../widget/widget.h"
+struct timer_internal_data_t;
 
 struct timer {
-    struct widget widget;
+    WIDGET_DEFINITION
     struct list subscribe_info_list;
-    timer_t timer;
-    struct itimerspec its;
+    struct timer_internal_data_t *internal_data;
 };
 
 enum timer_event_type {
     TIMER_EVENT_ALL
 };
+
+# define TIMER_POINTER(addr) ((struct timer *)(addr))
 
 struct timer* timer_init(si_t id);
 
@@ -54,7 +54,7 @@ si_t timer_exit(struct timer * b);
 
 void timer_register_event_handler(struct timer *pub, struct widget *sub, si_t event, widget_event_handler handler);
 
-void timer_set_time(struct timer *timer, const struct itimerspec *value);
+void timer_set_time(struct timer *timer, const struct timespec *value);
 
 void timer_run(struct timer *timer);
 
