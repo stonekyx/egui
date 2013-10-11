@@ -37,9 +37,10 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
-# include <widget.h>
 
 # include "spinbox.h"
+# include "../button/button.h"
+# include "../text_line/text_line.h"
 
 # define TMP_ARRAY_SIZE 256
 
