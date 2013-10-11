@@ -44,6 +44,7 @@ struct tab
 {
     WIDGET_DEFINITION
     struct list pages;
+    struct panel *panel;
 };
 
 /* tab样式结构体 */

@@ -193,6 +193,11 @@ struct tab* tab_init(void)
 
     list_init(&addr->pages);
 
+    addr->panel = panel_init(0);
+    addr->border_size = 0;
+    addr->panel->back_color = addr->back_color;
+    addr->panel->fore_color = addr->fore_color;
+
     return addr;
 }
 
