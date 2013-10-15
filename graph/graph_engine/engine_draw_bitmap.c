@@ -431,7 +431,7 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
 {
     ui_t offset;
     struct rgb * rgb;
-    struct color c;
+    struct color c={0};
     si_t x, y, i, j, origin;
 
     /* 获得位图的宽度 */
@@ -500,7 +500,7 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
 static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device* gd, struct rectangle* location)
 {
     ui_t r_field, g_field, b_field, offset, rgb;
-    struct color c;
+    struct color c={0};
     si_t x, y, i, j, origin;
 
     /* 获得颜色掩码 */
@@ -572,7 +572,7 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
 static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, struct rectangle* location)
 {
     ui_t offset, rgb, r_mask, g_mask, b_mask, r_shift, g_shift, b_shift;
-    struct color c;
+    struct color c={0};
     si_t x, y, i, j, origin;
 
     /* 获得位图的宽度 */
