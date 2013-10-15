@@ -261,6 +261,7 @@ extern si_t send_application_quit_message(struct egui_uds* uds_ptr)
 	 * 其实只需要发送头部 但是这样为了一个application quit还要增加一种特殊的msg 所以就只填负载的type了
 	 **/
 	union message msg_to_be_sent;
+	memset(&msg_to_be_sent, 0, sizeof(msg_to_be_sent));
 	message_set_type(&msg_to_be_sent, MESSAGE_TYPE_APPLICATION_QUIT);
 	return comm_send_message(uds_ptr, &msg_to_be_sent);
 }
