@@ -163,6 +163,8 @@ static void copy_message(union message* base_msg, union message* msg_to_be_sent)
 {
 	if(base_msg)
 		memcpy(msg_to_be_sent, base_msg, sizeof(union message));
+	else
+		memset(msg_to_be_sent, 0, sizeof(union message));
 }
 
 extern si_t send_input_message(struct egui_uds* uds_ptr, union message* msg, si_t window_descripter)

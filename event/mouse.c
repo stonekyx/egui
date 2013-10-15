@@ -218,13 +218,14 @@ static si_t basic_mouse(struct input_device * self, union message * m)
 static si_t deal_with_mouse(struct input_device * self, struct list* msg_list)
 {
 	union message msg;
-    int get_msg_res;
+	int get_msg_res;
+	memset(&msg, 0, sizeof(msg));
 	if(0 > (get_msg_res=basic_mouse(self, &msg)))
 	{
 		EGUI_PRINT_ERROR("failed to get mouse msg");
 		return -1;
 	}
-    if(1==get_msg_res) return 0;
+	if(1==get_msg_res) return 0;
 
 	list_push_back(msg_list, &msg, sizeof(union message));
 
