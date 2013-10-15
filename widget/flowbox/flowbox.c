@@ -111,7 +111,8 @@ si_t flowbox_add_widget(struct flowbox *f, struct widget *w)
     }
     f->used_width += w->area.width;
 
-    (f->max_height_of_row < w->area.height) && 
-        (f->max_height_of_row = w->area.height);
+    if(f->max_height_of_row < w->area.height) {
+        f->max_height_of_row = w->area.height;
+    }
     return 0;
 }
