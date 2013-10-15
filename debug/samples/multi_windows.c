@@ -109,6 +109,21 @@ int main()
         object_attach_child(OBJECT_POINTER(w2), OBJECT_POINTER(s));
     }
 
+    {
+        struct flowbox *f;
+        struct button *b[10];
+        int i;
+        f = flowbox_init(0);
+        flowbox_set_bounds(f, 5, 70, 405, 100);
+        for(i=0; i<10; i++) {
+            b[i] = button_init("test button");
+            button_set_bounds(b[i], 0, 0, i==5?106:100, i==4?40:(i==6?45:30));
+            object_attach_child(OBJECT_POINTER(f), OBJECT_POINTER(b[i]));
+            flowbox_add_widget(f, WIDGET_POINTER(b[i]));
+        }
+        object_attach_child(OBJECT_POINTER(w1), OBJECT_POINTER(f));
+    }
+
     /* 运行 */
     application_exec();
 

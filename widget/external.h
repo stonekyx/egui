@@ -48,6 +48,7 @@
 #include "checkbox/checkbox.h"
 #include "radiobutton/radiobutton.h"
 #include "spinbox/spinbox.h"
+#include "flowbox/flowbox.h"
 
 #if 0
 
