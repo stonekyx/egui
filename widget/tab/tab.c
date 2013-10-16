@@ -31,6 +31,7 @@
 # include <stdlib.h>
 # include <string.h>
 
+# include <config_parser.h>
 # include <base_type.h>
 # include <log.h>
 
@@ -159,7 +160,7 @@ void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 {
     struct list_node *pos;
     list_for_each_macro(pos, &b->pages) {
-        button_set_color((*(struct tab_page **)pos->data)->page_head,
+        tab_page_set_color(*(struct tab_page **)pos->data,
                 fcolor, bcolor);
     }
     panel_set_color(b->panel, fcolor, bcolor);
@@ -169,7 +170,7 @@ void tab_set_font(struct tab* b, si_t font)
 {
     struct list_node *pos;
     list_for_each_macro(pos, &b->pages) {
-        button_set_font((*(struct tab_page**)pos->data)->page_head, font);
+        tab_page_set_font(*(struct tab_page **)pos->data, font);
     }
 }
 
@@ -177,8 +178,8 @@ void tab_add_page(struct tab *t, struct tab_page *tp)
 {
     list_push_back(&t->pages, &tp, sizeof(tp));
     object_attach_child(OBJECT_POINTER(t->page_titles),
-            OBJECT_POINTER(tp->page_title));
-    flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_title));
+            OBJECT_POINTER(tp->page_head));
+    flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_head));
     if(list_size(&t->pages)==1) {
         tab_set_focus(t, 0);
     }
@@ -186,6 +187,17 @@ void tab_add_page(struct tab *t, struct tab_page *tp)
 
 void tab_set_focus(struct tab *t, si_t page_idx)
 {
-    t->focus = *(struct tab_page **)list_element_at(&t->pagess, page_idx);
+    /* save old sub-widgets */
+    struct object *old = OBJECT_POINTER(t->panel)->rchild;
+    struct object *new;
     object_delete(OBJECT_POINTER(t->panel)->rchild, NULL);
+    object_attach_child(OBJECT_POINTER(t->focus), old);
+
+    /* put up new sub-widgets */
+    t->focus = *(struct tab_page **)list_element_at(&t->pages, page_idx);
+    new = OBJECT_POINTER(t->focus)->rchild;
+    object_delete(OBJECT_POINTER(t->focus)->rchild, NULL);
+    object_attach_child(OBJECT_POINTER(t->panel), new);
+
+    panel_repaint(t->panel);
 }

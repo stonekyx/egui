@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include <log.h>
 
 #include "tab_page.h"
@@ -18,6 +20,7 @@ si_t tab_page_exit(struct tab_page *b)
 {
     button_exit(b->page_head);
     free(b);
+    return 0;
 }
 
 void tab_page_set_color(struct tab_page *p, struct color *fore, struct color *back)

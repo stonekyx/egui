@@ -63,36 +63,13 @@ struct tab_style
 # define TAB_POINTER(addr) ((struct tab *)(addr))
 
 /**
- * @brief tab的默认回调函数
- * 处理鼠标按下事件，鼠标抬起事件，重绘事件，显示事件
- *
- * @param self
- * @param msg
- *
- * @return 0
- **/
-extern si_t tab_default_callback(addr_t self, addr_t msg);
-
-/**
- * @brief 要求widget父类发送重绘信号，转到参数的callback函数里处理
- **/
-extern void tab_repaint(struct tab* b);
-
-/**
- * @brief 要求widget父类发送显示信号
- **/
-extern void tab_show(struct tab* b);
-
-/**
  * @brief 使用前设置窗口部件结构体
  *
  * @details
  *
- * @param text 显示在tab上的内容
- *
  * @return 0
 **/
-extern struct tab* tab_init(si_t minval, si_t maxval, si_t initval);
+extern struct tab* tab_init(void);
 
 /**
  * @brief 使用后清理窗口部件结构体
@@ -134,5 +111,9 @@ extern void tab_set_color(struct tab* b, struct color* fcolor, struct color* bco
  * @param font 字体
  **/
 extern void tab_set_font(struct tab* b, si_t font);
+
+extern void tab_add_page(struct tab *t, struct tab_page *tp);
+
+extern void tab_set_focus(struct tab *t, si_t page_idx);
 
 # endif

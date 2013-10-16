@@ -31,9 +31,9 @@
 # define _TAB_PAGE_H_ 1
 
 # include <base_type.h>
-# include <data_structures.h>
 
 # include "../widget/widget.h"
+# include "../button/button.h"
 
 /**
  * 标签页结构体
