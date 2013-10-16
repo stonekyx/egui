@@ -190,12 +190,15 @@ void tab_set_font(struct tab* b, si_t font)
 void tab_add_page(struct tab *t, struct tab_page *tp)
 {
     list_push_back(&t->pages, &tp, sizeof(tp));
+    tp->belong = t;
+
     object_attach_child(OBJECT_POINTER(t->page_titles),
             OBJECT_POINTER(tp->page_head));
     flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_head));
+
     tab_refresh_internal_bounds(t);
     if(list_size(&t->pages)==1) {
-        tab_set_focus(t, 0);
+        tab_set_focus(t, tp);
     }
 }
 
@@ -246,10 +249,8 @@ static void tab_object_tree_move(struct object *par, struct object *oldpar, stru
     tab_object_tree_refresh(newpar);
 }
 
-si_t tab_set_focus(struct tab *t, ui_t page_idx)
+si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
 {
-    struct tab_page *new_focus =
-        *(struct tab_page **)list_element_at(&t->pages, page_idx);
     if(!new_focus) {
         return -1;
     }
@@ -257,8 +258,21 @@ si_t tab_set_focus(struct tab *t, ui_t page_idx)
             OBJECT_POINTER(t->focus),
             OBJECT_POINTER(new_focus));
 
-    t->focus = new_focus;
+    if(t->focus) {
+        t->focus->head_pressed = 0;
+        tab_page_head_release(t->focus);
+    }
+    if(t->focus != new_focus) {
+        panel_repaint_with_children(t->panel);
+        panel_show(t->panel);
+    }
 
-    panel_repaint(t->panel);
+    t->focus = new_focus;
     return 0;
+}
+
+si_t tab_set_focus_index(struct tab *t, ui_t page_idx)
+{
+    return tab_set_focus(t,
+            *(struct tab_page **)list_element_at(&t->pages, page_idx));
 }

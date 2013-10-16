@@ -34,6 +34,7 @@
 
 # include "../widget/widget.h"
 # include "../button/button.h"
+# include "tab.h"
 
 /**
  * 标签页结构体
@@ -41,8 +42,9 @@
 struct tab_page
 {
     OBJECT_DEFINITION
-    si_t left_offset;
     struct button *page_head;
+    struct tab *belong;
+    si_t head_pressed;
 };
 
 /**
@@ -89,5 +91,12 @@ extern void tab_page_set_color(struct tab_page *p, struct color *fore, struct co
  * @param font 字体
  **/
 extern void tab_page_set_font(struct tab_page *p, si_t font);
+
+/**
+ * @brief 在标签页头按钮上模拟鼠标释放（即取消选定该标签页）
+ *
+ * @param tp 标签页指针
+ **/
+si_t tab_page_head_release(struct tab_page *tp);
 
 # endif
