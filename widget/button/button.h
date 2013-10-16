@@ -133,6 +133,13 @@ extern si_t button_exit(struct button * b);
 extern void button_set_bounds(struct button * widget, si_t x, si_t y, si_t width , si_t height);
 
 /**
+ * @brief 根据字体和文字长度自动设置按钮的边界
+ *
+ * @param b 按钮控件的指针
+ **/
+extern void button_set_bounds_auto(struct button *b);
+
+/**
  * @brief 设置按钮的颜色
  * 需要保留原值的将对应参数指针设置为空
  *

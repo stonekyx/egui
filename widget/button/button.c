@@ -36,7 +36,6 @@
 # include <log.h>
 # include <comm.h>
 # include <client_lib.h>
-# include <graph.h>
 
 # include "button.h"
 
@@ -356,6 +355,16 @@ si_t button_exit(struct button * b)
 void button_set_bounds(struct button * b, si_t x, si_t y, si_t width , si_t height)
 {
 	widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
+}
+
+void button_set_bounds_auto(struct button *b)
+{
+    button_set_bounds(b,
+            -1, -1,
+            b->border_size*2 +
+            get_font_width(b->gd)*strlen(b->text),
+            b->border_size*2 +
+            get_font_height(b->gd));
 }
 
 void button_set_color(struct button* b, struct color* fcolor, struct color* bcolor)
