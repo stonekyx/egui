@@ -49,6 +49,8 @@
 #include "radiobutton/radiobutton.h"
 #include "spinbox/spinbox.h"
 #include "flowbox/flowbox.h"
+#include "tab/tab.h"
+#include "tab/tab_page.h"
 
 #if 0
 

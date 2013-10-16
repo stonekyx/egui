@@ -114,6 +114,6 @@ extern void tab_set_font(struct tab* b, si_t font);
 
 extern void tab_add_page(struct tab *t, struct tab_page *tp);
 
-extern void tab_set_focus(struct tab *t, si_t page_idx);
+extern si_t tab_set_focus(struct tab *t, ui_t page_idx);
 
 # endif

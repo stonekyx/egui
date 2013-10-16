@@ -151,9 +151,22 @@ si_t tab_exit(struct tab * b)
     return widget_exit(WIDGET_POINTER(b));
 }
 
+static void tab_refresh_internal_bounds(struct tab *t)
+{
+    ui_t used_height;
+    flowbox_set_bounds(t->page_titles, 0, 0,
+            t->area.width, t->area.height);
+    flowbox_reorder_widgets(t->page_titles);
+    used_height = flowbox_get_actual_height(t->page_titles);
+    panel_set_bounds(t->panel,
+            0, used_height+1,
+            t->area.width, t->area.height - used_height-1);
+}
+
 void tab_set_bounds(struct tab * b, si_t x, si_t y, si_t width , si_t height)
 {
     widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
+    tab_refresh_internal_bounds(b);
 }
 
 void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
@@ -180,24 +193,72 @@ void tab_add_page(struct tab *t, struct tab_page *tp)
     object_attach_child(OBJECT_POINTER(t->page_titles),
             OBJECT_POINTER(tp->page_head));
     flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_head));
+    tab_refresh_internal_bounds(t);
     if(list_size(&t->pages)==1) {
         tab_set_focus(t, 0);
     }
 }
 
-void tab_set_focus(struct tab *t, si_t page_idx)
+static void tab_object_tree_refresh(struct object *obj)
 {
-    /* save old sub-widgets */
-    struct object *old = OBJECT_POINTER(t->panel)->rchild;
-    struct object *new;
-    object_delete(OBJECT_POINTER(t->panel)->rchild, NULL);
-    object_attach_child(OBJECT_POINTER(t->focus), old);
+    struct object *tree;
+    if(!obj) {
+        return;
+    }
+    /* 找到这棵树根节点的父节点 */
+    /* 没有的话 tree == NULL */
+	tree = object_get_root(obj)->parent;
 
-    /* put up new sub-widgets */
-    t->focus = *(struct tab_page **)list_element_at(&t->pages, page_idx);
-    new = OBJECT_POINTER(t->focus)->rchild;
-    object_delete(OBJECT_POINTER(t->focus)->rchild, NULL);
-    object_attach_child(OBJECT_POINTER(t->panel), new);
+    /* obj 在对象树中 */
+    /* 必须更新 root->parent 节点的 lchild 成员和 rchild 成员 */
+    /* 此时 tree == root->parent */
+    if(tree != NULL)
+    {
+        /* 更新最左边节点 */
+        tree->lchild = object_tree_l_most_node(tree->parent);
+        /* 更新最右边节点 */
+        tree->rchild = object_tree_r_most_node(tree->parent);
+    }
+}
+
+/* @par not holds a sub-tree of widgets, and these widgets used to
+ * belong to @oldpar. We give them back to @oldpar, and move the sub-tree
+ * of @newpar to @par. */
+static void tab_object_tree_move(struct object *par, struct object *oldpar, struct object *newpar)
+{
+    if(!par || !newpar) {
+        return;
+    }
+    if(oldpar) {
+        oldpar->rchild = par->rchild; /* old sub-tree: parent side */
+    }
+    if(par->rchild) {
+        par->rchild->parent = oldpar; /* old sub-tree: child side */
+    }
+    par->rchild = newpar->rchild; /* new sub-tree: parent side */
+    if(newpar->rchild) {
+        newpar->rchild->parent = par; /* new sub-tree: child side */
+    }
+    newpar->rchild = NULL;
+
+    tab_object_tree_refresh(par);
+    tab_object_tree_refresh(oldpar);
+    tab_object_tree_refresh(newpar);
+}
+
+si_t tab_set_focus(struct tab *t, ui_t page_idx)
+{
+    struct tab_page *new_focus =
+        *(struct tab_page **)list_element_at(&t->pages, page_idx);
+    if(!new_focus) {
+        return -1;
+    }
+    tab_object_tree_move(OBJECT_POINTER(t->panel),
+            OBJECT_POINTER(t->focus),
+            OBJECT_POINTER(new_focus));
+
+    t->focus = new_focus;
 
     panel_repaint(t->panel);
+    return 0;
 }

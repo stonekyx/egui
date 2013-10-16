@@ -40,6 +40,7 @@
 **/
 struct tab_page
 {
+    OBJECT_DEFINITION
     si_t left_offset;
     struct button *page_head;
 };
