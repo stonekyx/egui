@@ -27,6 +27,8 @@
  * All rights reserved.
 **/
 
+#define _POSIX_C_SOURCE 200809L /* for strdup() */
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -311,7 +313,7 @@ void button_show(struct button* b)
 	widget_show(WIDGET_POINTER(b));
 }
 
-struct button* button_init(char* text)
+struct button* button_init(const char* text)
 {
     struct button * addr;
 
@@ -335,7 +337,7 @@ struct button* button_init(char* text)
 	
     /* button 子类成员 */
     addr->callback = button_default_callback;
-	addr->text = text;
+	addr->text = strdup(text);
 
     addr->custom_data = NULL;
 
@@ -349,6 +351,7 @@ struct button* button_init(char* text)
 */
 si_t button_exit(struct button * b)
 {
+    free(b->text);
     return widget_exit(WIDGET_POINTER(b));
 }
 

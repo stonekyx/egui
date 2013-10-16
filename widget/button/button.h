@@ -107,7 +107,7 @@ extern void button_show(struct button* b);
  *
  * @return 0
 **/
-extern struct button* button_init(char* text);
+extern struct button* button_init(const char* text);
 
 /**
  * @brief 使用后清理窗口部件结构体
