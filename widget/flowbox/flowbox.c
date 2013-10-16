@@ -139,7 +139,8 @@ si_t flowbox_reorder_widgets(struct flowbox *f)
     f->used_width = f->used_height = 0;
     f->max_height_of_row = 0;
     list_for_each_macro(pos, &f->subwidgets) {
-        if(flowbox_subwidget_adjust_bounds(f, pos->data) == -1) {
+        if(-1 == flowbox_subwidget_adjust_bounds(f,
+                    *(struct widget **)pos->data)) {
             return -1;
         }
     }
