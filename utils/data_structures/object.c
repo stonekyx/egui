@@ -540,6 +540,10 @@ static si_t object_tree_depth_first_traversal(struct object * root, void(* actio
 
 si_t object_tree_for_each(struct object * root, void(* action)(void *))
 {
+    if(!action) {
+        return 0;
+    }
+
     if(root->rchild != NULL)
     {
         object_tree_for_each(root->rchild, action);
