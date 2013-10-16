@@ -114,4 +114,6 @@ extern si_t panel_default_mouse_release(struct panel* ic , union message * msg);
 
 extern void panel_set_bounds(struct panel* panel, si_t x, si_t y, si_t width , si_t height);
 
+extern void panel_set_color(struct panel *p, struct color *fore, struct color *back);
+
 # endif

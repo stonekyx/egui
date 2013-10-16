@@ -389,4 +389,7 @@ void panel_set_bounds(struct panel* panel, si_t x, si_t y, si_t width , si_t hei
 	return;
 }
 
-
+void panel_set_color(struct panel *p, struct color *fore, struct color *back)
+{
+    widget_set_color(WIDGET_POINTER(p), fore, back);
+}
