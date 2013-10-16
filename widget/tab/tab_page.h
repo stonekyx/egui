@@ -42,7 +42,6 @@ struct tab_page
 {
     si_t left_offset;
     struct button *page_head;
-    struct list widgets;
 };
 
 /**
@@ -89,21 +88,5 @@ extern void tab_page_set_color(struct tab_page *p, struct color *fore, struct co
  * @param font 字体
  **/
 extern void tab_page_set_font(struct tab_page *p, si_t font);
-
-/**
- * @brief 设置标签页按钮的宽度
- *
- * @param b 要设置的标签页
- * @param width 目标宽度（仅按钮）
- **/
-extern void tab_page_set_title_width(struct tab_page *b, ui_t width);
-
-/**
- * @brief 添加子控件
- *
- * @param p 要添加到的标签页
- * @param w 要添加的控件
- **/
-extern void tab_page_add_widget(struct tab_page *p, struct widget *w);
 
 # endif
