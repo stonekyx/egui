@@ -42,6 +42,7 @@ struct flowbox
     si_t used_height;
     si_t max_height_of_row;
     si_t seam;
+    struct list subwidgets;
 };
 
 /**
@@ -74,5 +75,9 @@ extern si_t flowbox_exit(struct flowbox * b);
 void flowbox_set_bounds(struct flowbox * b, si_t x, si_t y, si_t width , si_t height);
 
 si_t flowbox_add_widget(struct flowbox *f, struct widget *w);
+
+si_t flowbox_reorder_widgets(struct flowbox *f);
+
+si_t flowbox_get_actual_height(struct flowbox *f);
 
 # endif
