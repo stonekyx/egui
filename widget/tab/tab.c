@@ -198,6 +198,7 @@ void tab_add_page(struct tab *t, struct tab_page *tp)
 
     tab_refresh_internal_bounds(t);
     if(list_size(&t->pages)==1) {
+        tp->head_pressed = 1;
         tab_set_focus(t, tp);
     }
 }

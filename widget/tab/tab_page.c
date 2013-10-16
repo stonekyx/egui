@@ -22,6 +22,14 @@ static si_t tab_page_head_button_callback(addr_t self, addr_t msg)
                 button_default_callback(self, msg);
             }
             break;
+        case MESSAGE_TYPE_WIDGET_REPAINT:
+            if(!belong->head_pressed) {
+                m->base.type = MESSAGE_TYPE_MOUSE_RELEASE;
+            } else {
+                m->base.type = MESSAGE_TYPE_MOUSE_PRESS;
+            }
+            button_default_callback(self, msg);
+            break;
         default:
             return button_default_callback(self, msg);
     }
