@@ -31,11 +31,13 @@
 # define _TAB_H_ 1
 
 # include <base_type.h>
-# include <comm.h>
+# include <data_structures.h>
 
 # include "../widget/widget.h"
 
 # include "tab_page.h"
+# include "../panel/panel.h"
+# include "../flowbox/flowbox.h"
 
 /**
  * 窗口部件结构体
@@ -45,6 +47,8 @@ struct tab
     WIDGET_DEFINITION
     struct list pages;
     struct panel *panel;
+    struct flowbox *page_titles;
+    struct tab_page *focus;
 };
 
 /* tab样式结构体 */

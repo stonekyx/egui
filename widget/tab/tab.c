@@ -32,12 +32,7 @@
 # include <string.h>
 
 # include <base_type.h>
-# include <config_parser.h>
 # include <log.h>
-# include <comm.h>
-# include <client_lib.h>
-# include <graph.h>
-# include <widget.h>
 
 # include "tab.h"
 
@@ -100,73 +95,6 @@ static si_t tab_init_with_default_style(struct tab * b)
     return res;
 }
 
-static si_t tab_default_widget_show(struct tab * b, union message * msg) 
-{
-    struct rectangle area;
-
-    widget_absolute_area(WIDGET_POINTER(b), &area);
-
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-    /* 更新 */
-    update(b->gd);
-
-    return 0;
-}
-
-static si_t tab_button_callback(addr_t self, addr_t msg)
-{
-    struct button *b = self;
-    union message *m = msg;
-    si_t delta = 0;
-    if(!strcmp(b->text, "v")) {
-        delta = -1;
-    } else if(!strcmp(b->text, "^")) {
-        delta = 1;
-    }
-    switch(m->base.type) {
-        case MESSAGE_TYPE_MOUSE_SINGLE_CLICK:
-            tab_value_change(TAB_POINTER(b->custom_data), delta);
-            break;
-        default:
-            return button_default_callback(self, msg);
-    }
-    return 0;
-}
-
-si_t tab_default_callback(addr_t self, addr_t msg)
-{
-    struct tab * b = self;
-    union message * m = msg;
-
-    switch(m->base.type)
-    {
-        case MESSAGE_TYPE_WIDGET_REPAINT:
-            tab_default_widget_show(b, m);
-            break;
-
-        case MESSAGE_TYPE_WIDGET_SHOW:
-            tab_default_widget_show(b, m);
-            break;
-
-        default:
-            break;
-    }
-
-    return 0;
-}
-
-void tab_repaint(struct tab* b)
-{
-	widget_repaint(WIDGET_POINTER(b));
-}
-
-void tab_show(struct tab* b)
-{
-	widget_show(WIDGET_POINTER(b));
-}
-
 struct tab* tab_init(void)
 {
     struct tab * addr;
@@ -187,9 +115,6 @@ struct tab* tab_init(void)
 
     /* 用全局样式对象初始化tab样式 */
     tab_init_with_default_style(addr);
-	
-    /* 默认的回调函数 */
-    addr->callback = tab_default_callback;
 
     list_init(&addr->pages);
 
@@ -197,6 +122,17 @@ struct tab* tab_init(void)
     addr->border_size = 0;
     addr->panel->back_color = addr->back_color;
     addr->panel->fore_color = addr->fore_color;
+    panel_set_bounds(addr->panel,
+            0, 0,
+            addr->area.width, addr->area.height);
+    object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->panel));
+
+    addr->page_titles = flowbox_init(0);
+    flowbox_set_bounds(addr->page_titles, 0, 0,
+            /* page titles can actually fill up the whole tab widget */
+            addr->area.width, addr->area.height);
+    object_attach_child(OBJECT_POINTER(addr),
+            OBJECT_POINTER(addr->page_titles));
 
     return addr;
 }
@@ -208,22 +144,48 @@ struct tab* tab_init(void)
 */
 si_t tab_exit(struct tab * b)
 {
-    while(list_size(&b->pages)>0) {
-        tab_remove_page(0);
-    }
+    flowbox_exit(b->page_titles);
+    panel_exit(b->panel);
+    list_exit(&b->pages);
     return widget_exit(WIDGET_POINTER(b));
 }
 
 void tab_set_bounds(struct tab * b, si_t x, si_t y, si_t width , si_t height)
 {
-	widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
+    widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
 }
 
 void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 {
-	widget_set_color(WIDGET_POINTER(b), fcolor, bcolor);
+    struct list_node *pos;
+    list_for_each_macro(pos, &b->pages) {
+        button_set_color((*(struct tab_page **)pos->data)->page_head,
+                fcolor, bcolor);
+    }
+    panel_set_color(b->panel, fcolor, bcolor);
 }
 
 void tab_set_font(struct tab* b, si_t font)
 {
+    struct list_node *pos;
+    list_for_each_macro(pos, &b->pages) {
+        button_set_font((*(struct tab_page**)pos->data)->page_head, font);
+    }
+}
+
+void tab_add_page(struct tab *t, struct tab_page *tp)
+{
+    list_push_back(&t->pages, &tp, sizeof(tp));
+    object_attach_child(OBJECT_POINTER(t->page_titles),
+            OBJECT_POINTER(tp->page_title));
+    flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_title));
+    if(list_size(&t->pages)==1) {
+        tab_set_focus(t, 0);
+    }
+}
+
+void tab_set_focus(struct tab *t, si_t page_idx)
+{
+    t->focus = *(struct tab_page **)list_element_at(&t->pagess, page_idx);
+    object_delete(OBJECT_POINTER(t->panel)->rchild, NULL);
 }
