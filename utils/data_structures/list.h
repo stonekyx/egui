@@ -355,7 +355,7 @@ list_for_each
  si_t (* function)(void *));
 
 #define list_for_each_macro(pos, list) \
-    for(pos=list->node.next; pos!=&list->node; pos=pos->next)
+    for((pos)=(list)->node.next; (pos)!=&(list)->node; (pos)=(pos)->next)
 
 /**
  * 链表排序
