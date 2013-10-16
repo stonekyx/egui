@@ -107,42 +107,17 @@ static si_t spinbox_init_with_default_style(struct spinbox * b)
 
 static si_t spinbox_default_widget_show(struct spinbox * b, union message * msg) 
 {
-    struct rectangle area;
-
-    widget_absolute_area(WIDGET_POINTER(b), &area);
-
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-    /* 更新 */
-    update(b->gd);
-
+    text_line_show(b->text_number);
+    button_show(b->button_up);
+    button_show(b->button_down);
     return 0;
-}
-
-static void _paint_spinbox(struct spinbox* b, struct rectangle* area, int x, int y)
-{
-    /* I think nothing should be done here,
-     * otherwise everything will be done twice. */
 }
 
 static si_t spinbox_default_widget_repaint(struct spinbox * b, union message * msg)
 {
-    struct rectangle area;
-    si_t x, y;
-
-    /* 获得左上角的绝对坐标 */
-    widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);
-
-    /* 获得绝对的工作区域 */
-    /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
-
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	_paint_spinbox(b, &area, x, y);
-
+    text_line_repaint(b->text_number);
+    button_repaint(b->button_up);
+    button_repaint(b->button_down);
     return 0;
 }
 
