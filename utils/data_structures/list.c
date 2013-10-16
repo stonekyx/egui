@@ -359,41 +359,6 @@ list_empty
     }
 }
 
-# if 0
-si_t
-list_sort
-(struct list * l,
- si_t (* comp)(void *, void *))
-{
-    si_t i;
-    ui_t ** tmp;
-    struct list_node * ptr;
-
-    if(l->node.next != &(l->node))
-    {
-        tmp = (ui_t **)calloc(sizeof(void *), (ui_t)(l->node.data));
-
-        for(i = 0, ptr = l->node.next; ptr != &(l->node); ++ i)
-        {
-            tmp[i] = (ui_t *)ptr->data;
-            ptr = ptr->next;
-        }
-
-        qsort(tmp, (ui_t)(l->node.data), sizeof(void *), comp);
-
-        for(i = 0, ptr = l->node.next; ptr != &(l->node); ++ i)
-        {
-            ptr->data = tmp[i];
-            ptr = ptr->next;
-        }
-
-        free(tmp);
-    }
-
-    return 0;
-}
-# endif
-
 si_t
 list_init
 (struct list * l)
@@ -412,4 +377,22 @@ list_exit
 (struct list * l)
 {
     return list_clear(l);
+}
+
+addr_t
+list_element_at
+(struct list *l, ui_t idx)
+{
+    struct list_node *pos;
+    ui_t cur = 0;
+    if(idx > list_size(l)) {
+        return NULL;
+    }
+    list_for_each_macro(pos, l) {
+        if(cur==idx) {
+            return pos->data;
+        }
+        cur++;
+    }
+    return NULL;
 }

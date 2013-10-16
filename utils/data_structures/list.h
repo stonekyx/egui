@@ -358,17 +358,16 @@ list_for_each
     for((pos)=(list)->node.next; (pos)!=&(list)->node; (pos)=(pos)->next)
 
 /**
- * 链表排序
+ * 找到链表的第idx个元素的数据
  *
  * @param l 链表指针
- * @param comp 元素比较函数指针
+ * @param idx 要找的元素下标（从0开始）
  *
- * @return 0
+ * @return 找到的元素包含的数据指针
 **/
 extern
-si_t
-list_sort
-(struct list * l,
- si_t (* comp)(void *, void *));
+addr_t
+list_element_at
+(struct list *l, ui_t idx);
 
 # endif
