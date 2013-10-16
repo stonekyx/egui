@@ -209,6 +209,7 @@ si_t panel_repaint(struct panel * pnl)
 {
   	union message msg;
 
+    msg.base.type = MESSAGE_TYPE_WIDGET_REPAINT;
     msg.widget_repaint.area.x = pnl->area.x;
     msg.widget_repaint.area.y = pnl->area.y;
     msg.widget_repaint.area.width = pnl->area.width;
@@ -218,6 +219,22 @@ si_t panel_repaint(struct panel * pnl)
 
     return 1;
 
+}
+
+si_t panel_repaint_with_children(struct panel *pnl)
+{
+    union message msg;
+
+    msg.base.type = MESSAGE_TYPE_WIDGET_REPAINT;
+    msg.widget_repaint.area.x = pnl->area.x;
+    msg.widget_repaint.area.y = pnl->area.y;
+    msg.widget_repaint.area.width = pnl->area.width;
+    msg.widget_repaint.area.height = pnl->area.height;
+
+    panel_default_widget_repaint(pnl, &msg);
+    panel_default_widget_repaint_children(pnl, &msg);
+
+    return 1;
 }
 
 /* 
@@ -240,19 +257,20 @@ si_t panel_default_widget_repaint(struct panel* pnl , union message * msg)
 
 	fill_rectangle(pnl->gd, area.x , area.y, area.width, area.height);
 
+	return 1;
+}
+
+si_t panel_default_widget_repaint_children(struct panel *pnl, union message *msg)
+{
+	struct object *tree, *node;
 	/*  绘制panel子控件的区域 */
-/*	tree = OBJECT_POINTER(pnl);
+	tree = OBJECT_POINTER(pnl);
 	node = tree->rchild;
 	while(node != NULL)
-	{   printf("%d ",i++);
-		wgt = (struct widget*)node;
-		widget_absolute_area(wgt,&area);
-		printf("child_area(%d,%d,%d,%d)  ",area.x, area.y,area.width,area.height);
-
-		wgt->callback(wgt, msg);
+	{
+		WIDGET_POINTER(node)->callback(node, msg);
 		node = object_tree_iterator_decrement(tree,node);
 	}
-*/
 	return 1;
 }
 
@@ -261,6 +279,7 @@ si_t panel_show(struct panel * pnl)
 {
   	union message msg;
 
+    msg.base.type = MESSAGE_TYPE_WIDGET_SHOW;
     msg.widget_repaint.area.x = pnl->area.x;
     msg.widget_repaint.area.y = pnl->area.y;
     msg.widget_repaint.area.width = pnl->area.width;

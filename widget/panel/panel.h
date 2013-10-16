@@ -98,7 +98,9 @@ extern si_t panel_exit (struct panel * ic);
 
 
 extern si_t panel_repaint(struct panel * i);
+extern si_t panel_repaint_with_children(struct panel *panel);
 extern si_t panel_default_widget_repaint(struct panel* ic , union message * msg);
+extern si_t panel_default_widget_repaint_children(struct panel *panel, union message *msg);
 
 
 extern si_t panel_show(struct panel * i);
