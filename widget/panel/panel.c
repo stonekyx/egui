@@ -382,11 +382,7 @@ si_t panel_default_mouse_release(struct panel* pnl , union message * msg)
 
 void panel_set_bounds(struct panel* panel, si_t x, si_t y, si_t width , si_t height)
 {
-	panel->area.x = x;
-	panel->area.y = y;
-	panel->area.width = width;
-	panel->area.height = height;
-	return;
+	widget_set_bounds(WIDGET_POINTER(panel), x, y, width, height);
 }
 
 void panel_set_color(struct panel *p, struct color *fore, struct color *back)
