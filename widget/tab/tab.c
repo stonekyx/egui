@@ -255,6 +255,9 @@ si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
     if(!new_focus) {
         return -1;
     }
+    if(t->focus == new_focus) {
+        return 0;
+    }
     tab_object_tree_move(OBJECT_POINTER(t->panel),
             OBJECT_POINTER(t->focus),
             OBJECT_POINTER(new_focus));
@@ -263,10 +266,8 @@ si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
         t->focus->head_pressed = 0;
         tab_page_head_release(t->focus);
     }
-    if(t->focus != new_focus) {
-        panel_repaint_with_children(t->panel);
-        panel_show(t->panel);
-    }
+    panel_repaint_with_children(t->panel);
+    panel_show(t->panel);
 
     t->focus = new_focus;
     return 0;
