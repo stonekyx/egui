@@ -1,7 +1,12 @@
+#define _POSIX_C_SOURCE 199309L
+
 #include <stdio.h>
+#include <stdlib.h>
 #include <ctype.h>
 #include <termios.h>
 #include <fcntl.h>
+#include <sys/time.h>
+#include <time.h>
 #include <widget.h>
 
 struct termios old_term;
@@ -25,22 +30,30 @@ void term_exit()
 void event_handler(struct widget *sub, struct widget *pub, si_t event)
 {
     static char buf[100];
-    time_t t = time(NULL);
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+
     printf("\033[%dD", strlen(buf));
-    strftime(buf, sizeof(buf), "%T", localtime(&t));
+    strftime(buf, sizeof(buf), "%T", localtime(&spec.tv_sec));
+    sprintf(buf+strlen(buf), ".%06ld", spec.tv_nsec/1000);
+
     printf("%s", buf);
     fflush(stdout);
     timer_run(TIMER_POINTER(pub));
 }
 
-int main()
+int main(int argc, char *argv[])
 {
     struct timer *timer = timer_init(0);
-    struct timespec ts = {
-        .tv_sec = 1,
-        .tv_nsec = 0
-    };
+    struct timespec ts;
     int ch;
+    if(argc<3) {
+        printf("Usage: %s <sec> <usec>\n", argv[0]);
+        exit(1);
+    }
+    ts.tv_sec = atoi(argv[1]);
+    ts.tv_nsec = atoi(argv[2]);
+
     term_init();
     timer_set_time(timer, &ts);
     timer_register_event_handler(timer, NULL, TIMER_EVENT_ALL, event_handler);
