@@ -134,6 +134,9 @@ static si_t button_default_widget_show(struct button * b, union message * msg)
 
 static void _paint_button(struct button* b, si_t is_pressed, struct rectangle* area, int x, int y)
 {
+    /* 设置区域 */
+    set_area(b->gd, area->x, area->y, area->width, area->height);
+
 	/* 背景色 */
 	set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
 	/* button 背景 */
@@ -178,27 +181,6 @@ static si_t button_default_widget_repaint(struct button * b, union message * msg
     /* 将会舍弃不在父控件内的部分*/
     widget_absolute_area(WIDGET_POINTER(b), &area);
 
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* button 背景 */
-    fill_rectangle(b->gd, area.x, area.y, area.width, area.height);
-    /* button 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* button 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-	/* button 显示的字 */
-    set_font(b->gd, b->font);
-    show_text(b->gd, x + b->border_size, y + b->border_size, b->text, strlen(b->text));
-    /* button 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* button 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
 	_paint_button(b, 0, &area, x, y);
 
     return 0;
@@ -216,22 +198,6 @@ static si_t button_default_mouse_press(struct button * b, union message * msg)
     /* 将会舍弃不在父控件内的部分*/
     widget_absolute_area(WIDGET_POINTER(b), &area);
 
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-    /* 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
 	_paint_button(b, 1, &area, x, y);
 
     return 0;
@@ -249,22 +215,6 @@ static si_t button_default_mouse_release(struct button * b, union message * msg)
     /* 将会舍弃不在父控件内的部分*/
     widget_absolute_area(WIDGET_POINTER(b), &area);
 
-    /* 设置区域 */
-    set_area(b->gd, area.x, area.y, area.width, area.height);
-
-	/* 背景色 */
-    set_color(b->gd, b->back_color.r, b->back_color.g, b->back_color.b, b->back_color.a);
-    /* button 右边框 */
-    draw_line(b->gd, x + b->area.width - 1, y, x + b->area.width - 1, y + b->area.height - 1);
-    /* button 下边框 */
-    draw_line(b->gd, x, y + b->area.height - 1, x + b->area.width - 1, y + b->area.height - 1);
-
-	/* 前景色 */
-    set_color(b->gd, b->fore_color.r, b->fore_color.g, b->fore_color.b, b->fore_color.a);
-    /* button 上边框 */
-    draw_line(b->gd, x, y, x + b->area.width - 1, y);
-    /* button 左边框 */
-    draw_line(b->gd, x, y, x, y + b->area.height - 1);
 	_paint_button(b, 0, &area, x, y);
 
     return 0;
