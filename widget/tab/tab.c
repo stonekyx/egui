@@ -266,6 +266,9 @@ si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
         t->focus->head_pressed = 0;
         tab_page_head_release(t->focus);
     }
+    panel_set_color(t->panel,
+            &new_focus->page_head->fore_color,
+            &new_focus->page_head->back_color);
     panel_repaint_with_children(t->panel);
     panel_show(t->panel);
 
