@@ -41,10 +41,9 @@
 **/
 struct tab_page
 {
-    OBJECT_DEFINITION
-    struct button *page_head;
+    struct panel base;
+    char *page_head;
     struct tab *belong;
-    si_t head_pressed;
 };
 
 /**
@@ -83,20 +82,5 @@ extern si_t tab_page_exit(struct tab_page * b);
  * @param back 背景色
  **/
 extern void tab_page_set_color(struct tab_page *p, struct color *fore, struct color *back);
-
-/**
- * @brief 设置tab_page的字体
- *
- * @param b 控件
- * @param font 字体
- **/
-extern void tab_page_set_font(struct tab_page *p, si_t font);
-
-/**
- * @brief 在标签页头按钮上模拟鼠标释放（即取消选定该标签页）
- *
- * @param tp 标签页指针
- **/
-si_t tab_page_head_release(struct tab_page *tp);
 
 # endif
