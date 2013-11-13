@@ -354,10 +354,10 @@ list_for_each
 (struct list * l,
  si_t (* function)(void *));
 
-#define list_for_each_macro(pos, list) \
+#define list_for_each_macro(list, pos) \
     for((pos)=(list)->node.next; (pos)!=&(list)->node; (pos)=(pos)->next)
 
-#define list_for_each_r_macro(pos, list) \
+#define list_for_each_r_macro(list, pos) \
     for((pos)=(list)->node.prev; (pos)!=&(list)->node; (pos)=(pos)->prev)
 
 /**

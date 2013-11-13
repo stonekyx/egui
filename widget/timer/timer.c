@@ -124,7 +124,7 @@ static void do_handle_event(union sigval subscribe_info)
 {
     struct list *subscribe_info_list = subscribe_info.sival_ptr;
     struct list_node *pos;
-    list_for_each_macro(pos, subscribe_info_list) {
+    list_for_each_macro(subscribe_info_list, pos) {
         struct widget_subscribe_info *si =
             pos->data;
         si->handler(si->subscriber, si->publisher, TIMER_EVENT_ALL);

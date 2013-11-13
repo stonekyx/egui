@@ -172,7 +172,7 @@ void tab_set_bounds(struct tab * b, si_t x, si_t y, si_t width , si_t height)
 void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 {
     struct list_node *pos;
-    list_for_each_macro(pos, &b->pages) {
+    list_for_each_macro(&b->pages, pos) {
         tab_page_set_color(*(struct tab_page **)pos->data,
                 fcolor, bcolor);
     }
@@ -182,7 +182,7 @@ void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 void tab_set_font(struct tab* b, si_t font)
 {
     struct list_node *pos;
-    list_for_each_macro(pos, &b->pages) {
+    list_for_each_macro(&b->pages, pos) {
         tab_page_set_font(*(struct tab_page **)pos->data, font);
     }
 }

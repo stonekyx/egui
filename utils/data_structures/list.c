@@ -388,7 +388,7 @@ list_element_at
     if(idx > list_size(l)) {
         return NULL;
     }
-    list_for_each_macro(pos, l) {
+    list_for_each_macro(l, pos) {
         if(cur==idx) {
             return pos->data;
         }
