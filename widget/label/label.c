@@ -150,8 +150,6 @@ static si_t label_default_widget_repaint(struct label * l, union message * msg)
 
     set_color(l->gd, l->fore_color.r, l->fore_color.g, l->fore_color.b, l->fore_color.a);
 
-    set_font(l->gd, l->font);
-
     show_text(l->gd, x + l->border_size, y + l->border_size, l->text, strlen(l->text));
 
     return 0;
@@ -237,4 +235,5 @@ void label_set_color(struct label* l, struct color* fcolor, struct color* bcolor
 void label_set_font(struct label* l, si_t font)
 {
 	l->font = font;
+    set_font(l->gd, l->font);
 }
