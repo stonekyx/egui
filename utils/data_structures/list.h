@@ -357,6 +357,9 @@ list_for_each
 #define list_for_each_macro(pos, list) \
     for((pos)=(list)->node.next; (pos)!=&(list)->node; (pos)=(pos)->next)
 
+#define list_for_each_r_macro(pos, list) \
+    for((pos)=(list)->node.prev; (pos)!=&(list)->node; (pos)=(pos)->prev)
+
 /**
  * 找到链表的第idx个元素的数据
  *
