@@ -76,6 +76,15 @@ extern si_t panel_default_callback(void* self , void* msg );
 **/
 extern void * panel_init(si_t id);
 
+/**
+ * @brief 仅初始化数据，使用已分配的空间
+ *
+ * @param addr 要初始化数据的panel对象
+ * @param id panel部件的标识符
+ *
+ * @return NULL on fail, addr on success
+**/
+extern void * panel_init_data(struct panel *addr, si_t id);
 
 /**
  * @brief 使用后清理窗口部件结构体

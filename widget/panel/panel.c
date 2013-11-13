@@ -112,7 +112,15 @@ void * panel_init(si_t id)
         EGUI_PRINT_SYS_ERROR("fail to malloc");
         return NULL;
     }
+    if(!(addr=panel_init_data(addr, id))) {
+        return NULL;
+    }
 
+    return addr;
+}
+
+void * panel_init_data(struct panel *addr, si_t id)
+{
     if(!(addr=widget_init_common(WIDGET_POINTER(addr), id))) {
         return NULL;
     }
