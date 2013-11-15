@@ -286,7 +286,7 @@ extern si_t draw_rectangle(si_t gd, si_t x, si_t y, si_t width, si_t height);
  *
  * @return 0
 */
-extern si_t draw_polygon(si_t gd, const struct point * p, si_t n);
+extern si_t draw_polygon(si_t gd, const struct point * p, ui_t n);
 
 /*
  * @brief 绘制一个圆

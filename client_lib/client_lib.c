@@ -312,7 +312,7 @@ extern si_t draw_rectangle(si_t gd, si_t x_axis, si_t y_axis, si_t x_size, si_t 
             (const_addr_t)&body, sizeof(body));
 }
 
-extern si_t draw_polygon(si_t gd, const struct point * p, si_t point_count)
+extern si_t draw_polygon(si_t gd, const struct point * p, ui_t point_count)
 {
 	struct packet_body_draw_polygon body;
 	request_set_draw_polygon(&body, gd, p, point_count);
