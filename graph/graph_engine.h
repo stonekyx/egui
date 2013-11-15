@@ -477,7 +477,7 @@ extern si_t engine_draw_rectangle(si_t graphics_device_handle, si_t x_axis, si_t
  *
  * @return 0
 **/
-extern si_t engine_draw_polygon(si_t graphics_device_handle, struct point * p, si_t point_count);
+extern si_t engine_draw_polygon(si_t graphics_device_handle, struct point * p, ui_t point_count);
 
 /**
  * 绘制一个圆

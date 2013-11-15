@@ -33,9 +33,13 @@ si_t
 engine_draw_polygon
 (si_t graphics_device_handle,
  struct point * p,
- si_t point_count)
+ ui_t point_count)
 {
     ui_t i = 0;
+
+    if(point_count <= 0) {
+        return 0;
+    }
 
     -- point_count;
 
