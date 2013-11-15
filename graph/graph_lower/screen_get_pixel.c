@@ -33,6 +33,44 @@
 
 # include "../graph_lower.h"
 
+static byte_t *
+screen_get_raw_video(struct screen *s)
+{
+    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
+    {
+        return s->memory_addr;
+    }
+    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
+    {
+        return s->buffer_addr;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+void
+screen_get_pixel_raw_nocheck
+(void * video,
+ si_t width,
+ si_t height,
+ si_t depth,
+ struct color *c,
+ si_t x,
+ si_t y)
+{
+    ui_t offset, color;
+    /* 获得像素关于显存的偏移量 */
+    offset = y * global_fix_screen_info.line_length + x * (depth >> 3);
+
+    /* 将像素的值赋给 color */
+    memcpy(&color, (byte_t*)video + offset, depth >> 3);
+
+    /* 将 color 转换成 struct color */
+    screen_value_to_color(c, &color);
+}
+
 /*
  * 从裸数组中获取像素。
  */
@@ -47,7 +85,6 @@ screen_get_pixel_raw
  si_t x,
  si_t y)
 {
-    ui_t offset, color;
     struct rectangle result_area, screen_area;
 
     screen_area.x = 0;
@@ -71,15 +108,25 @@ screen_get_pixel_raw
         return -1;
     }
 
-    /* 获得像素关于显存的偏移量 */
-    offset = y * global_fix_screen_info.line_length + x * (depth >> 3);
+    screen_get_pixel_raw_nocheck(video, width, height, depth, c, x, y);
 
-    /* 将像素的值赋给 color */
-    memcpy(&color, (byte_t*)video + offset, depth >> 3);
+    return 0;
+}
 
-    /* 将 color 转换成 struct color */
-    screen_value_to_color(c, &color);
-
+si_t
+screen_get_pixel_nocheck
+(struct screen *s,
+ struct color *c,
+ si_t x,
+ si_t y)
+{
+    byte_t * video = screen_get_raw_video(s);
+    if(!video) {
+        return -1;
+    }
+    screen_get_pixel_raw_nocheck(video,
+            s->width, s->height, s->color_depth,
+            c, x, y);
     return 0;
 }
 
@@ -96,21 +143,10 @@ screen_get_pixel
  si_t x,
  si_t y)
 {
-    byte_t * video;
-
-    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
-    {
-        video = s->memory_addr;
-    }
-    else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER)
-    {
-        video = s->buffer_addr;
-    }
-    else
-    {
+    byte_t * video = screen_get_raw_video(s);
+    if(!video) {
         return -1;
     }
-
     return screen_get_pixel_raw(video, s->width, s->height, s->color_depth,
             a, c, x, y);
 }

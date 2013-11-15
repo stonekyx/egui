@@ -34,42 +34,31 @@
 
 # include "../graph_lower.h"
 
-si_t
-screen_set_pixel_raw_r
-(void * video,
+static byte_t *
+screen_get_raw_video(struct screen *s)
+{
+    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT) {
+        return s->memory_addr;
+    } else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER) {
+        return s->buffer_addr;
+    } else {
+        return NULL;
+    }
+}
+
+void
+screen_set_pixel_raw_r_nocheck
+(void *video,
  si_t width,
  si_t height,
  si_t depth,
- struct rectangle * a,
- struct color * c,
+ struct color *c,
  si_t x,
  si_t y,
- void * dst)
+ void *dst)
 {
     ui_t offset, color, bit;
     byte_t * addr;
-    struct rectangle result_area, screen_area;
-
-    screen_area.x = 0;
-    screen_area.y = 0;
-    screen_area.width = width;
-    screen_area.height = height;
-
-    /* 工作区域不在屏幕区域 */
-    if(area_intersection(a, &screen_area, &result_area) == -1)
-    {
-        return -1;
-    }
-
-    /* 点不在工作区域与屏幕区域的交集内 */
-    if
-    ((x < result_area.x) ||
-     (x > result_area.x + result_area.width - 1) ||
-     (y < result_area.y) ||
-     (y > result_area.y + result_area.height - 1))
-    {
-        return -1;
-    }
 
     /* 获得像素关于显存的位偏移量 */
     bit = y * global_fix_screen_info.line_length * CHAR_BIT + x * depth;
@@ -123,13 +112,11 @@ screen_set_pixel_raw_r
     }
     else if(global_fix_screen_info.visual == FB_VISUAL_TRUECOLOR)
     {
-        if(depth>=32) {
+        if(depth >= 32 && c->a > 0) {
             /* if alpha channel is available, try alpha blending. */
             static struct color old;
-            if(screen_get_pixel_raw(video, width, height, depth, a, &old, x, y)>=0) {
-                old = *alpha_blend(c, &old);
-                c = &old;
-            }
+            screen_get_pixel_raw_nocheck(video, width, height, depth, &old, x, y);
+            c = alpha_blend(c, &old);
         }
         /* 获得颜色的值 */
         screen_color_to_value(&color, c);
@@ -178,8 +165,61 @@ screen_set_pixel_raw_r
         /* 将颜色写入视频缓冲区 */
         memcpy((void *)((byte_t*)dst + offset), (void *)(&color), depth >> 3);
     }
+}
+
+si_t
+screen_set_pixel_raw_r
+(void * video,
+ si_t width,
+ si_t height,
+ si_t depth,
+ struct rectangle * a,
+ struct color * c,
+ si_t x,
+ si_t y,
+ void * dst)
+{
+    struct rectangle result_area, screen_area;
+
+    screen_area.x = 0;
+    screen_area.y = 0;
+    screen_area.width = width;
+    screen_area.height = height;
+
+    /* 工作区域不在屏幕区域 */
+    if(area_intersection(a, &screen_area, &result_area) == -1)
+    {
+        return -1;
+    }
+
+    /* 点不在工作区域与屏幕区域的交集内 */
+    if
+    ((x < result_area.x) ||
+     (x > result_area.x + result_area.width - 1) ||
+     (y < result_area.y) ||
+     (y > result_area.y + result_area.height - 1))
+    {
+        return -1;
+    }
+
+    screen_set_pixel_raw_r_nocheck(video,
+            width, height, depth, c, x, y, dst);
 
     return 0;
+}
+
+void
+screen_set_pixel_raw_nocheck
+(void *video,
+ si_t width,
+ si_t height,
+ si_t depth,
+ struct color *c,
+ si_t x,
+ si_t y)
+{
+    screen_set_pixel_raw_r_nocheck(video,
+            width, height, depth, c, x, y, video);
 }
 
 si_t
@@ -209,24 +249,31 @@ screen_set_pixel_r
  si_t y,
  struct screen * dst)
 {
-    byte_t *video, *video_dst;
+    byte_t *video = screen_get_raw_video(s),
+           *video_dst = screen_get_raw_video(dst);
 
-    if(s->video_access_mode == VIDEO_ACCESS_MODE_DIRECT) {
-        video = s->memory_addr;
-    } else if(s->video_access_mode == VIDEO_ACCESS_MODE_BUFFER) {
-        video = s->buffer_addr;
-    } else {
+    if(!video || !video_dst) {
         return -1;
     }
-    if(dst->video_access_mode == VIDEO_ACCESS_MODE_DIRECT) {
-        video_dst = dst->memory_addr;
-    } else if(dst->video_access_mode == VIDEO_ACCESS_MODE_BUFFER) {
-        video_dst = dst->buffer_addr;
-    } else {
-        return -1;
-    }
-    return screen_set_pixel_raw_r(video, s->width, s->height, s->color_depth,
+    return screen_set_pixel_raw_r(video,
+            s->width, s->height, s->color_depth,
             a, c, x, y, video_dst);
+}
+
+si_t
+screen_set_pixel_nocheck
+(struct screen *s,
+ struct color *c,
+ si_t x,
+ si_t y)
+{
+    byte_t *video = screen_get_raw_video(s);
+    if(!video) {
+        return -1;
+    }
+    screen_set_pixel_raw_r_nocheck(video,
+            s->width, s->height, s->color_depth, c, x, y, video);
+    return 0;
 }
 
 si_t
@@ -237,5 +284,10 @@ screen_set_pixel
  si_t x,
  si_t y)
 {
-    return screen_set_pixel_r(s, a, c, x, y, s);
+    byte_t *video = screen_get_raw_video(s);
+    if(!video) {
+        return -1;
+    }
+    return screen_set_pixel_raw_r(video,
+            s->width, s->height, s->color_depth, a, c, x, y, video);
 }

@@ -263,6 +263,9 @@ extern si_t screen_index_to_color(struct color * c, ui_t * index);
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_set_pixel(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* Don't check for working area. */
+extern si_t screen_set_pixel_nocheck(struct screen *s, struct color *c, si_t x, si_t y);
+
 /* 功能跟上面一样，但是把像素输出到给定的dst */
 extern si_t screen_set_pixel_r(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y, struct screen *dst);
 
@@ -283,8 +286,13 @@ extern si_t screen_set_pixel_r(struct screen * s, struct rectangle * a, struct c
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_set_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* Don't check for working area. */
+extern void screen_set_pixel_raw_nocheck(void *video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y);
+
 /* 功能跟上面一样，但是把像素输出到给定的dst */
 extern si_t screen_set_pixel_raw_r(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y, void *dst);
+/* Don't check for working area */
+extern void screen_set_pixel_raw_r_nocheck(void *video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y, void *dst);
 
 /**
  * 获得屏幕上的某一点
@@ -300,6 +308,8 @@ extern si_t screen_set_pixel_raw_r(void * video, si_t width, si_t height, si_t d
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_get_pixel(struct screen * s, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* Don't check for area */
+extern si_t screen_get_pixel_nocheck(struct screen *s, struct color *c, si_t x, si_t y);
 
 /**
  * 从给定void数组中获取一点
@@ -318,6 +328,8 @@ extern si_t screen_get_pixel(struct screen * s, struct rectangle * a, struct col
  * @return 成功返回0，失败返回-1。
 **/
 extern si_t screen_get_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
+/* Don't check for area */
+extern void screen_get_pixel_raw_nocheck(void * video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y);
 
 /**
  * FIXME: Alpha blending is not implemented.
