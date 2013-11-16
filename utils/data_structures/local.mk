@@ -11,3 +11,7 @@ nobase_pkginclude_HEADERS += %D%/external.h %D%/object.h %D%/stack.h\
 							 %D%/vector.h %D%/list.h %D%/queue.h\
 							 %D%/tree.h %D%/hashmap.h %D%/cursor.h
 library_libdata_structures_la_LDFLAGS = -version-info 1:0:0
+
+client_cflow_SRC += $(library_libdata_structures_la_SOURCES)
+
+server_cflow_SRC += $(library_libdata_structures_la_SOURCES)

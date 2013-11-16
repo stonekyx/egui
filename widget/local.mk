@@ -46,3 +46,5 @@ library_libwidget_la_LIBADD = library/libclient_lib.la library/libgeometry.la li
 library_libwidget_la_LDFLAGS = -version-info 1:0:0
 
 # %D%/window/window_status.h is not complete, thus not distributing now.
+
+client_cflow_SRC += $(library_libwidget_la_SOURCES)

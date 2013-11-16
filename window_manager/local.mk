@@ -16,3 +16,5 @@ bin_PROGRAMS += %D%/server
 	%D%/window_info_iterator.h \
 	%D%/window_manager.h
 %C%_server_LDADD = library/libserver_lib.la library/libgraph.la library/libgeometry.la library/libevent.la library/libcomm.la library/libconfig_parser.la library/libdata_structures.la library/libcolor.la
+
+server_cflow_SRC += $(%C%_server_SOURCES)

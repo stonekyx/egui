@@ -15,3 +15,7 @@ nobase_pkginclude_HEADERS += %D%/egui_uds.h \
 							 %D%/respond.h \
 							 %D%/external.h
 library_libcomm_la_LDFLAGS = -version-info 1:0:0
+
+client_cflow_SRC += $(library_libcomm_la_SOURCES)
+
+server_cflow_SRC += $(library_libcomm_la_SOURCES)

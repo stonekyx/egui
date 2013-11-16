@@ -10,3 +10,5 @@ nobase_pkginclude_HEADERS += %D%/application.h\
 							 %D%/exec.h\
 							 %D%/external.h
 library_libapplication_la_LDFLAGS = -version-info 1:0:0
+
+client_cflow_SRC += $(library_libapplication_la_SOURCES)

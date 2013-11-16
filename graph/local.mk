@@ -67,3 +67,5 @@ nobase_pkginclude_HEADERS += %D%/graph_lower.h \
 							 %D%/bitops.h
 library_libgraph_la_LIBADD = library/libgeometry.la library/libcolor.la
 library_libgraph_la_LDFLAGS = -version-info 1:0:0
+
+server_cflow_SRC += $(library_libgraph_la_SOURCES)
