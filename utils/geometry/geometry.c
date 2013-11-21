@@ -28,6 +28,7 @@
 **/
 
 # include "geometry.h"
+# include <stdlib.h>
 
 void point_set(struct point* p, si_t x, si_t y)
 {
@@ -263,4 +264,89 @@ extern void ensure_point_in_area(struct point* p, struct rectangle* r)
         p->y = r->y;
     else if(p->y >= r->y + r->height -1)
         p->y = r->y + r->height -1;
+}
+
+/* ----------- Bresenham's line algorithm ----------- */
+
+struct bresenham_iterator {
+    si_t a, b, delta, x, y, dx, dy, stepx, stepy, i;
+    struct point ret;
+};
+
+extern struct bresenham_iterator *
+bresenham_init(si_t x1, si_t y1, si_t x2, si_t y2)
+{
+    struct bresenham_iterator *it =
+        calloc(1, sizeof(struct bresenham_iterator));
+
+    it->dx = labs(x1 - x2);
+    it->dy = labs(y1 - y2);
+
+    if(x2 > x1) {
+        it->stepx = 1;
+    } else {
+        it->stepx = -1;
+    }
+
+    if(y2 > y1) {
+        it->stepy = 1;
+    } else {
+        it->stepy = -1;
+    }
+
+    it->x = x1;
+    it->y = y1;
+
+    /* -1 < 斜率 < +1 */
+    if(it->dx > it->dy) {
+        it->a = it->dy << 1;
+        it->b = (it->dy - it->dx) << 1;
+        it->delta = (it->dy << 1) - it->dx;
+        it->i = 0;
+    } else {/* 斜率 <= -1 或者 +1 <= 斜率 */
+        it->a = it->dx << 1;
+        it->b = (it->dx - it->dy) << 1;
+        it->delta = (it->dx << 1) - it->dy;
+        it->i = 0;
+    }
+    return it;
+}
+
+extern struct point *bresenham_next(struct bresenham_iterator *it)
+{
+    /* -1 < 斜率 < +1 */
+    if(it->dx > it->dy) {
+        if(it->i <= it->dx) {
+            it->ret.x = it->x;
+            it->ret.y = it->y;
+
+            it->x += it->stepx;
+            if(it->delta < 0) {
+                it->delta += it->a;
+            } else {
+                it->delta += it->b;
+                it->y += it->stepy;
+            }
+
+            it->i ++; /* simulate a one-time for loop. */
+            return &it->ret;
+        }
+    } else {
+        if(it->i <= it->dy) {
+            it->ret.x = it->x;
+            it->ret.y = it->y;
+
+            it->y += it->stepy;
+            if(it->delta < 0) {
+                it->delta += it->a;
+            } else {
+                it->delta += it->b;
+                it->x += it->stepx;
+            }
+
+            it->i ++;
+            return &it->ret;
+        }
+    }
+    return NULL;
 }
