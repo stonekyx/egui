@@ -303,7 +303,7 @@ struct bitmap
     /**
      * 位图文件大小
     **/
-    ui_t size;
+    ui_t size; /* XXX: consider changing to size_t ? */
     /**
      * 位图文件头部区域地址
     **/
@@ -628,6 +628,17 @@ extern si_t engine_fill_x(si_t graphics_device_handle, si_t x, si_t y, si_t a, s
  * @return 0
 **/
 extern si_t engine_fill_arrow(si_t graphics_device_handle, si_t x, si_t y, si_t size, si_t direction);
+
+/**
+ * 填充多边形
+ *
+ * @param graphics_device_handle 图形设备描述符
+ * @param p 点列表
+ * @param point_count 列表中的点数
+ *
+ * @return 0
+**/
+extern si_t engine_fill_polygon(si_t graphics_device_handle, struct point *p, ui_t point_count);
 
 /**
  * 区域拷贝
