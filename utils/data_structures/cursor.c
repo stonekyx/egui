@@ -208,8 +208,8 @@ void init_cursor(char *path, struct cursor *cur)
 {
 	read_cursor_file_header(path, &cur->cfHeader);
 
-	cur->ciHeader = (struct cursor_info_header*) malloc (sizeof (struct cursor_info_header) * cur->cfHeader.cfNum);
-	cur->biHeader = (struct bmp_info_header*) malloc (sizeof (struct bmp_info_header) * cur->cfHeader.cfNum);
+	cur->ciHeader = calloc (cur->cfHeader.cfNum, sizeof (struct cursor_info_header));
+	cur->biHeader = calloc (cur->cfHeader.cfNum, sizeof (struct bmp_info_header));
 
 	int i;
 	for ( i=0; i<cur->cfHeader.cfNum; i++)
