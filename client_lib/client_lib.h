@@ -441,6 +441,17 @@ extern si_t fill_x(si_t gd, si_t x, si_t y, si_t a, si_t b);
 extern si_t fill_arrow(si_t gd, si_t x, si_t y, si_t size, si_t direction); /* t b l r */
 
 /*
+ * @brief 填充多边形
+ *
+ * @param gd 图形设备描述符
+ * @param p 组成多边形的点列表
+ * @param point_count 多边形的点数
+ *
+ * @return ??? FIXME
+*/
+extern si_t fill_polygon(si_t gd, const struct point * p, ui_t point_count);
+
+/*
  * @brief 区域复制
  * 
  * 功能是将源区域的信息复制到目标区域，参数中给定了源区域和目标区域的矩形左上角坐标，以及矩形区域的长和宽。

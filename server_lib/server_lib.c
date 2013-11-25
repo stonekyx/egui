@@ -518,6 +518,10 @@ static si_t _server_lib_handle_graphics_ops(addr_t body, si_t detail_type, union
 		func_ret = request_call_by_fill_x(body, engine_fill_x);
 		respond_set_normal(respond_ptr, RESPOND_TYPE_FILL_X, func_ret);
 		break;
+	case REQUEST_TYPE_FILL_POLYGON:
+		func_ret = request_call_by_fill_polygon(body, engine_fill_polygon);
+		respond_set_normal(respond_ptr, RESPOND_TYPE_FILL_POLYGON, func_ret);
+		break;
 	case REQUEST_TYPE_GET_COLOR_LIMIT:
 		{
 			struct color_limit func_ret = {0};

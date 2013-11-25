@@ -100,6 +100,8 @@ char* respond_type_to_str(si_t respond_type)
 		return "RESPOND_TYPE_FILL_ARROW";
 	case RESPOND_TYPE_FILL_X:
 		return "RESPOND_TYPE_FILL_X";
+	case RESPOND_TYPE_FILL_POLYGON:
+		return "RESPOND_TYPE_FILL_POLYGON";
 	case RESPOND_TYPE_SHOW_TEXT:
 		return "RESPOND_TYPE_SHOW_TEXT";
 	case RESPOND_TYPE_CPY_AREA:

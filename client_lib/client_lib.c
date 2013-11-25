@@ -420,6 +420,17 @@ extern si_t fill_arrow(si_t gd, si_t x, si_t y, si_t size, si_t direction)
             (const_addr_t)&body, sizeof(body));
 }
 
+extern si_t fill_polygon(si_t gd, const struct point * p, ui_t point_count)
+{
+	struct packet_body_fill_polygon body;
+	request_set_fill_polygon(&body, gd, p, point_count);
+	/**
+	 * 画多边型需要较为复杂的请求包：标准请求包外加每个点的信息
+	 **/
+	return send_body_with_extra_context_and_return_respond(REQUEST_TYPE_FILL_POLYGON, RESPOND_TYPE_FILL_POLYGON,
+            (const_addr_t)&body, sizeof(body),
+            (const_addr_t)p    , point_count * sizeof(struct point));
+}
 
 extern si_t cpy_area(si_t gd, si_t mode, si_t dst_x, si_t dst_y, si_t src_x, si_t src_y, si_t x_size, si_t y_size)
 {

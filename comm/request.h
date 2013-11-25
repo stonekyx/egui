@@ -111,6 +111,8 @@ enum __request_type__
     REQUEST_TYPE_FILL_ARROW,
     /** 填充叉 **/
     REQUEST_TYPE_FILL_X,
+    /** 填充多边形 **/
+    REQUEST_TYPE_FILL_POLYGON,
 
     /** 显示文字 **/
     REQUEST_TYPE_SHOW_TEXT,
@@ -568,10 +570,10 @@ struct packet_body_fill_polygon
 {
 	si_t gd;
 	struct point * points;
-	si_t point_count;
+	ui_t point_count;
 };
-extern void request_set_fill_polygon(struct packet_body_fill_polygon* body, si_t gd, struct point* point, si_t point_count);
-extern si_t request_call_by_fill_polygon(addr_t arg, si_t (*callable)(si_t, struct point*, si_t));
+extern void request_set_fill_polygon(struct packet_body_fill_polygon* body, si_t gd, const struct point* point, ui_t point_count);
+extern si_t request_call_by_fill_polygon(addr_t arg, si_t (*callable)(si_t, struct point*, ui_t));
 
 /**
  * 填充矩形的请求

@@ -517,12 +517,12 @@ extern si_t request_call_by_fill_ellipse(addr_t arg, si_t (*callable)(si_t, si_t
 	return callable(body->gd, body->x, body->y, body->a, body->b);
 }
 
-extern void request_set_fill_polygon(struct packet_body_fill_polygon* body, si_t gd, struct point* point, si_t point_count)
+extern void request_set_fill_polygon(struct packet_body_fill_polygon* body, si_t gd, const struct point* point, ui_t point_count)
 {
 	write_func_arg_to_struct_var((addr_t)body, 3, gd, point, point_count);
 }
 
-extern si_t request_call_by_fill_polygon(addr_t arg, si_t (*callable)(si_t, struct point*, si_t))
+extern si_t request_call_by_fill_polygon(addr_t arg, si_t (*callable)(si_t, struct point*, ui_t))
 {
 	struct packet_body_fill_polygon* body = (struct packet_body_fill_polygon*)arg;
 	body->points = (struct point*)((byte_t*)arg + sizeof(struct packet_body_fill_polygon));

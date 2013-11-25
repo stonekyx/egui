@@ -111,6 +111,8 @@ enum __respond_type__
     RESPOND_TYPE_FILL_ARROW,
     /** 填充叉 **/
     RESPOND_TYPE_FILL_X,
+    /** 填充多边形 **/
+    RESPOND_TYPE_FILL_POLYGON,
 
     /** 显示文字 **/
     RESPOND_TYPE_SHOW_TEXT,
