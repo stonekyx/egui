@@ -55,11 +55,11 @@ get_draw_area
         }
     }
     for(i=0; i<pcnt; i++) {
-        if(check_area.width < p[i].x-check_area.x) {
-            check_area.width = p[i].x-check_area.x;
+        if(check_area.width < p[i].x-check_area.x+1) {
+            check_area.width = p[i].x-check_area.x+1;
         }
-        if(check_area.height < p[i].y-check_area.y) {
-            check_area.height = p[i].y-check_area.y;
+        if(check_area.height < p[i].y-check_area.y+1) {
+            check_area.height = p[i].y-check_area.y+1;
         }
     }
 
@@ -93,7 +93,7 @@ static void map_toggle_bit(addr_t map, si_t width, si_t x, si_t y)
     ((byte_t*)map)[flat_pixel/CHAR_BIT] ^= (1u<<(flat_pixel%CHAR_BIT));
 }
 
-static int map_get_bit(addr_t map, si_t width, si_t x, si_t y)
+static byte_t map_get_bit(addr_t map, si_t width, si_t x, si_t y)
 {
     ui_t flat_pixel = x + y*width;
     return ((byte_t*)map)[flat_pixel/CHAR_BIT] & (1u<<(flat_pixel%CHAR_BIT));
@@ -190,8 +190,8 @@ static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
         mark_line(row_start, row_end, area, b, base);
         for(j=0; j<area->height; j++) {
             map_toggle_bit(map, area->width, row_start[j], j);
-            if(row_end[j]+1 < area->width) {
-                map_toggle_bit(map, area->width, row_end[j]+1, j);
+            if(row_end[j] < area->width) {
+                map_toggle_bit(map, area->width, row_end[j], j);
             }
         }
     }
