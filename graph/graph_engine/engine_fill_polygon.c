@@ -87,13 +87,6 @@ static addr_t get_map_space(size_t bytes)
     return buffer;
 }
 
-static int check_range(struct point *pos, struct rectangle *area)
-{
-    return (pos->x >= area->x && pos->y >= area->y &&
-            pos->x < area->x + area->width &&
-            pos->y < area->y + area->height);
-}
-
 static void map_toggle_bit(addr_t map, si_t width, si_t x, si_t y)
 {
     ui_t flat_pixel;
@@ -116,8 +109,14 @@ static void mark_line(si_t row_start[], si_t row_end[], struct rectangle *a,
     bresenham_for_each(pos, it, st->x, st->y, en->x, en->y) {
         si_t dx = pos->x - a->x;
         si_t dy = pos->y - a->y;
-        if(!check_range(pos, a)) {
+        if(dy<0 || dy>a->height) { /* not affective to the row. */
             continue;
+        }
+        if(dx < 0) {
+            dx = 0;
+        }
+        if(dx >= a->width) {
+            dx = a->width-1;
         }
         if(row_start[dy] == -1 || row_start[dy] > dx) {
             row_start[dy] = dx;
@@ -167,7 +166,7 @@ static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
         mark_line(row_start, row_end, area, base, a);
         mark_line(row_start, row_end, area, a, b);
         mark_line(row_start, row_end, area, b, base);
-        for(j=0; j<area->width; j++) {
+        for(j=0; j<area->height; j++) {
             map_toggle_bit(map, area->width, row_start[j], j);
             if(row_end[j]+1 < area->width) {
                 map_toggle_bit(map, area->width, row_end[j]+1, j);
