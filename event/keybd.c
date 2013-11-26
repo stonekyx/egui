@@ -32,7 +32,7 @@ si_t keybd_init(struct input_device * self, char * keybd_device_path)
 static si_t deal_with_keybd(struct input_device * self, struct list* msg_list)
 {
 	struct input_event ie;
-	union message msg;
+	union message msg=(const union message){{0}};
 
 	/* 读取数据 */
 	if(uds_read(&self->uds, &ie, sizeof(struct input_event)) < 0)

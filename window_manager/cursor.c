@@ -162,6 +162,7 @@ si_t cursor_show()
 
 si_t cursor_exit()
 {
+    free(cursor_gd.screen.buffer_addr);
     memset(&cursor_gd, 0, sizeof(struct graphics_device));
 
     return 0;

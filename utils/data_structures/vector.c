@@ -317,7 +317,7 @@ vector_erase
 {
     free((v->head + i)->data);
 
-    memcpy
+    memmove
     (v->head + i,
      v->head + i + 1,
      sizeof(struct vector_node) * (v->curr - v->head - i - 1));
