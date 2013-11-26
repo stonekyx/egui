@@ -348,5 +348,6 @@ extern struct point *bresenham_next(struct bresenham_iterator *it)
             return &it->ret;
         }
     }
+    free(it);
     return NULL;
 }

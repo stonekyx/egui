@@ -89,16 +89,20 @@ static addr_t get_map_space(size_t bytes)
 
 static void map_toggle_bit(addr_t map, si_t width, si_t x, si_t y)
 {
-    ui_t flat_pixel;
-    flat_pixel = x + y*width;
-    ((byte_t*)map)[flat_pixel/CHAR_BIT] ^= (1<<(flat_pixel%CHAR_BIT));
+    ui_t flat_pixel = x + y*width;
+    ((byte_t*)map)[flat_pixel/CHAR_BIT] ^= (1u<<(flat_pixel%CHAR_BIT));
 }
 
 static int map_get_bit(addr_t map, si_t width, si_t x, si_t y)
 {
-    ui_t flat_pixel;
-    flat_pixel = x + y*width;
-    return ((byte_t*)map)[flat_pixel/CHAR_BIT] & (1<<(flat_pixel%CHAR_BIT));
+    ui_t flat_pixel = x + y*width;
+    return ((byte_t*)map)[flat_pixel/CHAR_BIT] & (1u<<(flat_pixel%CHAR_BIT));
+}
+
+static void map_set_bit(addr_t map, si_t width, si_t x, si_t y)
+{
+    ui_t flat_pixel = x + y*width;
+    ((byte_t*)map)[flat_pixel/CHAR_BIT] |= (1u<<(flat_pixel%CHAR_BIT));
 }
 
 static void mark_line(si_t row_start[], si_t row_end[], struct rectangle *a,
@@ -148,6 +152,24 @@ static void fill_map(addr_t map, struct rectangle *area)
     }
 }
 
+static void set_border(addr_t map, struct rectangle *area, struct point p[], ui_t pcnt)
+{
+    ui_t i;
+    for(i=0; i<pcnt; i++) {
+        ui_t next = i==pcnt-1 ? 0 : (i+1);
+        struct point *pos;
+        struct bresenham_iterator *it;
+        bresenham_for_each(pos, it, p[i].x, p[i].y, p[next].x, p[next].y) {
+            si_t x = pos->x - area->x;
+            si_t y = pos->y - area->y;
+            if(x<0 || y<0 || x>=area->width || y>=area->height) {
+                continue;
+            }
+            map_set_bit(map, area->width, x, y);
+        }
+    }
+}
+
 static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
 {
     ui_t i;
@@ -176,6 +198,7 @@ static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
     free(row_start);
     free(row_end);
     fill_map(map, area);
+    set_border(map, area, p, pcnt);
     return map;
 }
 
