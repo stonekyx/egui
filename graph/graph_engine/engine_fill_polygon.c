@@ -122,7 +122,7 @@ static void mark_line(si_t row_start[], si_t row_end[], struct rectangle *a,
         if(dx >= a->width) {
             dx = a->width-1;
         }
-        if(row_start[dy] == -1 || row_start[dy] > dx) {
+        if(row_start[dy] == -1 || row_start[dy] > dx+1 || row_start[dy] == dx-1) {
             row_start[dy] = dx;
         }
         if(row_end[dy] == -1 || row_end[dy] < dx) {
@@ -189,6 +189,9 @@ static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
         mark_line(row_start, row_end, area, a, b);
         mark_line(row_start, row_end, area, b, base);
         for(j=0; j<area->height; j++) {
+            if(row_start[j]>row_end[j]) {
+                continue;
+            }
             map_toggle_bit(map, area->width, row_start[j], j);
             if(row_end[j] < area->width) {
                 map_toggle_bit(map, area->width, row_end[j], j);
