@@ -51,6 +51,7 @@
 #include "flowbox/flowbox.h"
 #include "tab/tab.h"
 #include "tab/tab_page.h"
+#include "tab/tab_header.h"
 
 #if 0
 

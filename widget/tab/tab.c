@@ -36,6 +36,8 @@
 # include <log.h>
 
 # include "tab.h"
+# include "tab_header.h"
+# include "tab_page.h"
 
 /* tab样式全局对象 */
 static struct tab_style tab_default_style =
@@ -128,12 +130,9 @@ struct tab* tab_init(void)
             addr->area.width, addr->area.height);
     object_attach_child(OBJECT_POINTER(addr), OBJECT_POINTER(addr->panel));
 
-    addr->page_titles = flowbox_init(0);
-    flowbox_set_bounds(addr->page_titles, 0, 0,
-            /* page titles can actually fill up the whole tab widget */
-            addr->area.width, addr->area.height);
+    addr->header = tab_header_init();
     object_attach_child(OBJECT_POINTER(addr),
-            OBJECT_POINTER(addr->page_titles));
+            OBJECT_POINTER(addr->header));
 
     return addr;
 }
@@ -145,7 +144,7 @@ struct tab* tab_init(void)
 */
 si_t tab_exit(struct tab * b)
 {
-    flowbox_exit(b->page_titles);
+    tab_header_exit(b->header);
     panel_exit(b->panel);
     list_exit(&b->pages);
     return widget_exit(WIDGET_POINTER(b));
@@ -153,13 +152,9 @@ si_t tab_exit(struct tab * b)
 
 static void tab_refresh_internal_bounds(struct tab *t)
 {
-    ui_t used_height;
-    flowbox_set_bounds(t->page_titles, 0, 0,
-            t->area.width, t->area.height);
-    flowbox_reorder_widgets(t->page_titles);
-    used_height = flowbox_get_actual_height(t->page_titles);
+    ui_t used_height = t->header->area.height;
     panel_set_bounds(t->panel,
-            0, used_height+1,
+            0, t->header->area.height+1,
             t->area.width, t->area.height - used_height-1);
 }
 
@@ -181,26 +176,10 @@ void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 
 void tab_set_font(struct tab* b, si_t font)
 {
-    struct list_node *pos;
-    list_for_each_macro(&b->pages, pos) {
-        tab_page_set_font(*(struct tab_page **)pos->data, font);
-    }
 }
 
 void tab_add_page(struct tab *t, struct tab_page *tp)
 {
-    list_push_back(&t->pages, &tp, sizeof(tp));
-    tp->belong = t;
-
-    object_attach_child(OBJECT_POINTER(t->page_titles),
-            OBJECT_POINTER(tp->page_head));
-    flowbox_add_widget(t->page_titles, WIDGET_POINTER(tp->page_head));
-
-    tab_refresh_internal_bounds(t);
-    if(list_size(&t->pages)==1) {
-        tp->head_pressed = 1;
-        tab_set_focus(t, tp);
-    }
 }
 
 static void tab_object_tree_refresh(struct object *obj)
@@ -252,28 +231,6 @@ static void tab_object_tree_move(struct object *par, struct object *oldpar, stru
 
 si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
 {
-    if(!new_focus) {
-        return -1;
-    }
-    if(t->focus == new_focus) {
-        return 0;
-    }
-    tab_object_tree_move(OBJECT_POINTER(t->panel),
-            OBJECT_POINTER(t->focus),
-            OBJECT_POINTER(new_focus));
-
-    if(t->focus) {
-        t->focus->head_pressed = 0;
-        tab_page_head_release(t->focus);
-    }
-    panel_set_color(t->panel,
-            &new_focus->page_head->fore_color,
-            &new_focus->page_head->back_color);
-    panel_repaint_with_children(t->panel);
-    panel_show(t->panel);
-
-    t->focus = new_focus;
-    return 0;
 }
 
 si_t tab_set_focus_index(struct tab *t, ui_t page_idx)

@@ -6,7 +6,8 @@ noinst_PROGRAMS += %D%/test_widget \
                    %D%/test_text_line \
                    %D%/test_scroll_bar \
                    %D%/test_image_view \
-                   %D%/test_icon
+                   %D%/test_icon \
+				   %D%/test_tab_header
 
 %C%_test_widget_SOURCES = %D%/test_widget.c
 %C%_test_label_SOURCES = %D%/test_label.c
@@ -15,6 +16,7 @@ noinst_PROGRAMS += %D%/test_widget \
 %C%_test_scroll_bar_SOURCES = %D%/test_scroll_bar.c
 %C%_test_image_view_SOURCES = %D%/test_image_view.c
 %C%_test_icon_SOURCES = %D%/test_icon.c
+%C%_test_tab_header_SOURCES = %D%/test_tab_header.c
 
 %C%_test_widget_LDADD = $(%C%_LDADD_TEMP)
 %C%_test_label_LDADD = $(%C%_LDADD_TEMP)
@@ -23,4 +25,5 @@ noinst_PROGRAMS += %D%/test_widget \
 %C%_test_scroll_bar_LDADD = $(%C%_LDADD_TEMP)
 %C%_test_image_view_LDADD = $(%C%_LDADD_TEMP)
 %C%_test_icon_LDADD = $(%C%_LDADD_TEMP)
+%C%_test_tab_header_LDADD = $(%C%_LDADD_TEMP)
 

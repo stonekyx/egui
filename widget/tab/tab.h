@@ -47,8 +47,8 @@ struct tab
     WIDGET_DEFINITION
     struct list pages;
     struct panel *panel;
-    struct flowbox *page_titles;
     struct tab_page *focus;
+    struct tab_header *header;
 };
 
 /* tab样式结构体 */

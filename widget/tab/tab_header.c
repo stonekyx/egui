@@ -1,25 +1,30 @@
 #include "comm.h"
 #include "base_type.h"
+#include "client_lib.h"
+#include "log.h"
 
 #include "tab_header.h"
+#include "../label/label.h"
 
 #define TAB_HEADER_UNIT_INTERVAL 13
+#define TAB_HEADER_LEFT_PADDING 2
+#define TAB_HEADER_TOP_PADDING 2
 
 static si_t tab_header_default_callback(addr_t s, addr_t m)
 {
     struct tab_header *self = s;
     union message *msg = m;
-    switch(m->base.type) {
+    switch(msg->base.type) {
         case MESSAGE_TYPE_MOUSE_PRESS:
             tab_header_set_focus(
                     self,
                     tab_header_find_unit(
                         self,
-                        msg->base.cursor_position));
+                        &msg->base.cursor_position));
             /* Fall through */
         case MESSAGE_TYPE_WIDGET_REPAINT:
             tab_header_repaint(self);
-            break;
+            /* Fall through */
         case MESSAGE_TYPE_WIDGET_SHOW:
             tab_header_show(self);
             break;
@@ -29,33 +34,46 @@ static si_t tab_header_default_callback(addr_t s, addr_t m)
     return 0;
 }
 
-static void tab_header_paint_unit(
+static void tab_header_repaint_unit(
         struct tab_header *self,
         const struct tab_header_unit *unit,
-        const struct rectangle *abs_area)
+        const struct point *p)
 {
-    set_color(self->gd, 0, 0, 0, 0);
-    draw_line(self->gd,
-            unit->left_border + abs_area->x
+    struct point pnts[]={
+        {
+            .x= unit->left_border + p->x
                 -TAB_HEADER_LEFT_PADDING-TAB_HEADER_UNIT_INTERVAL,
-            abs_area->y + abs_area->height - 1,
-            unit->left_border + abs_area->x
+            .y= p->y + self->area.height - 1
+        },
+        {
+            .x= unit->left_border + p->x
                 -TAB_HEADER_LEFT_PADDING,
-            abs_area->y);
-    draw_line(self->gd,
-            unit->left_border + abs_area->x
-                -TAB_HEADER_LEFT_PADDING,
-            abs_area->y,
-            unit->left_border + abs_area->x + unit->width
+            .y= p->y
+        },
+        {
+            .x= unit->left_border + p->x + unit->width
                 +TAB_HEADER_LEFT_PADDING,
-            abs_area->y);
-    draw_line(self->gd,
-            unit->left_border + abs_area->x + unit->width
-                +TAB_HEADER_LEFT_PADDING,
-            abs_area->y,
-            unit->left_border + abs_area->x + unit->width
+            .y= p->y
+        },
+        {
+            .x= unit->left_border + p->x + unit->width
                 +TAB_HEADER_LEFT_PADDING+TAB_HEADER_UNIT_INTERVAL,
-            abs_area->y + abs_area->height - 1);
+            .y= p->y + self->area.height - 1
+        },
+    };
+    struct color *c = &WIDGET_POINTER(unit->page)->back_color;
+    int i;
+    set_color(self->gd, c->r, c->g, c->b, c->a);
+    fill_polygon(self->gd, pnts, 4);
+    set_color(self->gd, 0, 0, 0, 0);
+    for(i=0; i<3; i++) {
+        draw_line(self->gd, pnts[i].x, pnts[i].y, pnts[i+1].x, pnts[i+1].y);
+    }
+    show_text(self->gd,
+            p->x + unit->left_border,
+            p->y + TAB_HEADER_TOP_PADDING,
+            unit->page->page_head,
+            strlen(unit->page->page_head));
 }
 
 struct tab_header *tab_header_init(void)
@@ -69,14 +87,14 @@ struct tab_header *tab_header_init(void)
     if(!(addr=widget_init_common(WIDGET_POINTER(addr), 0))) {
         return NULL;
     }
-    addr->width = TAB_HEADER_UNIT_INTERVAL + TAB_HEADER_LEFT_PADDING;
+    addr->area.width = TAB_HEADER_UNIT_INTERVAL + TAB_HEADER_LEFT_PADDING;
 
     addr->name = "struct tab_header";
     addr->callback = tab_header_default_callback;
-    list_init(&addr->pages);
+    list_init(&addr->units);
     addr->sample = label_init("sample_for_tab_header");
 
-    addr->height = get_font_height(addr->sample->gd) +
+    addr->area.height = get_font_height(addr->sample->gd) +
         2*TAB_HEADER_TOP_PADDING + 1;
 
     return addr;
@@ -85,7 +103,7 @@ struct tab_header *tab_header_init(void)
 si_t tab_header_exit(struct tab_header *t)
 {
     label_exit(t->sample);
-    list_exit(t->pages);
+    list_exit(&t->units);
     return widget_exit(WIDGET_POINTER(t));
 }
 
@@ -104,11 +122,10 @@ void tab_header_add_page(
         .page = page_ptr,
         .width = get_font_width(self->sample->gd)*
             strlen(page_ptr->page_head),
-        .height = self->height - 2*TAB_HEADER_TOP_PADDING - 1,
-        .left_border = self->width
+        .left_border = self->area.width
     };
-    list_push_back(&self->pages, &tmp, sizeof(struct tab_header_unit));
-    self->width += tmp.width +
+    list_push_back(&self->units, &tmp, sizeof(struct tab_header_unit));
+    self->area.width += tmp.width +
         TAB_HEADER_UNIT_INTERVAL + TAB_HEADER_LEFT_PADDING;
 }
 
@@ -116,19 +133,32 @@ void tab_header_repaint(struct tab_header *self)
 {
     struct list_node *pos;
     struct rectangle abs_area;
+    struct point abs_coor;
+
+    widget_absolute_coordinate(WIDGET_POINTER(self),
+            &abs_coor.x, &abs_coor.y);
     widget_absolute_area(WIDGET_POINTER(self), &abs_area);
-    list_for_each_r_macro(&self->pages, pos) {
-        if(pos == self->focus) {
+    set_area(self->gd, abs_area.x, abs_area.y,
+            abs_area.width, abs_area.height);
+
+    list_for_each_r_macro(&self->units, pos) {
+        if(pos->data == self->focus) {
             continue;
         }
         tab_header_repaint_unit(self,
-                (struct tab_header_unit *)pos->data, &abs_area);
+                (struct tab_header_unit *)pos->data, &abs_coor);
     }
-    tab_header_repaint_unit(self, self->focus, &abs_area);
+    if(self->focus) {
+        tab_header_repaint_unit(self, self->focus, &abs_coor);
+    }
 }
 
 void tab_header_show(struct tab_header *self)
 {
+    struct rectangle area;
+    widget_absolute_area(WIDGET_POINTER(self), &area);
+    set_area(self->gd, area.x, area.y, area.width, area.height);
+    update(self->gd);
 }
 
 struct tab_header_unit *tab_header_find_unit(

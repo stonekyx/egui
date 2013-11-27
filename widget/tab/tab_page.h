@@ -34,6 +34,7 @@
 
 # include "../widget/widget.h"
 # include "../button/button.h"
+# include "../panel/panel.h"
 # include "tab.h"
 
 /**
@@ -61,6 +62,7 @@ struct tab_page
  * @return 0
 **/
 extern struct tab_page* tab_page_init(const char *title);
+extern struct tab_page* tab_page_init_data(struct tab_page *addr, const char *title);
 
 /**
  * @brief 使用后清理窗口部件结构体

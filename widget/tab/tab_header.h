@@ -2,12 +2,14 @@
 
 #define TAB_HEADER_H
 
+#include "../widget/widget.h"
+#include "tab_page.h"
+
 typedef void (*tab_header_callback_t)(struct tab_page *new_focus);
 
 struct tab_header_unit {
     struct tab_page *page;
     ui_t width; /* Need to be updated when font in @sample changes */
-    ui_t height;
     ui_t left_border; /* e.g. /^^^x^^x^^^^\ <- start of this unit,
                         then left_border=sum(width) + intv*(n+1)*/
 };
@@ -20,5 +22,29 @@ struct tab_header {
                             it changes with label widget. */
     struct tab_header_unit *focus;
 };
+
+struct tab_header *tab_header_init(void);
+
+si_t tab_header_exit(struct tab_header *t);
+
+void tab_header_set_callback(
+        struct tab_header *self,
+        tab_header_callback_t callback);
+
+void tab_header_add_page(
+        struct tab_header *self,
+        struct tab_page *page_ptr);
+
+void tab_header_repaint(struct tab_header *self);
+
+void tab_header_show(struct tab_header *self);
+
+struct tab_header_unit *tab_header_find_unit(
+        struct tab_header *self,
+        struct point *cursor_pos);
+
+void tab_header_set_focus(
+        struct tab_header *self,
+        struct tab_header_unit *new_focus);
 
 #endif
