@@ -16,7 +16,7 @@ struct tab_header_unit {
 
 struct tab_header {
     WIDGET_DEFINITION
-    struct list units; /* list of (struct tab_header_unit *) */
+    struct list units; /* list of (struct tab_header_unit) */
     tab_header_callback_t callback_to_tab;
     struct label *sample; /* All header units use the same font, and
                             it changes with label widget. */
@@ -40,8 +40,8 @@ void tab_header_repaint(struct tab_header *self);
 void tab_header_show(struct tab_header *self);
 
 struct tab_header_unit *tab_header_find_unit(
-        struct tab_header *self,
-        struct point *cursor_pos);
+        const struct tab_header *self,
+        const struct point *cursor_pos);
 
 void tab_header_set_focus(
         struct tab_header *self,

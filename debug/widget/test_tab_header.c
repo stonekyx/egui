@@ -23,9 +23,11 @@ int main()
         struct tab_page *p1 = tab_page_init("test1"),
                         *p2 = tab_page_init("test page 2"),
                         *p3 = tab_page_init("page_3");
+        struct color blue = {.r=0x1A, .g=0x7B, .b=0xBD, .a=0};
         tab_header_add_page(t, p1);
         tab_header_add_page(t, p2);
         tab_header_add_page(t, p3);
+        tab_page_set_color(p1, NULL, &blue);
     }
     object_attach_child(OBJECT_POINTER(w), OBJECT_POINTER(t));
 

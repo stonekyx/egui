@@ -37,7 +37,8 @@ static si_t tab_header_default_callback(addr_t s, addr_t m)
 static void tab_header_repaint_unit(
         struct tab_header *self,
         const struct tab_header_unit *unit,
-        const struct point *p)
+        const struct point *p,
+        const struct color *c)
 {
     struct point pnts[]={
         {
@@ -51,18 +52,20 @@ static void tab_header_repaint_unit(
             .y= p->y
         },
         {
-            .x= unit->left_border + p->x + unit->width
+            .x= unit->left_border + p->x + unit->width-1
                 +TAB_HEADER_LEFT_PADDING,
             .y= p->y
         },
         {
-            .x= unit->left_border + p->x + unit->width
+            .x= unit->left_border + p->x + unit->width-1
                 +TAB_HEADER_LEFT_PADDING+TAB_HEADER_UNIT_INTERVAL,
             .y= p->y + self->area.height - 1
         },
     };
-    struct color *c = &WIDGET_POINTER(unit->page)->back_color;
     int i;
+    if(!c) {
+        c = &WIDGET_POINTER(unit->page)->back_color;
+    }
     set_color(self->gd, c->r, c->g, c->b, c->a);
     fill_polygon(self->gd, pnts, 4);
     set_color(self->gd, 0, 0, 0, 0);
@@ -74,6 +77,42 @@ static void tab_header_repaint_unit(
             p->y + TAB_HEADER_TOP_PADDING,
             unit->page->page_head,
             strlen(unit->page->page_head));
+}
+
+static int tab_header_point_in_unit(const struct tab_header *self,
+        const struct point *p,
+        const struct tab_header_unit *u)
+{
+    if(p->y<0 || p->y>=self->area.height ||
+            p->x<u->left_border
+            -TAB_HEADER_LEFT_PADDING-TAB_HEADER_UNIT_INTERVAL ||
+            p->x>=u->left_border+u->width-1
+            +TAB_HEADER_LEFT_PADDING+TAB_HEADER_UNIT_INTERVAL) {
+        return 0;
+    }
+    if(p->x>=u->left_border-TAB_HEADER_LEFT_PADDING &&
+            p->x<u->left_border+u->width+TAB_HEADER_LEFT_PADDING) {
+        return 1;
+    }
+    if(p->x<u->left_border-TAB_HEADER_LEFT_PADDING) { /* left triangle */
+        si_t tx = p->x - (u->left_border
+            -TAB_HEADER_LEFT_PADDING-TAB_HEADER_UNIT_INTERVAL);
+        /* y+1    x_t - x
+         * --- >= ------- , triangle similarity ratio
+         * y_t       x_t
+         */
+        return TAB_HEADER_UNIT_INTERVAL*(p->y+1) >=
+            self->area.height*(TAB_HEADER_UNIT_INTERVAL-tx);
+    } else { /* right triangle */
+        si_t tx = p->x -
+            (u->left_border+u->width-1+TAB_HEADER_LEFT_PADDING);
+        /* y+1    x+1
+         * --- >= ---
+         * y_t    x_t
+         */
+        return TAB_HEADER_UNIT_INTERVAL*(p->y+1) >=
+            self->area.height*(tx+1);
+    }
 }
 
 struct tab_header *tab_header_init(void)
@@ -142,14 +181,19 @@ void tab_header_repaint(struct tab_header *self)
             abs_area.width, abs_area.height);
 
     list_for_each_r_macro(&self->units, pos) {
-        if(pos->data == self->focus) {
+        struct color c;
+        struct tab_header_unit *i = pos->data;
+        if(i == self->focus) {
             continue;
         }
-        tab_header_repaint_unit(self,
-                (struct tab_header_unit *)pos->data, &abs_coor);
+        c = WIDGET_POINTER(i->page)->back_color;
+        c.r *= 0.5;
+        c.g *= 0.5;
+        c.b *= 0.5;
+        tab_header_repaint_unit(self, i, &abs_coor, &c);
     }
     if(self->focus) {
-        tab_header_repaint_unit(self, self->focus, &abs_coor);
+        tab_header_repaint_unit(self, self->focus, &abs_coor, NULL);
     }
 }
 
@@ -162,13 +206,37 @@ void tab_header_show(struct tab_header *self)
 }
 
 struct tab_header_unit *tab_header_find_unit(
-        struct tab_header *self,
-        struct point *cursor_pos)
+        const struct tab_header *self,
+        const struct point *cp)
 {
+    struct list_node *pos;
+    struct point cursor_pos = *cp;
+    struct point abs_coor;
+    widget_absolute_coordinate(WIDGET_POINTER(self),
+            &abs_coor.x, &abs_coor.y);
+    cursor_pos.x -= abs_coor.x;
+    cursor_pos.y -= abs_coor.y;
+    if(self->focus &&
+            tab_header_point_in_unit(self, &cursor_pos, self->focus)) {
+        return self->focus;
+    }
+    list_for_each_macro(&self->units, pos) {
+        if(pos->data == self->focus) {
+            continue;
+        }
+        if(tab_header_point_in_unit(self, &cursor_pos, pos->data)) {
+            return pos->data;
+        }
+    }
+    return NULL;
 }
 
 void tab_header_set_focus(
         struct tab_header *self,
         struct tab_header_unit *new_focus)
 {
+    if(!new_focus) {
+        return;
+    }
+    self->focus = new_focus;
 }
