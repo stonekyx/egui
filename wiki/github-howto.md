@@ -15,7 +15,7 @@
 <dt>Local branch</dt>
 <dd>本地分支，就是你平常checkout的时候指定的分支，`git checkout -b <branch_name>`创建的也是本地分支。`git branch`可以列出本地分支。</dd>
 <dt>Remote branch</dt>
-<dd>远程分支，也是在*本地电脑*里，但是代表着服务器上的某个分支。`git branch -r`可以列出远程分支。上面提到的本地分支会追踪某个远程分支，但`git fetch`的时候只会更新远程分支，所以你checkout到本地分支的时候是看不到新代码的，而是会在`git status`里提示一句“xx commits behind”，表示该本地分支与对应远程分支的距离。</dd>
+<dd>远程分支，也是在<em>本地电脑</em>里，但是代表着服务器上的某个分支。`git branch -r`可以列出远程分支。上面提到的本地分支会追踪某个远程分支，但`git fetch`的时候只会更新远程分支，所以你checkout到本地分支的时候是看不到新代码的，而是会在`git status`里提示一句“xx commits behind”，表示该本地分支与对应远程分支的距离。</dd>
 </dl>
 
 ##EGUI的git使用方法##
