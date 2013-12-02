@@ -105,30 +105,52 @@ static void map_set_bit(addr_t map, si_t width, si_t x, si_t y)
     ((byte_t*)map)[flat_pixel/CHAR_BIT] |= (1u<<(flat_pixel%CHAR_BIT));
 }
 
+static void mark_point(si_t row_start[], si_t row_end[], struct rectangle *a,
+        struct point *dp)
+{
+    if(dp->y<0 || dp->y>a->height) { /* not affective to the row. */
+        return;
+    }
+    if(dp->x < 0) {
+        dp->x = 0;
+    }
+    if(dp->x >= a->width) {
+        dp->x = a->width-1;
+    }
+    if(row_start[dp->y] == -1 || row_start[dp->y] > dp->x) {
+        row_start[dp->y] = dp->x;
+    }
+    if(row_end[dp->y] == -1 || row_end[dp->y] < dp->x) {
+        row_end[dp->y] = dp->x;
+    }
+}
+
 static void mark_line(si_t row_start[], si_t row_end[], struct rectangle *a,
         const struct point *st, const struct point *en)
 {
     struct point *pos;
+    struct point last;
     struct bresenham_iterator *it;
+    if(st->x > en->x || (st->x == en->x && st->y > en->y)) {
+        const struct point *tmp = st;
+        st = en;
+        en = tmp;
+    }
     bresenham_for_each(pos, it, st->x, st->y, en->x, en->y) {
-        si_t dx = pos->x - a->x;
-        si_t dy = pos->y - a->y;
-        if(dy<0 || dy>a->height) { /* not affective to the row. */
+        struct point dp;
+        if((st->x == pos->x && st->y == pos->y) ||
+                last.y == pos->y) {
+            last = *pos;
             continue;
         }
-        if(dx < 0) {
-            dx = 0;
-        }
-        if(dx >= a->width) {
-            dx = a->width-1;
-        }
-        if(row_start[dy] == -1 || row_start[dy] > dx+1 || row_start[dy] == dx-1) {
-            row_start[dy] = dx;
-        }
-        if(row_end[dy] == -1 || row_end[dy] < dx) {
-            row_end[dy] = dx;
-        }
+        dp.x = last.x - a->x;
+        dp.y = last.y - a->y;
+        last = *pos;
+        mark_point(row_start, row_end, a, &dp);
     }
+    last.x -= a->x;
+    last.y -= a->y;
+    mark_point(row_start, row_end, a, &last);
 }
 
 static void fill_map(addr_t map, struct rectangle *area)
@@ -190,6 +212,9 @@ static addr_t prepare_map(struct rectangle *area, struct point p[], ui_t pcnt)
         mark_line(row_start, row_end, area, b, base);
         for(j=0; j<area->height; j++) {
             if(row_start[j]>row_end[j]) {
+                continue;
+            }
+            if(row_start[j]==-1 || row_end[j]==-1) {
                 continue;
             }
             map_toggle_bit(map, area->width, row_start[j], j);
