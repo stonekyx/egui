@@ -24,7 +24,7 @@ struct tab_page *tab_page_init_data(
         struct tab_page *addr,
         const char *title)
 {
-    if(panel_init_data(&addr->base, 0) != &addr->base) {
+    if(panel_init_data(PANEL_POINTER(addr), 0) != PANEL_POINTER(addr)) {
         return NULL;
     }
     addr->page_head = strdup(title);
@@ -34,12 +34,10 @@ struct tab_page *tab_page_init_data(
 si_t tab_page_exit(struct tab_page *b)
 {
     free(b->page_head);
-    panel_exit(&b->base);
-    free(b);
-    return 0;
+    return panel_exit(PANEL_POINTER(b));
 }
 
 void tab_page_set_color(struct tab_page *p, struct color *fore, struct color *back)
 {
-    panel_set_color(&p->base, fore, back);
+    panel_set_color(PANEL_POINTER(p), fore, back);
 }

@@ -42,7 +42,7 @@
 **/
 struct tab_page
 {
-    struct panel base;
+    PANEL_DEFINITION
     char *page_head;
     struct tab *belong;
 };

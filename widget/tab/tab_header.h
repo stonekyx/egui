@@ -5,8 +5,6 @@
 #include "../widget/widget.h"
 #include "tab_page.h"
 
-typedef void (*tab_header_callback_t)(struct tab_page *new_focus);
-
 struct tab_header_unit {
     struct tab_page *page;
     ui_t width; /* Need to be updated when font in @sample changes */
@@ -17,19 +15,15 @@ struct tab_header_unit {
 struct tab_header {
     WIDGET_DEFINITION
     struct list units; /* list of (struct tab_header_unit) */
-    tab_header_callback_t callback_to_tab;
     struct label *sample; /* All header units use the same font, and
                             it changes with label widget. */
     struct tab_header_unit *focus;
+    struct tab *parent_tab;
 };
 
 struct tab_header *tab_header_init(void);
 
 si_t tab_header_exit(struct tab_header *t);
-
-void tab_header_set_callback(
-        struct tab_header *self,
-        tab_header_callback_t callback);
 
 void tab_header_add_page(
         struct tab_header *self,

@@ -52,8 +52,8 @@ static struct panel_style panel_default_style =
         /* 默认工作区域 */
         0,  /* .area_x */
         0,  /* .area_y */
-        0,  /* .area_width */
-        0,  /* .area_height */
+        400,  /* .area_width */
+        400,  /* .area_height */
 
         /* 默认边界宽度 */
         0,  /* .border_size */

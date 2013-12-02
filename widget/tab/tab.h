@@ -37,7 +37,6 @@
 
 # include "tab_page.h"
 # include "../panel/panel.h"
-# include "../flowbox/flowbox.h"
 
 /**
  * 窗口部件结构体
@@ -45,8 +44,6 @@
 struct tab
 {
     WIDGET_DEFINITION
-    struct list pages;
-    struct panel *panel;
     struct tab_page *focus;
     struct tab_header *header;
 };
@@ -115,7 +112,5 @@ extern void tab_set_font(struct tab* b, si_t font);
 extern void tab_add_page(struct tab *t, struct tab_page *tp);
 
 extern si_t tab_set_focus(struct tab *t, struct tab_page *new_focus);
-
-extern si_t tab_set_focus_index(struct tab *t, ui_t page_idx);
 
 # endif

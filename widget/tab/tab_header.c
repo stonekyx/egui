@@ -3,6 +3,7 @@
 #include "client_lib.h"
 #include "log.h"
 
+#include "tab.h"
 #include "tab_header.h"
 #include "../label/label.h"
 
@@ -115,6 +116,21 @@ static int tab_header_point_in_unit(const struct tab_header *self,
     }
 }
 
+static void object_disconnect(struct object *o)
+{
+    if(NULL==o || NULL==o->parent) {
+        return;
+    }
+    if(o->parent->lchild == o) {
+        o->parent->lchild = NULL;
+    } else if(o->parent->rchild == o) {
+        o->parent->rchild = NULL;
+    }
+    o->parent = NULL;
+}
+
+/* ---------------------static above---------------------- */
+
 struct tab_header *tab_header_init(void)
 {
     struct tab_header *addr;
@@ -146,13 +162,6 @@ si_t tab_header_exit(struct tab_header *t)
     return widget_exit(WIDGET_POINTER(t));
 }
 
-void tab_header_set_callback(
-        struct tab_header *self,
-        tab_header_callback_t callback)
-{
-    self->callback_to_tab = callback;
-}
-
 void tab_header_add_page(
         struct tab_header *self,
         struct tab_page *page_ptr)
@@ -166,6 +175,9 @@ void tab_header_add_page(
     list_push_back(&self->units, &tmp, sizeof(struct tab_header_unit));
     self->area.width += tmp.width +
         TAB_HEADER_UNIT_INTERVAL + TAB_HEADER_LEFT_PADDING;
+    if(list_size(&self->units)==1) {
+        tab_header_set_focus(self, list_back(&self->units));
+    }
 }
 
 void tab_header_repaint(struct tab_header *self)
@@ -239,4 +251,14 @@ void tab_header_set_focus(
         return;
     }
     self->focus = new_focus;
+    if(self->parent_tab) {
+        object_disconnect(OBJECT_POINTER(self->parent_tab->focus));
+        self->parent_tab->focus = new_focus->page;
+        panel_set_bounds(PANEL_POINTER(new_focus->page),
+                0, self->area.height, -1, -1);
+        object_attach_child(OBJECT_POINTER(self->parent_tab),
+                OBJECT_POINTER(new_focus->page));
+        panel_repaint(PANEL_POINTER(new_focus->page));
+        panel_show(PANEL_POINTER(new_focus->page));
+    }
 }
