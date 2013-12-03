@@ -258,7 +258,7 @@ void tab_header_set_focus(
                 0, self->area.height, -1, -1);
         object_attach_child(OBJECT_POINTER(self->parent_tab),
                 OBJECT_POINTER(new_focus->page));
-        panel_repaint(PANEL_POINTER(new_focus->page));
+        panel_repaint_with_children(PANEL_POINTER(new_focus->page));
         panel_show(PANEL_POINTER(new_focus->page));
     }
 }
