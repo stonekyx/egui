@@ -66,7 +66,11 @@ nobase_pkginclude_HEADERS += %D%/graph_lower.h \
 							 %D%/graph_enumerator.h \
 							 %D%/external.h \
 							 %D%/bitops.h
-library_libgraph_la_LIBADD = library/libgeometry.la library/libcolor.la
+noinst_HEADERS += %D%/graph_lower/fbtools.h
+EXTRA_library_libgraph_la_SOURCES = %D%/graph_lower/fbtools.c
+
+library_libgraph_la_LIBADD = library/libgeometry.la library/libcolor.la $(FBTOOLS_SYSTEM)
+library_libgraph_la_DEPENDENCIES = $(FBTOOLS_SYSTEM)
 library_libgraph_la_LDFLAGS = -version-info 1:0:0
 
 server_cflow_SRC += $(library_libgraph_la_SOURCES)

@@ -101,6 +101,9 @@ static si_t cursor_get_refresh_area(struct rectangle *result)
 si_t cursor_paint()
 {
     struct rectangle refarea;
+    if(!global_screen.visible) {
+        return 1;
+    }
     if(-1 == cursor_get_refresh_area(&refarea)) {
         EGUI_PRINT_ERROR("Error in area union code");
         return -1;

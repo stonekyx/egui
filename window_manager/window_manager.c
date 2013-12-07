@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stropts.h>
 # include <fcntl.h>
 # include <sys/stat.h>
 
@@ -45,6 +46,70 @@
 #include "config.h"
 
 struct window_manager global_wm;
+
+/* ----------------Begin terminal operations---------------- */
+
+#ifdef USE_FBTOOLS /* init and exit terminal with fbida's code */
+
+/* Code from fbida */
+struct termios  saved_attributes;
+int             saved_fl;
+
+static si_t terminal_init(void)
+{
+	struct termios tattr;
+
+	fcntl(0,F_GETFL,&saved_fl);
+	tcgetattr (0, &saved_attributes);
+
+	fcntl(0,F_SETFL,O_NONBLOCK);
+	memcpy(&tattr,&saved_attributes,sizeof(struct termios));
+	tattr.c_lflag &= ~(ICANON|ECHO);
+	tattr.c_cc[VMIN] = 1;
+	tattr.c_cc[VTIME] = 0;
+	tcsetattr (0, TCSAFLUSH, &tattr);
+	return 0;
+}
+
+static void terminal_exit(void)
+{
+	fcntl(0,F_SETFL,saved_fl);
+	tcsetattr (0, TCSAFLUSH, &saved_attributes);
+}
+
+extern si_t framebuffer_fd;
+
+static si_t console_switch(void)
+{
+	static int switch_last;
+	if(switch_last == fb_switch_state) {
+		return 0;
+	}
+	switch(fb_switch_state) {
+		case FB_REL_REQ:
+			fb_switch_release();
+		case FB_INACTIVE:
+			/*visible = 0;*/
+			global_screen.visible = 0;
+			break;
+		case FB_ACQ_REQ:
+			fb_switch_acquire();
+		case FB_ACTIVE:
+			/*visible = 1;*/
+			global_screen.visible = 1;
+			ioctl(framebuffer_fd,FBIOPAN_DISPLAY,&fb_var);
+			screen_flush(0,0,global_screen.width, global_screen.height);
+			cursor_paint();
+			break;
+		default:
+			break;
+	}
+	switch_last = fb_switch_state;
+	return 1;
+}
+
+#else /* If configured not to use fbida style, use our own broken one. */
+
 struct termios term;
 
 /**
@@ -52,7 +117,7 @@ struct termios term;
  *
  * @return 成功返回0 否则返回-1
  **/
-si_t terminal_init()
+static si_t terminal_init()
 {
 	struct termios new_term;
 	si_t fd = open((char*)ctermid(NULL), O_RDONLY);
@@ -68,16 +133,16 @@ si_t terminal_init()
 		return -1;
 	}
 
-    new_term = term;
+	new_term = term;
 	new_term.c_lflag = term.c_lflag & ~( ECHO | ECHOE | ECHOK | ECHONL);
-    new_term.c_cflag = new_term.c_cflag | ( ICANON );
+	new_term.c_cflag = new_term.c_cflag | ( ICANON );
 
 	if(tcsetattr(fd, TCSAFLUSH, &new_term) < 0)
 	{
 		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
 		return -1;
 	}
-    close(fd);
+	close(fd);
 
 	return 0;
 }
@@ -85,7 +150,7 @@ si_t terminal_init()
 /**
  * @brief 清理终端
  **/
-void terminal_exit()
+static void terminal_exit()
 {
 	si_t fd = open((char*)ctermid(NULL), O_RDONLY);
 	if(fd < 0)
@@ -97,8 +162,11 @@ void terminal_exit()
 	{
 		EGUI_PRINT_SYS_ERROR("failed to set termios attribute. tcgetattr()");
 	}
-    close(fd);
+	close(fd);
 }
+
+#endif
+/* ------------------End of terminal operations------------------ */
 
 /**
  * @brief 初始化配置文件
@@ -143,6 +211,9 @@ static si_t comm_init(char* server_path)
 	 * 初始化监听事件的event_listener
 	 **/
 	event_listener_init(&global_wm.server_listener);
+#ifdef USE_FBTOOLS
+	global_wm.server_listener.callback = console_switch;
+#endif
 
 	/**
 	 * 添加event_listener监听来自窗口管理器通信句柄的读请求 若有读请求发生则调用window_manager_accept_handler处理
@@ -289,7 +360,7 @@ static si_t graph_init(char* framebuffer_path, si_t top_margin, si_t down_margin
 	 * 初始化窗口区域
 	 **/
 	rectangle_set(&global_wm.work_area,
-		0 + left_margin, 0 + top_margin, global_screen.width - left_margin - right_margin, global_screen.height - top_margin - down_margin);
+			0 + left_margin, 0 + top_margin, global_screen.width - left_margin - right_margin, global_screen.height - top_margin - down_margin);
 
 	/** 绘制桌面 **/
 	engine_set_color(global_wm.gd_handler, global_wm.backcolor.r, global_wm.backcolor.g, global_wm.backcolor.b, global_wm.backcolor.a);
@@ -409,11 +480,11 @@ si_t window_manager_exit()
 {
 	applications_exit();
 	cursor_exit();
+	terminal_exit();
 	graph_exit();
 	comm_exit();
 	event_exit();
 	config_exit();
-	terminal_exit();
 
 	return 0;
 }

@@ -88,6 +88,7 @@ extern void event_listener_init(struct event_listener* l)
 	list_init(&l->event_handler_set);
 	FD_ZERO(&l->read_set);
 	FD_ZERO(&l->write_set);
+	l->callback = NULL;
 }
 
 extern void event_listener_add_read_event(struct event_listener* l, struct egui_uds* uds, addr_t arg,
@@ -163,6 +164,9 @@ extern si_t event_listener_exec(struct event_listener* l)
 		 * 监听等待事件
 		 **/
 		select_ret = select(maxfd, &l->read_set, &l->write_set, NULL, NULL);
+		if(l->callback && l->callback()>0) {
+			continue;
+		}
 
 		if(select_ret > 0)
 		{

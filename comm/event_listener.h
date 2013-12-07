@@ -79,6 +79,8 @@ struct event_listener
 	fd_set read_set;
 	/** 实际select的所有等待写的fd的集合 **/
 	fd_set write_set;
+	/** 每次select之后一定要进行的补充动作 **/
+	si_t (*callback)(void);
 };
 
 /**

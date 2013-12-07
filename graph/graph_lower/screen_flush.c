@@ -46,6 +46,9 @@ screen_flush
     byte_t * src_addr, * dst_addr;
     struct rectangle screen_area, temp_area, real_area;
 
+    if(!global_screen.visible) {
+        return 0;
+    }
     if(global_screen.video_access_mode == VIDEO_ACCESS_MODE_DIRECT)
     {
         return -1;

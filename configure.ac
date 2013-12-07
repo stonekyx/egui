@@ -42,6 +42,20 @@ AS_IF([test "$with_mouse_resolution"],
       [let with_mouse_resolution=65536])
 AC_DEFINE_UNQUOTED([MOUSE_RESOLUTION], [$with_mouse_resolution], [Mouse-moving resolution.])
 
+# Whether use fbtools
+AC_ARG_ENABLE([fbtools],
+              AS_HELP_STRING([--enable-fbtools=yes],
+                             [specify whether fbtools should be used.]),
+              [],
+              []
+              )
+AS_IF([test "$enable_fbtools" = "no"],
+      [FBTOOLS_SYSTEM=""],
+      AC_DEFINE([USE_FBTOOLS], [], [Enable fbtools.])
+      FBTOOLS_SYSTEM='graph/graph_lower/fbtools.lo'
+      )
+AC_SUBST([FBTOOLS_SYSTEM])
+
 # Checks for programs.
 AC_PROG_AWK
 AC_PROG_CC
@@ -61,7 +75,7 @@ CFLAGS="-std=c99 -pedantic -Wall -g"
 AC_MSG_CHECKING([whether CC supports -std=c99 -pedantic -Wall -g])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([])],
                 [AC_MSG_RESULT([yes])]
-                [AM_CFLAGS="-std=c99 -pedantic -Wall -g"],
+                [AM_CFLAGS="-std=c99 -Wall -g"],
                 [AC_MSG_RESULT([no])]
                 [AC_MSG_WARN([Your compiler may not support c99, compiling is likely to fail.])]
                 )

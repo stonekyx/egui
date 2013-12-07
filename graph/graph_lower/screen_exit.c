@@ -36,6 +36,12 @@
 
 # include "../graph_lower.h"
 
+# include "config.h"
+
+#ifdef USE_FBTOOLS
+# include "fbtools.h"
+#endif
+
 si_t
 screen_exit()
 {
@@ -53,11 +59,15 @@ screen_exit()
     /* 释放视频缓冲区 */
     free(global_screen.buffer_addr);
 
+#ifdef USE_FBTOOLS
+    fb_cleanup();
+#else
     /* 释放视频存储区 */
     if(-1 == munmap(global_screen.memory_addr, global_screen.size)) {
         EGUI_PRINT_SYS_ERROR("failed to unmap framebuffer: munmap()");
         return -1;
     }
+#endif
 
     return 0;
 }

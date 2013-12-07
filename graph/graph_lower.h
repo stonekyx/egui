@@ -78,6 +78,11 @@ struct screen
      * 视频缓冲区起始地址
     **/
     byte_t * buffer_addr;
+
+    /**
+     * 是否正常刷新到memory_addr
+    **/
+    si_t visible;
 };
 
 /**

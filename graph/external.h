@@ -33,5 +33,6 @@
 # include "graph_lower.h"
 # include "graph_engine.h"
 # include "graph_enumerator.h"
+# include "graph_lower/fbtools.h"
 
 # endif

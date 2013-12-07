@@ -39,15 +39,32 @@
 # include "../graph_lower.h"
 # include "log.h"
 
+# include "config.h"
+
+#ifdef USE_FBTOOLS
+# include "fbtools.h"
+#endif
 
 struct fb_var_screeninfo global_var_screen_info;
 struct fb_fix_screeninfo global_fix_screen_info;
 struct fb_cmap global_cmap;
 struct screen global_screen;
+#ifdef USE_FBTOOLS
+si_t framebuffer_fd;
+#endif
 
 si_t screen_init(const char* path)
 {
-    si_t fb_fd, i, retval;
+    si_t fb_fd, i;
+
+#ifdef USE_FBTOOLS
+    fb_fd = fb_init(NULL, NULL, 0);
+    fb_catch_exit_signals();
+    fb_switch_init();
+    global_var_screen_info = fb_var;
+    global_fix_screen_info = fb_fix;
+#else
+    si_t retval;
 
     fb_fd = open(path, O_RDWR);
 
@@ -74,6 +91,7 @@ si_t screen_init(const char* path)
 		EGUI_PRINT_SYS_ERROR("failed to obtain fixed screen info: ioctl()");
         return -1;
     }
+#endif
 
     /* 获得屏幕的宽度 */
     global_screen.width = global_var_screen_info.xres;
@@ -90,6 +108,10 @@ si_t screen_init(const char* path)
     /* XXX: Why always VIDEO_ACCESS_MODE_BUFFER? */
     global_screen.video_access_mode = VIDEO_ACCESS_MODE_BUFFER;
 
+#ifdef USE_FBTOOLS
+    global_screen.memory_addr = fb_mem;
+    /* fb_mem is guaranteed to be valid at this point */
+#else
     /* 映射视频地址 */
     global_screen.memory_addr =
     mmap(NULL, global_screen.size, PROT_READ | PROT_WRITE, MAP_SHARED, fb_fd, 0);
@@ -99,6 +121,7 @@ si_t screen_init(const char* path)
 		EGUI_PRINT_SYS_ERROR("failed to map screen to memory: mmap()");
         return -1;
     }
+#endif
 
     global_screen.buffer_addr = (byte_t *)malloc(global_screen.size);
 
@@ -107,6 +130,8 @@ si_t screen_init(const char* path)
 		EGUI_PRINT_SYS_ERROR("failed to malloc for screen buffer: malloc()");
         return -1;
     }
+
+    global_screen.visible = 1;
 
     /* 0 = White 1 = Black */
     if(global_fix_screen_info.visual == FB_VISUAL_MONO01)
@@ -195,8 +220,12 @@ si_t screen_init(const char* path)
         /* unspecified */
     }
 
+#ifdef USE_FBTOOLS
+    framebuffer_fd = fb_fd; /* export to window_manager */
+#else
     /* 关闭 fb 设备文件 */
     close(fb_fd);
+#endif /* For fbtools, the fd will be closed in fb_cleanup() */
 
     return 0;
 }
