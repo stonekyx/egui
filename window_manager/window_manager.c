@@ -52,15 +52,18 @@ struct window_manager global_wm;
 #ifdef USE_FBTOOLS /* init and exit terminal with fbida's code */
 
 /* Code from fbida */
-struct termios  saved_attributes;
-int             saved_fl;
+struct termios  saved_attributes[3];
+int             saved_fl[3];
 
 static si_t terminal_init(void)
 {
 	struct termios tattr;
+	int i;
 
-	fcntl(0,F_GETFL,&saved_fl);
-	tcgetattr (0, &saved_attributes);
+	for(i=0; i<3; i++) {
+		fcntl(i,F_GETFL,&saved_fl[i]);
+		tcgetattr (i, &saved_attributes[i]);
+	}
 
 	fcntl(0,F_SETFL,O_NONBLOCK);
 	memcpy(&tattr,&saved_attributes,sizeof(struct termios));
@@ -73,8 +76,11 @@ static si_t terminal_init(void)
 
 static void terminal_exit(void)
 {
-	fcntl(0,F_SETFL,saved_fl);
-	tcsetattr (0, TCSAFLUSH, &saved_attributes);
+	int i;
+	for(i=0; i<3; i++) {
+		fcntl(i,F_SETFL,saved_fl[i]);
+		tcsetattr (i, TCSAFLUSH, &saved_attributes[i]);
+	}
 }
 
 extern si_t framebuffer_fd;
@@ -480,8 +486,8 @@ si_t window_manager_exit()
 {
 	applications_exit();
 	cursor_exit();
-	terminal_exit();
 	graph_exit();
+	terminal_exit();
 	comm_exit();
 	event_exit();
 	config_exit();
