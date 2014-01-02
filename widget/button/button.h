@@ -30,52 +30,23 @@
 # ifndef _BUTTON_H_
 # define _BUTTON_H_ 1
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 # include <base_type.h>
 # include <comm.h>
 
 # include "../widget/widget.h"
 
-/**
- * 窗口部件结构体
-**/
-# define BUTTON_DEFINITION \
-    /**
-     * 从 widget 继承
-    **/ \
-    WIDGET_DEFINITION \
-    \
-    /**
-     * 文字
-    **/ \
-    char * text; \
-    \
-    /**
-     * 字体
-    **/ \
-    si_t font; \
-    \
-    /**
-     * extra data
-     **/ \
-    addr_t custom_data;
-
-struct button
-{
-    BUTTON_DEFINITION
+struct ButtonImpl;
+class Button:public Widget {
+  public:
+    Button(si_t id=0);
+    ~Button();
+  private:
+    ButtonImpl *_pimpl;
 };
-
-/* 按钮样式结构体 */
-struct button_style
-{
-    struct widget_style common;
-    /* 字体 */
-    si_t font;
-};
-
-/**
- * 将地址强制转换成 struct button *
- **/
-# define BUTTON_POINTER(addr) ((struct button *)(addr))
 
 /**
  * @brief button的默认回调函数

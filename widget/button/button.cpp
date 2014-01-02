@@ -29,6 +29,8 @@
 
 #define _POSIX_C_SOURCE 200809L /* for strdup() */
 
+extern "C" {
+
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
@@ -39,7 +41,10 @@
 # include <comm.h>
 # include <client_lib.h>
 
+}
+
 # include "button.h"
+# include "button_impl.h"
 
 # define TMP_ARRAY_SIZE 256
 
