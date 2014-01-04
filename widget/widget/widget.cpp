@@ -52,34 +52,44 @@ WidgetImpl::WidgetStyle WidgetImpl::default_style = {
     0,                      /* .flag */
 
     /* 默认工作区域 */
+    {
     0,                      /* .area_x */
     0,                      /* .area_y */
     0,                      /* .area_width */
     0,                      /* .area_height */
+    },
 
     /* 默认边界宽度 */
     0,                      /* .border_size */
 
     /* 默认宽度&高度 */
+    {
     0,                      /* .maximum_width */
     0,                      /* .minimum_width */
+    },
+    {
     0,                      /* .maximum_height */
     0,                      /* .minimum_height */
+    },
 
     /* 默认鼠标形状 */
     CURSOR_SHAPE_X,         /* .cursor */
 
     /* 默认背景色 */
+    {
     255,                    /* .back_color_r */
     255,                    /* .back_color_g */
     255,                    /* .back_color_b */
     0,                      /* .back_color_a */
+    },
 
     /* 默认前景色 */
+    {
     0,                      /* .fore_color_r */
     0,                      /* .fore_color_g */
     0,                      /* .fore_color_b */
     0,                      /* .fore_color_a */
+    },
 };
 
 WidgetImpl::WidgetImpl(Widget *p):owner(p)
@@ -109,17 +119,17 @@ struct config_parser *WidgetImpl::read_style_config()
         return NULL;
     }
     /* 从配置读取各项配置,赋予style指针 */
-    config_parser_get_int(parser, "area_x", &(style->area_x));
-    config_parser_get_int(parser, "area_y", &(style->area_y));
-    config_parser_get_int(parser, "area_width", &(style->area_width));
-    config_parser_get_int(parser, "area_height", &(style->area_height));
+    config_parser_get_int(parser, "area_x", &(style->area.x));
+    config_parser_get_int(parser, "area_y", &(style->area.y));
+    config_parser_get_int(parser, "area_width", &(style->area.width));
+    config_parser_get_int(parser, "area_height", &(style->area.height));
 
     config_parser_get_int(parser, "border_size", &(style->border_size));
 
-    config_parser_get_int(parser, "maximum_width", &(style->maximum_width));
-    config_parser_get_int(parser, "minimum_width", &(style->minimum_width));
-    config_parser_get_int(parser, "maximum_height", &(style->maximum_height));
-    config_parser_get_int(parser, "minimum_height", &(style->minimum_height));
+    config_parser_get_int(parser, "maximum_width", &(style->width_range.max));
+    config_parser_get_int(parser, "minimum_width", &(style->width_range.min));
+    config_parser_get_int(parser, "maximum_height", &(style->height_range.max));
+    config_parser_get_int(parser, "minimum_height", &(style->height_range.min));
 
     static char tmp_str[TMP_ARRAY_SIZE];
     int tmp_int;
@@ -128,15 +138,15 @@ struct config_parser *WidgetImpl::read_style_config()
         style->cursor = tmp_int;
     }
 
-    config_parser_get_int(parser, "back_color_r", &(style->back_color_r));
-    config_parser_get_int(parser, "back_color_g", &(style->back_color_g));
-    config_parser_get_int(parser, "back_color_b", &(style->back_color_b));
-    config_parser_get_int(parser, "back_color_a", &(style->back_color_a));
+    config_parser_get_int(parser, "back_color_r", &(style->back_color.r));
+    config_parser_get_int(parser, "back_color_g", &(style->back_color.g));
+    config_parser_get_int(parser, "back_color_b", &(style->back_color.b));
+    config_parser_get_int(parser, "back_color_a", &(style->back_color.a));
 
-    config_parser_get_int(parser, "fore_color_r", &(style->fore_color_r));
-    config_parser_get_int(parser, "fore_color_g", &(style->fore_color_g));
-    config_parser_get_int(parser, "fore_color_b", &(style->fore_color_b));
-    config_parser_get_int(parser, "fore_color_a", &(style->fore_color_a));
+    config_parser_get_int(parser, "fore_color_r", &(style->fore_color.r));
+    config_parser_get_int(parser, "fore_color_g", &(style->fore_color.g));
+    config_parser_get_int(parser, "fore_color_b", &(style->fore_color.b));
+    config_parser_get_int(parser, "fore_color_a", &(style->fore_color.a));
 
     style->flag = 1;
     return parser;
@@ -150,29 +160,20 @@ void WidgetImpl::init_with_default_style()
     WidgetStyle *style = get_default_style();
 
     /* 用widget默认样式初始化widget各样式属性 */
-    owner->area.x = style->area_x;
-    owner->area.y = style->area_y;
-    owner->area.width = style->area_width;
-    owner->area.height = style->area_height;
+    owner->area = style->area;
 
     owner->border_size = style->border_size;
 
-    owner->maximum_width = style->maximum_width;
-    owner->minimum_width = style->minimum_width;
-    owner->maximum_height = style->maximum_height;
-    owner->minimum_height = style->minimum_height;
+    owner->maximum_width = style->width_range.max;
+    owner->minimum_width = style->width_range.min;
+    owner->maximum_height = style->height_range.max;
+    owner->minimum_height = style->height_range.min;
 
     owner->cursor = style->cursor;
 
-    owner->back_color.r = style->back_color_r;
-    owner->back_color.g = style->back_color_g;
-    owner->back_color.b = style->back_color_b;
-    owner->back_color.a = style->back_color_a;
+    owner->back_color = style->back_color;
 
-    owner->fore_color.r = style->fore_color_r;
-    owner->fore_color.g = style->fore_color_g;
-    owner->fore_color.b = style->fore_color_b;
-    owner->fore_color.a = style->fore_color_a;
+    owner->fore_color = style->fore_color;
 }
 
 Widget::Widget(si_t id):_pimpl(new WidgetImpl(this))

@@ -1,10 +1,6 @@
 #ifndef _WBL_WIDGET_IMPL_H_
 #define _WBL_WIDGET_IMPL_H_ 1
 
-#include <iostream>
-
-using namespace std;
-
 struct WidgetImpl {
     static const char *const config_name;
     static const char *config_path;
@@ -12,39 +8,28 @@ struct WidgetImpl {
     WidgetImpl(Widget * p);
 
     struct WidgetStyle {
-        WidgetStyle(std::initializer_list<>);
         /* 一个标志 */
         si_t flag;
 
         /* 工作区域 */
-        si_t area_x;
-        si_t area_y;
-        si_t area_width;
-        si_t area_height;
+        struct rectangle area;
 
         /* 边界宽度 */
         si_t border_size;
 
         /* 高度&宽度 */
-        si_t maximum_width;
-        si_t minimum_width;
-        si_t maximum_height;
-        si_t minimum_height;
+        struct ValueRange {
+            si_t max, min;
+        }width_range, height_range;
 
         /* 鼠标形状 */
         si_t cursor;
 
         /* 背景色 */
-        si_t back_color_r;
-        si_t back_color_g;
-        si_t back_color_b;
-        si_t back_color_a;
+        struct color back_color;
 
         /* 前景色 */
-        si_t fore_color_r;
-        si_t fore_color_g;
-        si_t fore_color_b;
-        si_t fore_color_a;
+        struct color fore_color;
     };
 
     static WidgetStyle default_style;
