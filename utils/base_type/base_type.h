@@ -115,4 +115,11 @@ typedef const void *const_addr_t;
  **/
 typedef char bool_t;
 
+/**
+ * 整数范围
+**/
+struct int_range_t {
+    si_t max, min;
+};
+
 # endif
