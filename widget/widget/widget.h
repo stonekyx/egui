@@ -52,17 +52,11 @@ struct widget {
     /* 边框宽度 */
     si_t border_size;
 
-    /* 最大宽度 */
-    si_t maximum_width;
+    /* 合法的宽度范围 */
+    struct int_range_t width_range;
 
-    /* 最小宽度 */
-    si_t minimum_width;
-
-    /* 最大高度 */
-    si_t maximum_height;
-
-    /* 最小高度 */
-    si_t minimum_height;
+    /* 合法的高度范围 */
+    struct int_range_t height_range;
 
     /* 光标的形状
        如果没有设置，将使使用父窗口部件的光标形状

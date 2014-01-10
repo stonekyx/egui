@@ -40,7 +40,7 @@ extern "C" {
 # include "../widget/widget.h"
 
 struct ButtonImpl;
-class Button:public Widget {
+class Button:protected Widget {
   public:
     Button(si_t id=0);
     ~Button();

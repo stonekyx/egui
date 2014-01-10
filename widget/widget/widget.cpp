@@ -47,7 +47,7 @@ const char *const WidgetImpl::config_name = "widget.cfg";
 const char *WidgetImpl::config_path =::get_config_path(WidgetImpl::
                                                        config_name);
 
-WidgetImpl::WidgetStyle WidgetImpl::default_style = {
+WidgetImpl::WidgetStyle WidgetImpl::default_style(
     /* 初始化，默认未访问 */
     0,                      /* .flag */
 
@@ -89,8 +89,8 @@ WidgetImpl::WidgetStyle WidgetImpl::default_style = {
     0,                      /* .fore_color_g */
     0,                      /* .fore_color_b */
     0,                      /* .fore_color_a */
-    },
-};
+    }
+    );
 
 WidgetImpl::WidgetImpl(Widget *p):owner(p)
 {
@@ -161,18 +161,11 @@ void WidgetImpl::init_with_default_style()
 
     /* 用widget默认样式初始化widget各样式属性 */
     owner->area = style->area;
-
     owner->border_size = style->border_size;
-
-    owner->maximum_width = style->width_range.max;
-    owner->minimum_width = style->width_range.min;
-    owner->maximum_height = style->height_range.max;
-    owner->minimum_height = style->height_range.min;
-
+    owner->width_range = style->width_range;
+    owner->height_range = style->height_range;
     owner->cursor = style->cursor;
-
     owner->back_color = style->back_color;
-
     owner->fore_color = style->fore_color;
 }
 

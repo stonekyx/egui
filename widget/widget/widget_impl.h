@@ -8,6 +8,27 @@ struct WidgetImpl {
     WidgetImpl(Widget * p);
 
     struct WidgetStyle {
+        WidgetStyle(
+                const si_t &flag,
+                const rectangle &area,
+                const si_t &border_size,
+                const int_range_t &width_range,
+                const int_range_t &height_range,
+                const si_t &cursor,
+                const color &back_color,
+                const color &fore_color
+                ):
+            flag(flag),
+            area(area),
+            border_size(border_size),
+            width_range(width_range),
+            height_range(height_range),
+            cursor(cursor),
+            back_color(back_color),
+            fore_color(fore_color)
+        {
+        }
+
         /* 一个标志 */
         si_t flag;
 
@@ -18,9 +39,7 @@ struct WidgetImpl {
         si_t border_size;
 
         /* 高度&宽度 */
-        struct ValueRange {
-            si_t max, min;
-        }width_range, height_range;
+        struct int_range_t width_range, height_range;
 
         /* 鼠标形状 */
         si_t cursor;

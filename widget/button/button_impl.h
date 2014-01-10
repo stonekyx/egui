@@ -6,6 +6,7 @@
 struct ButtonImpl : public WidgetImpl {
     static const char *const config_name;
     static const char *config_path;
+    Button *owner;
     /* 文字 */
     char *text;
     /* 字体 */
@@ -14,6 +15,14 @@ struct ButtonImpl : public WidgetImpl {
     addr_t custom_data;
 
     struct ButtonStyle : public WidgetImpl::WidgetStyle {
+        ButtonStyle(
+                const WidgetImpl::WidgetStyle &base,
+                const si_t &font):
+            WidgetStyle(base),
+            font(font)
+        {
+        }
+
         si_t font;
     };
 

@@ -49,47 +49,60 @@ extern "C" {
 # define TMP_ARRAY_SIZE 256
 
 /* 按钮样式全局对象 */
-static struct button_style button_default_style =
-{
+ButtonImpl::ButtonStyle ButtonImpl::default_style(
     {
         /* 初始化，默认未访问 */
-        0,  /* .flag */
+        0,                      /* .flag */
 
         /* 默认工作区域 */
-        0,  /* .area_x */
-        0,  /* .area_y */
-        0,  /* .area_width */
-        0,  /* .area_height */
+        {
+        0,                      /* .area_x */
+        0,                      /* .area_y */
+        0,                      /* .area_width */
+        0,                      /* .area_height */
+        },
 
         /* 默认边界宽度 */
-        1,  /* .border_size */
+        1,                      /* .border_size */
 
         /* 默认宽度&高度 */
-        0,  /* .maximum_width */
-        0,  /* .minimum_width */
-        0,  /* .maximum_height */
-        0,  /* .minimum_height */
+        {
+        0,                      /* .maximum_width */
+        0,                      /* .minimum_width */
+        },
+        {
+        0,                      /* .maximum_height */
+        0,                      /* .minimum_height */
+        },
 
         /* 默认鼠标形状 */
-        CURSOR_SHAPE_X, /* .cursor */
+        CURSOR_SHAPE_X,         /* .cursor */
 
         /* 默认背景色 */
+        {
         /* FIXME:不应该hard code */
-        0,    /* .back_color_r */
-        255,    /* .back_color_g */
-        0,  /* .back_color_b */
-        0,  /* .back_color_a */
+        0,                      /* .back_color_r */
+        255,                    /* .back_color_g */
+        0,                      /* .back_color_b */
+        0,                      /* .back_color_a */
+        },
 
         /* 默认前景色 */
-        255,  /* .fore_color_r */
-        0,  /* .fore_color_g */
-        0,  /* .fore_color_b */
-        0,  /* .fore_color_a */
+        {
+        255,                    /* .fore_color_r */
+        0,                      /* .fore_color_g */
+        0,                      /* .fore_color_b */
+        0,                      /* .fore_color_a */
+        },
     },
     /* 默认字体 */
-    FONT_MATRIX_08, /* .font */
-};
+    FONT_MATRIX_08 /* .font */
+    );
 
+void ButtonImpl::init_with_default_style()
+{
+    WidgetImpl::init_with_default_style();
+}
 /**
  * @brief 用button全局样式对象初始化button对象
  *
