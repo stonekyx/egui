@@ -6,6 +6,7 @@ tags
 cscope.out
 _build
 !.gitignore
+!.ycm_extra_conf.py
 
 # Generated documentations
 *.cflow
