@@ -154,7 +154,6 @@ screen_set_h_line
  si_t y2)
 {
     ui_t offset, color, pixel, size, h_offset, t_offset, h_bit, bit, t_bit, byte_quantity;
-    si_t i;
     byte_t * addr, * video;
     byte_t temp, mask;
     struct rectangle result_area, screen_area;
@@ -343,6 +342,7 @@ screen_set_h_line
     }
     else
     {
+        ui_t i;
         /* 像素对应的字节数 */
         pixel = s->color_depth >> 3;
         /* 获得起始像素相对于显存的字节偏移量 */

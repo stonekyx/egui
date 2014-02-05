@@ -37,6 +37,7 @@
 #include "log.h"
 #include "comm.h"
 #include "client_lib.h"
+#include "compiler.h"
 
 #define TMP_ARRAY_SIZE 256
 #define MAXBUF 80
@@ -138,15 +139,16 @@ static si_t text_line_init_with_default_style(struct text_line * tl)
 static char keybd_code_to_char_number(si_t code);
 static char keybd_code_to_char_letter(si_t code);
 static si_t text_line_handle_special_key(struct text_line* t, si_t code);
-static char* get_next_line_start(char* this_line_start_index, si_t maxline, si_t is_enter_enable, si_t is_linewrap);
-static char* get_prev_line_start(char* this_line_start_index, si_t maxline, si_t is_enter_enable, si_t is_linewrap);
-static si_t lines_between(char* p, char* q, si_t maxline, si_t is_enter_enable, si_t is_linewrap);
+static char* get_next_line_start(char* this_line_start_index, ui_t maxline, si_t is_enter_enable, si_t is_linewrap);
+static char* get_prev_line_start(char* this_line_start_index, ui_t maxline, si_t is_enter_enable, si_t is_linewrap);
+static si_t lines_between(char* p, char* q, ui_t maxline, si_t is_enter_enable, si_t is_linewrap);
 static si_t text_line_default_show_text(struct text_line* t, si_t x, si_t y);
-static si_t text_line_draw_frame(si_t gd, si_t x, si_t y, si_t width, si_t height, si_t margin);
+static si_t text_line_draw_frame(si_t gd, si_t x, si_t y, ui_t width, ui_t height, si_t margin);
 /* }}} */
 extern si_t text_line_default_widget_show(struct text_line* t, union message* msg)
 {
     struct rectangle area;
+	NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(t), &area);
 
@@ -546,7 +548,7 @@ static si_t text_line_handle_special_key(struct text_line* t, si_t code)
  * returns pointer to character that's the start index of next line
  * return NULL if "next line"do not exists
  **/
-static char* get_next_line_start(char* this_line_start, si_t maxline, si_t is_enter_enable, si_t is_linewrap)
+static char* get_next_line_start(char* this_line_start, ui_t maxline, si_t is_enter_enable, si_t is_linewrap)
 {
     if(!is_enter_enable)
     {
@@ -562,7 +564,7 @@ static char* get_next_line_start(char* this_line_start, si_t maxline, si_t is_en
             return next + 1;
         while(*(++ next) != '\n')
         {
-            if(next - this_line_start == maxline - 1)
+            if(next + 1 == this_line_start + maxline)
                 break;
             if(*next == '\0')
                 return NULL;
@@ -598,13 +600,13 @@ static char* get_next_line_start(char* this_line_start, si_t maxline, si_t is_en
  * returns pointer to character that's the start index of previous line
  * return NULL if "previous line" do not exists
  **/
-static char* get_prev_line_start(char* this_line_start, si_t maxline, si_t is_enter_enable, si_t is_linewrap)
+static char* get_prev_line_start(char* this_line_start, ui_t maxline, si_t is_enter_enable, si_t is_linewrap)
 {
     if(!is_enter_enable)
     {
         char* cur = this_line_start;
         while(*(-- cur) != '\0')
-            if(this_line_start - cur == maxline)
+            if(this_line_start == cur + maxline)
                 return cur;
         return NULL;
     }
@@ -623,7 +625,7 @@ static char* get_prev_line_start(char* this_line_start, si_t maxline, si_t is_en
         {
             if(*prev == '\0')
                 return prev + 1;
-            if(last - prev == maxline)
+            if(last == prev + maxline)
                 return prev;
         }
         return prev + 1;
@@ -658,7 +660,7 @@ static char* get_prev_line_start(char* this_line_start, si_t maxline, si_t is_en
  * returns lines between p and q
  * p is the start of certain line
  **/
-static si_t lines_between(char* p, char* q, si_t maxline, si_t is_enter_enable, si_t is_linewrap)
+static si_t lines_between(char* p, char* q, ui_t maxline, si_t is_enter_enable, si_t is_linewrap)
 {
     if(q - p < 0)
         return -1;
@@ -693,7 +695,7 @@ static si_t lines_between(char* p, char* q, si_t maxline, si_t is_enter_enable, 
             return 0;
         while(++ cur != q)
         {
-            if(*cur == '\n' || cur - start == maxline)
+            if(*cur == '\n' || cur == start + maxline)
             {
                 line ++;
                 start = cur;
@@ -870,7 +872,7 @@ static si_t text_line_default_show_text(struct text_line* t, si_t x, si_t y)
     return 0;
 }
 
-static si_t text_line_draw_frame(si_t gd, si_t x, si_t y, si_t width, si_t height, si_t margin)
+static si_t text_line_draw_frame(si_t gd, si_t x, si_t y, ui_t width, ui_t height, si_t margin)
 {
     si_t n, m;
     /**
@@ -923,6 +925,7 @@ static si_t text_line_default_widget_repaint(struct text_line* t, union message*
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(t), &x, &y);
@@ -1140,6 +1143,8 @@ static si_t text_line_default_mouse_press(struct text_line* t, union message* ms
     /**
      * TODO
      **/
+    NOT_USED(t);
+    NOT_USED(msg);
     return 0;
 }
 
@@ -1148,6 +1153,8 @@ static si_t text_line_default_mouse_release(struct text_line* t, union message* 
     /**
      * TODO
      **/
+    NOT_USED(t);
+    NOT_USED(msg);
     return 0;
 }
 
@@ -1156,6 +1163,8 @@ static si_t text_line_default_keybd_leave(struct text_line* t, union message* ms
     /**
      * TODO
      **/
+    NOT_USED(t);
+    NOT_USED(msg);
     return 0;
 }
 

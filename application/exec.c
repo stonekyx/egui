@@ -36,6 +36,7 @@
 # include "comm.h"
 # include "widget.h"
 # include "log.h"
+# include "compiler.h"
 
 # include "application.h"
 # include "manipulate_window.h"
@@ -119,6 +120,7 @@ static struct widget* do_dispatch_simple_message_to_all(struct widget* w, union 
 static si_t application_update_keybd_focus(struct widget* w);
 static struct widget* do_dispatch_repaint_event_to_all(struct widget* w, union message* msg)
 {
+    NOT_USED(msg);
     if(w->callback != NULL)
     {
         union message msg;
@@ -219,6 +221,7 @@ static struct widget* do_dispatch_keybd_event_and_returns(struct widget* w, unio
  **/
 static struct widget* do_parse_widget(struct widget* w, union message* m)
 {
+    NOT_USED(m);
     /**
      * record focusable widget
      **/
@@ -411,6 +414,7 @@ static si_t
 handle_mouse_move
 (union message * msg)
 {
+    NOT_USED(msg);
     return 0;
 }
 
@@ -734,6 +738,7 @@ static void application_handle_message(union message* msg)
 si_t application_event_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	union message msg;
+    NOT_USED(arg);
 
 	if(0 != comm_recv_msg(uds_ptr, &msg))
 	{

@@ -37,6 +37,7 @@
 #include <comm.h>
 #include <client_lib.h>
 #include <graph.h>
+#include "compiler.h"
 
 # include "panel.h"
 
@@ -250,11 +251,12 @@ si_t panel_repaint_with_children(struct panel *pnl)
  * 首先绘制panel本身的区域，可用背景色。
  * 然后再从列表中 依次取出每个元素，判断每个控件的具体类型，调用控件本身对应的callback 函数
  *
- * */  
+ * */
 
 si_t panel_default_widget_repaint(struct panel* pnl , union message * msg)
-{ 
+{
 	struct rectangle area;
+	NOT_USED(msg);
 
 	/*  绘制panel本身的区域 */
 	widget_absolute_area( WIDGET_POINTER( pnl ), &area );

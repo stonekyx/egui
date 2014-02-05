@@ -5,6 +5,7 @@
 #include "comm.h"
 #include "event.h"
 #include "log.h"
+#include "compiler.h"
 
 #define KEYBD_DEVICE_PATH "/dev/input/event2"
 #define MOUSE_DEVICE_PATH "/dev/input/event4"
@@ -12,6 +13,7 @@
 static void input_device_destructor(struct egui_uds* uds, addr_t arg)
 {
 	struct input_device* id_ptr = arg;
+    NOT_USED(uds);
 	if(0 != id_ptr->input_exit(id_ptr))
 	{
 		EGUI_PRINT_ERROR("failed to exit input device");
@@ -56,6 +58,7 @@ static si_t input_event_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	struct input_device* id_ptr = arg;
 	struct list msg_list;
+    NOT_USED(uds_ptr);
 
 	list_init(&msg_list);
 

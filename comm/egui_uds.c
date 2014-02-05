@@ -35,9 +35,11 @@
 # include <sys/un.h>
 # include <sys/socket.h>
 #include <signal.h>
+# include <errno.h>
 
 # include "egui_uds.h"
 # include "log.h"
+# include "compiler.h"
 
 si_t uds_init(struct egui_uds* uds, si_t sock_type, char* file_path, si_t peer_role)
 {
@@ -224,31 +226,55 @@ void uds_init_from_naked_socket(struct egui_uds* uds, si_t sockfd)
 	uds->peer_role = PEER_ROLE_LISTENER;
 }
 
-si_t uds_read(const struct egui_uds* uds, addr_t content, ui_t bytes)
+ssize_t uds_read(const struct egui_uds* uds, addr_t content, size_t bytes)
 {
-	si_t nread = read(uds->sock_fd, content, bytes);
-	if(nread < 0)
-	{
-		EGUI_PRINT_SYS_ERROR("Failed to read from egui unix domain socket: read()");
-		return -1;
-	}
-	return nread;
+	char *buffer = content;
+	ssize_t pos = 0;
+
+	do {
+		ssize_t rc;
+
+		rc = read(uds->sock_fd, buffer + pos, bytes - pos);
+		if (rc == -1) {
+			if (errno == EINTR || errno == EAGAIN)
+				continue;
+			EGUI_PRINT_SYS_ERROR("Failed to read from egui unix domain socket: read()");
+			return -1;
+		}
+		if (rc == 0) {
+			/* eof */
+			break;
+		}
+		pos += rc;
+	} while (bytes - pos > 0);
+	return pos;
 }
 
-si_t uds_write(const struct egui_uds* uds, const_addr_t content, ui_t bytes)
+ssize_t uds_write(const struct egui_uds* uds, const_addr_t content, size_t bytes)
 {
-	si_t nwrite = write(uds->sock_fd, content, bytes);
-	if(nwrite < 0)
-	{
-		EGUI_PRINT_SYS_ERROR("Failed to write from egui unix domain socket: write()");
-		return -1;
-	}
-	return nwrite;
+	const char *buffer = content;
+	int count_save = bytes;
+
+	do {
+		int rc;
+
+		rc = write(uds->sock_fd, buffer, bytes);
+		if (rc == -1) {
+			if (errno == EINTR || errno == EAGAIN)
+				continue;
+			EGUI_PRINT_SYS_ERROR("Failed to write from egui unix domain socket: write()");
+			return -1;
+		}
+		buffer += rc;
+		bytes -= rc;
+	} while (bytes > 0);
+	return count_save;
 }
 
 static si_t signal_pipe_recv = 0;
 static void sigpipe_handler(int signo)
 {
+    NOT_USED(signo);
 	signal_pipe_recv = 1;
 }
 

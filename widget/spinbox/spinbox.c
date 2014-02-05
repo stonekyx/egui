@@ -37,6 +37,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
+# include "compiler.h"
 
 # include "spinbox.h"
 # include "../button/button.h"
@@ -107,6 +108,7 @@ static si_t spinbox_init_with_default_style(struct spinbox * b)
 
 static si_t spinbox_default_widget_show(struct spinbox * b, union message * msg) 
 {
+    NOT_USED(msg);
     text_line_show(b->text_number);
     button_show(b->button_up);
     button_show(b->button_down);
@@ -115,6 +117,7 @@ static si_t spinbox_default_widget_show(struct spinbox * b, union message * msg)
 
 static si_t spinbox_default_widget_repaint(struct spinbox * b, union message * msg)
 {
+    NOT_USED(msg);
     text_line_repaint(b->text_number);
     button_repaint(b->button_up);
     button_repaint(b->button_down);

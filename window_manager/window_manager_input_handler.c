@@ -40,6 +40,7 @@
 # include "window_info_iterator.h"
 # include "log.h"
 # include "config.h"
+# include "compiler.h"
 
 /* 记录鼠标的左键是否按下 */
 static si_t title_bar_press = 0;
@@ -588,6 +589,7 @@ static si_t accumulate_widget_resize(union message * msg)
 {
 	struct rectangle* win_work_area = &global_wm.active_win_info_ptr->work_area;
 	struct rectangle* win_area = &global_wm.active_win_info_ptr->area;
+	NOT_USED(msg);
 
 	if(global_wm.active_app_info_ptr == NULL && global_wm.active_win_info_ptr == NULL)
 	{
@@ -752,6 +754,7 @@ si_t handle_widget_resize(union message * msg)
 si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	struct input_device* input_device_ptr = (struct input_device*)arg;
+	NOT_USED(uds_ptr);
 
 	if(0 != input_device_ptr->deal_with_input(input_device_ptr, &global_wm.message_list))
 	{
@@ -837,7 +840,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				{
 					global_wm.new_cursor.x = 0;
 				}
-				else if(global_wm.new_cursor.x >= global_screen.width)
+				else if(global_wm.new_cursor.x >= (si_t)global_screen.width)
 				{
 					global_wm.new_cursor.x = global_screen.width - 1;
 				}
@@ -857,7 +860,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 				{
 					global_wm.new_cursor.y = 0;
 				}
-				else if(global_wm.new_cursor.y >= global_screen.height)
+				else if(global_wm.new_cursor.y >= (si_t)global_screen.height)
 				{
 					global_wm.new_cursor.y = global_screen.height - 1;
 				}
@@ -880,6 +883,7 @@ si_t window_manager_input_handler(struct egui_uds* uds_ptr, addr_t arg)
 void window_manager_input_destructor(struct egui_uds* uds, addr_t arg)
 {
 	struct input_device* id_ptr = arg;
+	NOT_USED(uds);
 	if(0 != id_ptr->input_exit(id_ptr))
 	{
 		EGUI_PRINT_ERROR("failed to exit input device");

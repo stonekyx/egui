@@ -33,6 +33,7 @@
 # include <unistd.h>
 
 #include "application.h"
+#include "compiler.h"
 
 # include "my_widget.h"
 # include "directory_item.h"
@@ -63,6 +64,7 @@ static void mywidget_subscribe_scrollbar(struct widget* subscriber, struct widge
 {
     struct scroll_bar* s = SCROLL_BAR_POINTER(pulisher);
     int lines_per_page = s->area.height / s->line_height;
+    NOT_USED(subscriber);
 
     switch(event)
     {
@@ -83,7 +85,7 @@ static void mywidget_subscribe_scrollbar(struct widget* subscriber, struct widge
          * press down arow
          **/
     case SCROLL_BAR_EVENT_LINE_DOWN:
-        if(mw->start + mw->count < vector_size(&file_list))
+        if(mw->start + mw->count < (si_t)vector_size(&file_list))
         {
             ++ (mw->start);
 
@@ -107,7 +109,7 @@ static void mywidget_subscribe_scrollbar(struct widget* subscriber, struct widge
          * press spaces below elevator
          **/
     case SCROLL_BAR_EVENT_PAGE_DOWN:
-        if((mw->start += lines_per_page) > vector_size(&file_list) - mw->count)
+        if((mw->start += lines_per_page) > (si_t)vector_size(&file_list) - mw->count)
             mw->start = vector_size(&file_list) - mw->count;
         my_widget_repaint(mw);
         my_widget_show(mw);

@@ -172,7 +172,7 @@ hashmap_rehash
  const struct hashmap_pair *old[],
  ui_t old_size)
 {
-    int i;
+    ui_t i;
     q->data = calloc(new_size, sizeof(const struct hashmap_pair *));
     if(NULL == q->data) {
         q->data = old;
@@ -217,7 +217,7 @@ hashmap_insert
     if(NULL == q || NULL == data) {
         return -1;
     }
-    if(q->data_cnt >= (int)(q->data_size*q->grow_threshold)) {
+    if(q->data_cnt >= (ui_t)(q->data_size*q->grow_threshold)) {
         hashmap_grow(q);
     }
     hashval = (q->hash_func)(&data->key, q->prime);

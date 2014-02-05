@@ -53,8 +53,6 @@ screen_get_raw_video(struct screen *s)
 void
 screen_get_pixel_raw_nocheck
 (void * video,
- si_t width,
- si_t height,
  si_t depth,
  struct color *c,
  si_t x,
@@ -108,7 +106,7 @@ screen_get_pixel_raw
         return -1;
     }
 
-    screen_get_pixel_raw_nocheck(video, width, height, depth, c, x, y);
+    screen_get_pixel_raw_nocheck(video, depth, c, x, y);
 
     return 0;
 }
@@ -125,8 +123,7 @@ screen_get_pixel_nocheck
         return -1;
     }
     screen_get_pixel_raw_nocheck(video,
-            s->width, s->height, s->color_depth,
-            c, x, y);
+            s->color_depth, c, x, y);
     return 0;
 }
 

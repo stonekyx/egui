@@ -6,5 +6,6 @@ nobase_pkginclude_HEADERS += %D%/application.h %D%/base_type.h\
 							 %D%/client_lib.h %D%/color.h %D%/comm.h\
 							 %D%/config_parser.h %D%/data_structures.h\
 							 %D%/event.h %D%/geometry.h %D%/graph.h\
-							 %D%/log.h %D%/server_lib.h %D%/widget.h
+							 %D%/log.h %D%/server_lib.h %D%/widget.h\
+							 %D%/compiler.h
 

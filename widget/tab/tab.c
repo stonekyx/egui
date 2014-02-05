@@ -145,12 +145,20 @@ void tab_set_bounds(struct tab * b, si_t x, si_t y, si_t width , si_t height)
     widget_set_bounds(WIDGET_POINTER(b), x, y, width, height);
 }
 
+/* Set color for all pages */
 void tab_set_color(struct tab* b, struct color* fcolor, struct color* bcolor)
 {
+    struct list_node *pos;
+    list_for_each_macro(&b->header->units, pos) {
+        panel_set_color(
+                PANEL_POINTER(((struct tab_header_unit*)pos->data)->page),
+                fcolor, bcolor);
+    }
 }
 
 void tab_set_font(struct tab* b, si_t font)
 {
+    tab_header_set_font(b->header, font);
 }
 
 void tab_add_page(struct tab *t, struct tab_page *tp)
@@ -160,4 +168,12 @@ void tab_add_page(struct tab *t, struct tab_page *tp)
 
 si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
 {
+    struct list_node *pos;
+    list_for_each_macro(&t->header->units, pos) {
+        if(((struct tab_header_unit*)pos->data)->page == new_focus) {
+            tab_header_set_focus(t->header, pos->data);
+            return 0;
+        }
+    }
+    return -1;
 }

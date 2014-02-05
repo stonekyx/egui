@@ -42,7 +42,7 @@ static struct point p[5];
 
 static si_t debug_draw()
 {
-    si_t i;
+    ui_t i;
 
     /* 设置颜色 黄色 */
     gd.color.r = cl.r_limit;

@@ -203,7 +203,7 @@ static si_t config_exit()
  **/
 static si_t comm_init(char* server_path)
 {
-	int i = 0;
+	ui_t i = 0;
 	/**
 	 * 初始化窗口管理器的通信句柄 用来接受用户应用程序的连接请求
 	 **/

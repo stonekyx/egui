@@ -6,6 +6,7 @@
 #include <log.h>
 
 #include "config_parser.h"
+#include "compiler.h"
 
 #define TMP_ARRAY_LENTH 1024
 #define DILIMETER '='
@@ -395,6 +396,7 @@ si_t config_parser_set_str(struct config_parser * parser, const char * key, cons
 static si_t item_exit(void * data0, void * data1)
 {
     struct config_item *item = (struct config_item *)data0;
+    NOT_USED(data1);
 
     free(item->key);
     free(item->value);

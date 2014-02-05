@@ -30,6 +30,7 @@
 #include "log.h"
 #include <signal.h>
 #include <color.h>
+#include "compiler.h"
 #include "window_manager.h"
 
 int main(int argc, char* argv[])
@@ -40,6 +41,8 @@ int main(int argc, char* argv[])
 	/**
 	 * TODO 命令行参数
 	 **/
+	NOT_USED(argc);
+	NOT_USED(argv);
 #if 0 /** commented by padme 2012-05-12 {{{ **/
 	if(SIG_ERR == signal(SIGCHLD,SIG_IGN))
 	{

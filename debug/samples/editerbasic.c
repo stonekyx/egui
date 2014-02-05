@@ -9,6 +9,7 @@
 #include "application.h"
 #include "client_lib.h"
 #include "log.h"
+#include "compiler.h"
 
 #define LABEL_MAX 128
 #define FILE_MAX  4096
@@ -84,6 +85,7 @@ void text_line_subscribe_scrollbar(struct widget* subscriber, struct widget* pul
 void scrollbar_subscribe_text_line(struct widget* subscriber, struct widget* pulisher, si_t event)
 {
     struct scroll_bar* s = SCROLL_BAR_POINTER(subscriber);
+    NOT_USED(pulisher);
 
     switch(event)
     {

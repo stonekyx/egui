@@ -35,6 +35,7 @@
 # include <log.h>
 # include <comm.h>
 # include <client_lib.h>
+# include "compiler.h"
 
 # include "dialog.h"
 # include "../window/paint_window_decoration.h"
@@ -137,6 +138,7 @@ dialog_default_widget_show
 (struct dialog * d,
  union message * msg)
 {
+    NOT_USED(msg);
     /* 设置区域 */
     set_area
     (d->gd,

@@ -40,6 +40,7 @@
 
 #include "widget.h"
 #include "client_lib.h"
+#include "compiler.h"
 
 #define DESKTOP_PATH  "/mnt/hgfs/gui/cece/c_egui_desktop/"
 
@@ -52,6 +53,7 @@ my_widget_default_widget_show
  union message * msg)
 {
     struct rectangle area;
+    NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(mw), &area);
 
@@ -77,6 +79,7 @@ my_widget_default_widget_repaint
     struct directory_item * di_ptr;
     struct rectangle area;
     si_t x, y, font_height, i, n, x1, y1, temp;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(mw), &x, &y);
@@ -153,7 +156,7 @@ my_widget_default_widget_repaint
     y1 = y + mw->border_size;
 
     /* 目录项的数目大于能显示的数目 */
-    if(vector_size(&file_list) > mw->count)
+    if((si_t)vector_size(&file_list) > mw->count)
     {
         /* 目录项开始的索引 */
         temp = mw->start;
@@ -196,6 +199,8 @@ my_widget_default_mouse_press
 (struct my_widget * mw,
  union message * msg)
 {
+    NOT_USED(mw);
+    NOT_USED(msg);
     return 0;
 }
 
@@ -204,6 +209,8 @@ my_widget_default_mouse_release
 (struct my_widget * mw,
  union message * msg)
 {
+    NOT_USED(mw);
+    NOT_USED(msg);
     return 0;
 }
 
@@ -229,7 +236,7 @@ my_widget_default_mouse_single_click
         y1 = msg->mouse.cursor_position.y - area.y;
 
         index = y1 / 24;
-        if(index >= vector_size(&file_list))
+        if(index >= (si_t)vector_size(&file_list))
             return 0;
 
         di_ptr = vector_at(&file_list, index + mw->start);

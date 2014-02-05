@@ -37,6 +37,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
+# include "compiler.h"
 
 # include "image_view.h"
 
@@ -103,6 +104,7 @@ static si_t image_view_init_with_default_style(struct image_view * iv)
 static si_t image_view_default_widget_show(struct image_view * i, union message * msg)
 {
     struct rectangle area;
+    NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(i), &area);
 
@@ -119,6 +121,7 @@ static si_t image_view_default_widget_repaint(struct image_view * i, union messa
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(i), &x, &y);

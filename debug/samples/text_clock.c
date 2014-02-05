@@ -8,6 +8,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include <widget.h>
+#include "compiler.h"
 
 struct termios old_term;
 
@@ -31,6 +32,9 @@ void event_handler(struct widget *sub, struct widget *pub, si_t event)
 {
     static char buf[100];
     struct timespec spec;
+    NOT_USED(sub);
+    NOT_USED(event);
+
     clock_gettime(CLOCK_REALTIME, &spec);
 
     printf("\033[%dD", strlen(buf));

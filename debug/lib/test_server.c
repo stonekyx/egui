@@ -2,6 +2,7 @@
 # include "server_lib.h"
 # include "graph.h"
 # include "log.h"
+# include "compiler.h"
 
 #define SERVER_PATH "/tmp/test_server_sock"
 #define FB_DEV_FILE_PATH "/dev/fb0"
@@ -9,6 +10,7 @@
 si_t fake_graphics_device_init_handler(addr_t arg, si_t gd)
 {
 	struct graphics_device* gd_ptr = (struct graphics_device*)gd;
+	NOT_USED(arg);
 
     memcpy(&(gd_ptr->screen), &global_screen, sizeof(struct screen));
 	gd_ptr->screen.video_access_mode = VIDEO_ACCESS_MODE_DIRECT;
@@ -21,12 +23,14 @@ si_t fake_graphics_device_init_handler(addr_t arg, si_t gd)
 
 si_t fake_graphics_device_exit_handler(addr_t arg, si_t gd)
 {
+	NOT_USED(arg);
 	EGUI_PRINT_INFO("fake_graphics_device_exit_handler() is called! gd = %d", (int)gd);
 	return 0;
 }
 
 si_t fake_maximize_window_handler(addr_t arg, si_t fd, struct rectangle* area)
 {
+	NOT_USED(arg);
 	EGUI_PRINT_INFO("maximize_window_handler() is called! fd = %d!", (int)fd);
 	area->x = fd + 1;
 	area->y = fd + 2;
@@ -37,12 +41,14 @@ si_t fake_maximize_window_handler(addr_t arg, si_t fd, struct rectangle* area)
 
 si_t fake_window_manager_exit_handler(addr_t arg)
 {
+	NOT_USED(arg);
 	EGUI_PRINT_INFO("fake_window_manager_exit_handler() is called!");
 	return 0;
 }
 
 si_t fake_update_handler(addr_t arg, si_t gd)
 {
+	NOT_USED(arg);
 	engine_update(gd);
 	EGUI_PRINT_INFO("fake_update_handler() is called!");
 	return 0;
@@ -51,6 +57,7 @@ si_t fake_update_handler(addr_t arg, si_t gd)
 si_t server_accept_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	struct egui_uds client_uds = {0};
+	NOT_USED(arg);
 	if(0 != accept_as_uds(uds_ptr, &client_uds))
 	{
 		EGUI_PRINT_ERROR("failed to accept client uds");

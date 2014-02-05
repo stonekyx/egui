@@ -7,6 +7,7 @@
 
 #include "comm.h"
 #include "log.h"
+#include "compiler.h"
 
 #define SERVER_PATH "/tmp/test_server_sock"
 const char* help_str = "usage:\n1. draw_line x1 y1 x2 y2\n2. register_window parent_descripter window_title\n3. window_manager_exit";
@@ -97,6 +98,7 @@ si_t command_handler(struct egui_uds* uds_ptr, addr_t arg)
 	const char draw_line_command[] = "draw_line";
 	const char register_window_command[] = "register_window";
 	const char window_manager_exit_command[] = "window_manager_exit";
+	NOT_USED(uds_ptr);
 
 	EGUI_PRINT_INFO("callback command_handler() is called");
 
@@ -150,6 +152,7 @@ si_t command_handler(struct egui_uds* uds_ptr, addr_t arg)
 si_t server_message_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	union message msg;
+	NOT_USED(arg);
 
 	EGUI_PRINT_INFO("callback server_message_handler() is called");
 

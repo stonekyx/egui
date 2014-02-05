@@ -39,6 +39,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
+# include "compiler.h"
 
 # include "icon.h"
 
@@ -71,7 +72,7 @@ void *icon_init(si_t id)
 	addr->text_field.y = 0;
 	addr->text_field.width = 0;
 	addr->text_field.height = 0;
-	
+
 	addr->is_text_visiable = 0;
 	memset(addr->img_path , 0 ,sizeof(char)*255);
 	memset(addr->text , 0, sizeof(char)*255);
@@ -86,8 +87,8 @@ void *icon_init(si_t id)
  *
  */
 si_t   icon_update_all_areas ( struct icon * ic )
-{	 
-  	struct rectangle area;		
+{
+	struct rectangle area;
 	/* 总字数 ， 单字宽度，单字高度，每行字数 ,总行数,最后一行的字数 */
 	si_t char_total_num ;
 	si_t font_height;
@@ -106,7 +107,7 @@ si_t   icon_update_all_areas ( struct icon * ic )
 		font_width  = get_font_width( ic->gd ) ;
 		maxlen = area.width * 2 / font_width;
 
-		text_line_num = char_total_num / maxlen + 1; 
+		text_line_num = char_total_num / maxlen + 1;
 		if( font_height  > ic->area.height || font_width  >ic->area.width)
 		{
             EGUI_PRINT_ERROR("font for desktop icon is too large");
@@ -118,16 +119,16 @@ si_t   icon_update_all_areas ( struct icon * ic )
 		ic->text_field.y = area.y + area.height - ( text_line_num * font_height );
 		ic->text_field.width = area.width;
 		ic->text_field.height = text_line_num * font_height ;
-	
-		ic->img_field.x = area.x + area.width/4 ; 
+
+		ic->img_field.x = area.x + area.width/4 ;
 		ic->img_field.y = area.y  ;
 		ic->img_field.width = area.width/2 ;
 		ic->img_field.height = area.height - ic->text_field.height;
-		
+
 	}
 	else
 	{
-		ic->img_field.x = area.x ; 
+		ic->img_field.x = area.x ;
 		ic->img_field.y = area.y ;
 		ic->img_field.width = area.width ;
 		ic->img_field.height = area.height ;
@@ -143,7 +144,7 @@ si_t   icon_update_all_areas ( struct icon * ic )
 si_t file_exist(char * file_path)
 {
 	si_t fd;
-	
+
 	if( ( file_path != NULL ) && ( fd = open(file_path , O_RDONLY) )== -1 )
 	{
 		return 0;
@@ -162,11 +163,11 @@ si_t icon_draw_img(struct icon *ic)
 	set_area(ic->gd, ic->img_field.x , ic->img_field.y, ic->img_field.width  , ic->img_field.height );
 
 	fill_rectangle(ic->gd, ic->img_field.x , ic->img_field.y, ic->img_field.width  , ic->img_field.height );
-	
+
 	set_color(ic->gd, ic->back_color.r, ic->back_color.g, ic->back_color.b, ic->back_color.a);
 
 	if(file_exist(ic->img_path))
-	{	
+	{
 		draw_img(ic->gd, ic->img_path, ALIGN_HORIZONTAL_TYPE_CENTER | ALIGN_VERTICAL_TYPE_CENTER );
 	}
 
@@ -175,17 +176,17 @@ si_t icon_draw_img(struct icon *ic)
 
 si_t icon_show_text(struct icon * ic)
 {
-  	 
+
 	/* 总字数 ， 单字宽度，单字高度，每行字数 ,总行数,最后一行的字数 */
 	si_t char_total_num ;
-	si_t font_width;      
-	si_t font_height; 	  	
+	si_t font_width;
+	si_t font_height;
 	si_t maxlen;
 	si_t text_line_num;
 	si_t last_line_text_num;
 
 	si_t i = 0;
-	
+
 
 	char_total_num = strlen( ic->text );
 
@@ -198,7 +199,7 @@ si_t icon_show_text(struct icon * ic)
 	last_line_text_num = char_total_num % maxlen ;
 
 	text_line_num = char_total_num / maxlen + 1;
-  
+
 	set_color(ic->gd, ic->fore_color.r, ic->fore_color.g, ic->fore_color.b, ic->fore_color.a);
 
 	/* 设置区域 , 文字区域*/
@@ -213,14 +214,14 @@ si_t icon_show_text(struct icon * ic)
 		show_text(ic->gd, ic->text_field.x, ic->text_field.y + i * font_height  , ic->text + i*maxlen ,maxlen);
 	}
 
-	show_text(  ic->gd, 
+	show_text(  ic->gd,
 			    ic->text_field.x + ( ic->text_field.width  - last_line_text_num * font_width ) / 2,
-			    ic->text_field.y + i * font_height  , 
+			    ic->text_field.y + i * font_height  ,
 			    ic->text + i * maxlen ,
 			    last_line_text_num
 			 );
 	return 0;
-	
+
 }
 
 
@@ -272,7 +273,7 @@ si_t icon_get_is_text_visiable(struct icon *ic)
 
 si_t icon_default_callback(void* self , void* msg )
 {
-	
+
     struct icon* ic = self;
     union message * m = msg;
 
@@ -323,10 +324,11 @@ si_t icon_repaint(struct icon * ic)
 
 
 si_t icon_default_widget_repaint(struct icon* ic , union message * msg)
-{  
+{
+	NOT_USED(msg);
 	icon_update_all_areas( ic );
 
-	icon_draw_img( ic );	
+	icon_draw_img( ic );
 
 	if(icon_get_is_text_visiable(ic) == 1)
 	{
@@ -356,7 +358,8 @@ si_t icon_show(struct icon * ic)
 si_t icon_default_widget_show(struct icon* ic , union message * msg)
 {
 	struct rectangle area;
-    
+	NOT_USED(msg);
+
     widget_absolute_area(WIDGET_POINTER(ic), &area);
 	set_area( ic->gd, area.x, area.y, area.width, area.height );
 	update( ic->gd );
@@ -372,12 +375,13 @@ si_t icon_default_widget_show(struct icon* ic , union message * msg)
 si_t icon_default_mouse_press(struct icon* ic , union message * msg)
 {
 	struct rectangle area;
-     
+	NOT_USED(msg);
+
     widget_absolute_area(WIDGET_POINTER(ic), &area);
 
     /* 设置区域 */
     set_area(ic->gd, area.x, area.y, area.width, area.height);
-	  
+
 	/* 上边框 */
     set_color(ic->gd, 0, 0, 0, 0);
 
@@ -393,27 +397,28 @@ si_t icon_default_mouse_press(struct icon* ic , union message * msg)
     draw_line(ic->gd, area.x, area.y + area.height - 1, area.x + area.width - 1, area.y + area.height - 1);
 
     return 0;
-	
+
 }
 
- 
+
 /* 图标被按下后，应该能够显示四周边框,Color:black，其他的特效，待完成。
  * 因此，需要将画笔的颜色设置为黑色
  *
  **/
 si_t icon_default_mouse_release(struct icon* ic , union message * msg)
 {
- 	struct rectangle area;   
+	struct rectangle area;
+	NOT_USED(msg);
 
 	widget_absolute_area(WIDGET_POINTER(ic), &area);
 
     /* 设置区域 */
     set_area(ic->gd, area.x, area.y, area.width, area.height);
-	  
+
 	/* 上边框 */
     /* FIXME: should not be hard code */
     set_color(ic->gd, 255, 255, 255, 0);
-  	
+
 	draw_line( ic->gd, area.x, area.y, area.x + area.width - 1, area.y );
 
 	/* 左边框 */

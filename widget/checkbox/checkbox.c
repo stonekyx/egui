@@ -37,6 +37,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include <graph.h>
+# include "compiler.h"
 
 # include "checkbox.h"
 
@@ -102,6 +103,7 @@ static si_t checkbox_init_with_default_style(struct checkbox * b)
 static si_t checkbox_default_widget_show(struct checkbox * b, union message * msg) 
 {
     struct rectangle area;
+    NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(b), &area);
 
@@ -140,6 +142,7 @@ static si_t checkbox_default_widget_repaint(struct checkbox *c, union message *m
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(c), &x, &y);

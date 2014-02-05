@@ -38,6 +38,7 @@
 # include <log.h>
 # include <comm.h>
 # include <client_lib.h>
+# include "compiler.h"
 
 # include "button.h"
 
@@ -117,9 +118,10 @@ static si_t button_init_with_default_style(struct button * b)
     return res;
 }
 
-static si_t button_default_widget_show(struct button * b, union message * msg) 
+static si_t button_default_widget_show(struct button * b, union message * msg)
 {
     struct rectangle area;
+    NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(b), &area);
 
@@ -173,6 +175,7 @@ static si_t button_default_widget_repaint(struct button * b, union message * msg
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);
@@ -190,6 +193,7 @@ static si_t button_default_mouse_press(struct button * b, union message * msg)
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);
@@ -207,6 +211,7 @@ static si_t button_default_mouse_release(struct button * b, union message * msg)
 {
     struct rectangle area;
     si_t x, y;
+    NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(b), &x, &y);

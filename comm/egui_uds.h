@@ -120,7 +120,7 @@ extern void uds_init_from_naked_socket(struct egui_uds* uds, si_t sockfd);
  *
  * @return 成功返回读取字数，失败返回-1。
  **/
-extern si_t uds_read(const struct egui_uds* uds, addr_t content, ui_t bytes);
+extern ssize_t uds_read(const struct egui_uds* uds, addr_t content, size_t bytes);
 
 /** 
  * 对系统函数write()的封装 
@@ -131,7 +131,7 @@ extern si_t uds_read(const struct egui_uds* uds, addr_t content, ui_t bytes);
  *
  * @return 成功返回写入字数，失败返回-1。
  **/
-extern si_t uds_write(const struct egui_uds* uds, const_addr_t content, ui_t bytes);	
+extern ssize_t uds_write(const struct egui_uds* uds, const_addr_t content, size_t bytes);
 
 /**
  * 判断对方socket是否已关闭

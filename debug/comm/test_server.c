@@ -8,6 +8,7 @@
  **/
 #include "comm.h"
 #include "log.h"
+#include "compiler.h"
 
 #define SERVER_PATH "/tmp/test_server_sock"
 
@@ -21,6 +22,7 @@ static si_t EXIT_NUMBER = 255;
  **/
 void uds_destructor(struct egui_uds* uds, addr_t arg)
 {
+	NOT_USED(arg);
 	uds_exit(uds);
 }
 
@@ -96,6 +98,7 @@ si_t client_request_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
 	struct queue message_queue;
 	si_t ret = 0;
+	NOT_USED(arg);
 
 	EGUI_PRINT_INFO("callback client_request_handler() is called");
 

@@ -49,8 +49,6 @@ screen_get_raw_video(struct screen *s)
 void
 screen_set_pixel_raw_r_nocheck
 (void *video,
- si_t width,
- si_t height,
  si_t depth,
  struct color *c,
  si_t x,
@@ -115,7 +113,7 @@ screen_set_pixel_raw_r_nocheck
         if(depth >= 32 && c->a > 0) {
             /* if alpha channel is available, try alpha blending. */
             static struct color old;
-            screen_get_pixel_raw_nocheck(video, width, height, depth, &old, x, y);
+            screen_get_pixel_raw_nocheck(video, depth, &old, x, y);
             c = alpha_blend(c, &old);
         }
         /* 获得颜色的值 */
@@ -203,7 +201,7 @@ screen_set_pixel_raw_r
     }
 
     screen_set_pixel_raw_r_nocheck(video,
-            width, height, depth, c, x, y, dst);
+            depth, c, x, y, dst);
 
     return 0;
 }
@@ -211,15 +209,13 @@ screen_set_pixel_raw_r
 void
 screen_set_pixel_raw_nocheck
 (void *video,
- si_t width,
- si_t height,
  si_t depth,
  struct color *c,
  si_t x,
  si_t y)
 {
     screen_set_pixel_raw_r_nocheck(video,
-            width, height, depth, c, x, y, video);
+            depth, c, x, y, video);
 }
 
 si_t
@@ -272,7 +268,7 @@ screen_set_pixel_nocheck
         return -1;
     }
     screen_set_pixel_raw_r_nocheck(video,
-            s->width, s->height, s->color_depth, c, x, y, video);
+            s->color_depth, c, x, y, video);
     return 0;
 }
 

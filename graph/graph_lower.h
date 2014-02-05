@@ -47,12 +47,12 @@ struct screen
     /**
      * 水平尺寸
     **/
-    si_t width;
+    ui_t width;
 
     /**
      * 竖直尺寸
     **/
-    si_t height;
+    ui_t height;
 
     /**
      * 视频访问模式
@@ -292,12 +292,12 @@ extern si_t screen_set_pixel_r(struct screen * s, struct rectangle * a, struct c
 **/
 extern si_t screen_set_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
 /* Don't check for working area. */
-extern void screen_set_pixel_raw_nocheck(void *video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y);
+extern void screen_set_pixel_raw_nocheck(void *video, si_t depth, struct color *c, si_t x, si_t y);
 
 /* 功能跟上面一样，但是把像素输出到给定的dst */
 extern si_t screen_set_pixel_raw_r(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y, void *dst);
 /* Don't check for working area */
-extern void screen_set_pixel_raw_r_nocheck(void *video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y, void *dst);
+extern void screen_set_pixel_raw_r_nocheck(void *video, si_t depth, struct color *c, si_t x, si_t y, void *dst);
 
 /**
  * 获得屏幕上的某一点
@@ -334,7 +334,7 @@ extern si_t screen_get_pixel_nocheck(struct screen *s, struct color *c, si_t x, 
 **/
 extern si_t screen_get_pixel_raw(void * video, si_t width, si_t height, si_t depth, struct rectangle * a, struct color * c, si_t x, si_t y);
 /* Don't check for area */
-extern void screen_get_pixel_raw_nocheck(void * video, si_t width, si_t height, si_t depth, struct color *c, si_t x, si_t y);
+extern void screen_get_pixel_raw_nocheck(void * video, si_t depth, struct color *c, si_t x, si_t y);
 
 /**
  * FIXME: Alpha blending is not implemented.

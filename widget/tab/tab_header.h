@@ -41,4 +41,8 @@ void tab_header_set_focus(
         struct tab_header *self,
         struct tab_header_unit *new_focus);
 
+void tab_header_set_font(
+        struct tab_header *self,
+        si_t font);
+
 #endif

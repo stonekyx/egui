@@ -32,6 +32,7 @@
 # include <string.h>
 # include "graph.h"
 # include "log.h"
+# include "compiler.h"
 
 static struct event_listener* server_lib_event_listener_ptr = NULL;
 
@@ -440,6 +441,8 @@ static si_t _server_lib_handle_graphics_ops(addr_t body, si_t detail_type, union
 	si_t func_ret = 0;
 	/** 存储_server_lib_handle_request()返回值的变量 **/
 	si_t handler_ret = SELECTER_RETURN_TYPE_CONTINUE;
+
+	NOT_USED(app_addr);
 	switch(detail_type)
 	{
 	case REQUEST_TYPE_CLEAR:
@@ -585,6 +588,7 @@ static si_t _server_lib_handle_graphics_ops(addr_t body, si_t detail_type, union
 
 static void _server_lib_exit_handler(struct egui_uds* uds_ptr, addr_t app_addr)
 {
+	NOT_USED(uds_ptr);
 	if(NULL != client_exit_handler)
 	{
 		client_exit_handler(app_addr);

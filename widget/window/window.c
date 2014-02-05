@@ -35,6 +35,7 @@
 # include <log.h>
 # include <comm.h>
 # include <client_lib.h>
+# include "compiler.h"
 
 # include "window.h"
 # include "paint_window_decoration.h"
@@ -183,6 +184,7 @@ static si_t window_init_with_default_style(struct window * w)
 
 static si_t window_default_widget_show(struct window * w, union message * msg)
 {
+    NOT_USED(msg);
     /* 设置区域 */
     set_area
     (w->gd,
@@ -281,6 +283,7 @@ static si_t window_default_widget_resize(struct window * w, union message * msg)
 
 static si_t window_default_window_minimize(struct window * w, union message * msg)
 {
+    NOT_USED(msg);
     if(w->minimize_enable == 0)
     {
         return 0;
@@ -318,6 +321,7 @@ static si_t window_default_window_minimize(struct window * w, union message * ms
 
 static si_t window_default_window_maximize(struct window * w, union message * msg)
 {
+    NOT_USED(msg);
     if(w->maximize_enable == 0)
     {
         return 0;
@@ -347,6 +351,7 @@ static si_t window_default_window_maximize(struct window * w, union message * ms
 
 static si_t window_default_window_restore(struct window * w, union message * msg)
 {
+    NOT_USED(msg);
     /**************************************************************
      * status?                          restore?    next status?
      * WINDOW_STATUS_MAXIMIZED          yes         WINDOW_STATUS_NORMAL
@@ -422,6 +427,7 @@ static si_t window_default_window_activate(struct window * w, union message * ms
 
 static si_t window_default_window_deactivate(struct window * w, union message * msg)
 {
+    NOT_USED(msg);
     /**************************************************************
      * status:                              paint?
      * WINDOW_STATUS_MAXIMIZED              yes

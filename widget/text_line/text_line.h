@@ -77,7 +77,7 @@
     /**
      * numbers of characters that could be hold in a line
      **/ \
-    si_t chars_per_line; \
+    ui_t chars_per_line; \
     \
     /**
      * inner frame color

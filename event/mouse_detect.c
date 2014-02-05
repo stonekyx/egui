@@ -12,6 +12,7 @@
 
 #include "event.h"
 #include "config.h"
+#include "compiler.h"
 
 #define DEV_PATH "/dev/input"
 
@@ -41,6 +42,7 @@ static void simp_screen_init(const char *path)
 static si_t input_handler(struct egui_uds *uds, addr_t arg)
 {
     size_t id = (size_t) arg;
+    NOT_USED(uds);
     if (0 != mice[id].deal_with_input(mice + id, message_lists + id)) {
         return SELECTER_RETURN_TYPE_CONTINUE;
     }
@@ -93,6 +95,7 @@ static si_t input_handler(struct egui_uds *uds, addr_t arg)
 static void input_destructor(struct egui_uds *uds, addr_t arg)
 {
     size_t id = (size_t) arg;
+    NOT_USED(uds);
     mice[id].input_exit(mice + id);
 }
 

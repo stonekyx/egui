@@ -34,6 +34,7 @@
 #include "cursor.h"
 #include "flush_in_z_order.h"
 #include "log.h"
+#include "compiler.h"
 
 #include <stdlib.h>
 /**
@@ -78,6 +79,7 @@ static si_t register_application_handler(addr_t app_ptr, si_t video_access_mode,
  **/
 static si_t _do_update_last_window(struct window_info_iterator* iter, addr_t arg)
 {
+	NOT_USED(arg);
 	if(iter->win_info_ptr->area.x >= 0)
 	{
 		global_wm.active_app_info_ptr = iter->app_info_ptr;
@@ -620,6 +622,7 @@ static si_t minimize_window_handler(addr_t app_ptr, si_t window_descripter)
 {
 	struct window_info* win_info_ptr = (struct window_info*)window_descripter;
 	struct rectangle old_area = win_info_ptr->area;
+	NOT_USED(app_ptr);
 
 	/** 设置window_info的区域为一个不可能的区域 **/
 	window_info_resize(win_info_ptr, -1, -1, 0, 0);

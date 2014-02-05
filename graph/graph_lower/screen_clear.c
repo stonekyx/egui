@@ -76,7 +76,7 @@ screen_clear
         const ui_t width_byte = s->width * (s->color_depth<<3);
         for(i=0; i<s->height; i++) {
             register byte_t *taddr = addr;
-            while(taddr-addr < width_byte) {
+            while(taddr < addr+width_byte) {
                 memcpy(taddr, &color, pixel);
                 taddr += pixel;
             }

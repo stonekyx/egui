@@ -40,6 +40,7 @@
 # include "log.h"
 
 # include "config.h"
+# include "compiler.h"
 
 #ifdef USE_FBTOOLS
 # include "fbtools.h"
@@ -55,9 +56,10 @@ si_t framebuffer_fd;
 
 si_t screen_init(const char* path)
 {
-    si_t fb_fd, i;
+    si_t fb_fd;
 
 #ifdef USE_FBTOOLS
+    NOT_USED(path);
     fb_fd = fb_init(NULL, NULL, 0);
     fb_catch_exit_signals();
     fb_switch_init();
@@ -159,6 +161,8 @@ si_t screen_init(const char* path)
     (global_fix_screen_info.visual == FB_VISUAL_PSEUDOCOLOR ||
      global_fix_screen_info.visual == FB_VISUAL_DIRECTCOLOR)
     {
+        ui_t i;
+
         global_cmap.start = 0;
         global_cmap.len = 1 << global_var_screen_info.bits_per_pixel;
 

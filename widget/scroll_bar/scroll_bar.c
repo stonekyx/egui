@@ -34,6 +34,7 @@
 #include "config_parser.h"
 #include "log.h"
 #include "client_lib.h"
+#include "compiler.h"
 
 #include "scroll_bar.h"
 
@@ -142,6 +143,7 @@ static si_t scroll_bar_init_with_default_style(struct scroll_bar * sb)
 static si_t scroll_bar_default_widget_show(struct scroll_bar* s, union message* msg)
 {
 	struct rectangle area;
+	NOT_USED(msg);
 
 	widget_absolute_area(WIDGET_POINTER(s), &area);
 
@@ -159,6 +161,7 @@ static si_t scroll_bar_default_widget_repaint(struct scroll_bar* s, union messag
 	struct rectangle area;
 	struct rectangle elevator_area;
 	si_t x, y;
+	NOT_USED(msg);
 
 	/* 获得左上角的绝对坐标 */
 	widget_absolute_coordinate(WIDGET_POINTER(s), &x, &y);

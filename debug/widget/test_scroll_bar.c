@@ -7,12 +7,13 @@
 # include "application.h"
 # include "widget.h"
 # include "client_lib.h"
-
+# include "compiler.h"
 
 static void label_handler(struct widget* subscriber, struct widget* publisher, si_t event)
 {
     struct scroll_bar* s = (struct scroll_bar*)publisher;
     struct label* l = (struct label*)subscriber;
+    NOT_USED(event);
     sprintf(l->text, "e:%3ld, %3ld, s:%3ld, %3ld",  s->elevator_offset, s->elevator_height, s->total_len, s->cur_offset);
     label_repaint(l);
     label_show(l);

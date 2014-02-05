@@ -138,7 +138,7 @@ void print_palette(struct color *pale, int bits)
 	int i;
 	for (i = 0; i < bits; i++)
 	{
-/*		printf ("%0x\t%0x %0x %0x %0x\n", i, pale[i].r, pale[i].g, pale[i].b);	*/
+		printf ("%0x\t%0lx %0lx %0lx %0lx\n", i, pale[i].r, pale[i].g, pale[i].b, pale[i].a);
 	}
 }
 

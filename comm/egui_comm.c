@@ -40,8 +40,8 @@
  * send packet head & packet body
  **/
 static si_t comm_send_head_and_body(const struct egui_uds* uds_ptr, si_t packet_type, si_t detail_type,
-        const_addr_t body,  ui_t body_size,
-        const_addr_t extra, ui_t extra_size)
+        const_addr_t body,  size_t body_size,
+        const_addr_t extra, size_t extra_size)
 {
 	struct packet_head   head;
 	head.packet_type = packet_type;
@@ -49,13 +49,13 @@ static si_t comm_send_head_and_body(const struct egui_uds* uds_ptr, si_t packet_
 	head.size = body_size + extra_size;
 
 	/* 发送头部 */
-	if(sizeof(struct packet_head) != uds_write(uds_ptr, &head, sizeof(struct packet_head)))
+	if(-1 == uds_write(uds_ptr, &head, sizeof(struct packet_head)))
 	{
 		EGUI_PRINT_ERROR("failed to write packet head");
 		return -1;
 	}
 	/* 发送负载 */
-	if(body_size != uds_write(uds_ptr, body, body_size))
+	if(-1 == uds_write(uds_ptr, body, body_size))
 	{
 		EGUI_PRINT_ERROR("failed to write packet body");
 		return -1;
@@ -63,7 +63,7 @@ static si_t comm_send_head_and_body(const struct egui_uds* uds_ptr, si_t packet_
 	/** 发送附加信息 **/
 	if(extra_size != 0)
 	{
-		if(extra_size != uds_write(uds_ptr, extra, extra_size))
+		if(-1 == uds_write(uds_ptr, extra, extra_size))
 		{
 			EGUI_PRINT_ERROR("failed to write extra msg");
 			return -1;
@@ -119,12 +119,12 @@ extern si_t comm_send_message(const struct egui_uds* uds_ptr, const union messag
 /**
  * recv packet head, return packet_type, detail_type, size
  **/
-static si_t comm_recv_head(struct egui_uds* uds_ptr, si_t* detail_type, si_t* size)
+static si_t comm_recv_head(struct egui_uds* uds_ptr, si_t* detail_type, ui_t* size)
 {
 	struct packet_head head;
 
 	/* 接受头部 */
-	if(sizeof(struct packet_head) != uds_read(uds_ptr, &head, sizeof(struct packet_head)))
+	if(-1 == uds_read(uds_ptr, &head, sizeof(struct packet_head)))
 	{
 		EGUI_PRINT_ERROR("failed to read packet head");
 		return -1;
@@ -140,7 +140,8 @@ static si_t comm_recv_head(struct egui_uds* uds_ptr, si_t* detail_type, si_t* si
 extern si_t comm_recv_request_and_send_respond(struct egui_uds* uds_ptr, addr_t arg,
 	si_t(* callback)(addr_t, si_t, union respond*, addr_t))
 {
-	si_t detail_type = 0, body_size = 0;
+	si_t detail_type = 0;
+	ui_t body_size = 0;
 	si_t packet_type = comm_recv_head(uds_ptr, &detail_type, &body_size);
 	if(PACKET_TYPE_REQUEST == packet_type)
 	{
@@ -199,7 +200,8 @@ static si_t _recv_respond(struct egui_uds* uds_ptr, si_t expected_detail_type, a
 {
 	while(1)
 	{
-		si_t detail_type = 0, body_size = 0;
+		si_t detail_type = 0;
+		ui_t body_size = 0;
 		si_t packet_type = comm_recv_head(uds_ptr, &detail_type, &body_size);
 		if(PACKET_TYPE_RESPOND == packet_type)
 		{
@@ -226,7 +228,7 @@ static si_t _recv_respond(struct egui_uds* uds_ptr, si_t expected_detail_type, a
 					buff = result;
 				}
 				/* 读取负载 */
-				if(body_size != uds_read(uds_ptr, buff, body_size))
+				if(-1 == uds_read(uds_ptr, buff, body_size))
 				{
 					EGUI_PRINT_ERROR("failed to read respond body");
 					return -1;
@@ -244,7 +246,7 @@ static si_t _recv_respond(struct egui_uds* uds_ptr, si_t expected_detail_type, a
 		else if(PACKET_TYPE_MESSAGE == packet_type)
 		{
 			union message msg;
-			if(body_size != uds_read(uds_ptr, &msg, body_size))
+			if(-1 == uds_read(uds_ptr, &msg, body_size))
 			{
 				EGUI_PRINT_ERROR("failed to read msg, type %s", message_type_to_str(detail_type));
 				return -1;
@@ -280,11 +282,12 @@ extern si_t comm_recv_respond_in_new_buffer(struct egui_uds* uds_ptr, si_t expec
  **/
 extern si_t comm_recv_msg(struct egui_uds* uds_ptr, union message* msg_ptr)
 {
-	si_t detail_type = 0, body_size = 0;
+	si_t detail_type = 0;
+	ui_t body_size = 0;
 	si_t packet_type = comm_recv_head(uds_ptr, &detail_type, &body_size);
 	if(PACKET_TYPE_MESSAGE == packet_type)
 	{
-		if(body_size != uds_read(uds_ptr, msg_ptr, sizeof(union message)))
+		if(body_size != sizeof(union message) || -1 == uds_read(uds_ptr, msg_ptr, sizeof(union message)))
 		{
 			EGUI_PRINT_ERROR("failed to read message body");
 			return -1;
@@ -298,7 +301,7 @@ extern si_t comm_recv_msg(struct egui_uds* uds_ptr, union message* msg_ptr)
 	}
 	else
 	{
-		EGUI_PRINT_ERROR("expect message actaully recv %s[%d]", 
+		EGUI_PRINT_ERROR("expect message actaully recv %s[%d]",
 			packet_type == PACKET_TYPE_RESPOND ? "respond" : (packet_type == PACKET_TYPE_REQUEST ? "request" : "unknown"), (int)packet_type);
 		return -1;
 	}

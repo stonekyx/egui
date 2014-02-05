@@ -140,7 +140,7 @@ char* request_type_to_str(si_t request_type)
  * @param struct_ptr 待写入的结构体指针，所有成员变量都从该指针指向的地址开始写起
  * @param param_num 参数个数
  **/
-static void write_func_arg_to_struct_var(addr_t struct_ptr, int param_num, ...)
+static void write_func_arg_to_struct_var(addr_t struct_ptr, ui_t param_num, ...)
 {
     va_list ap;	/* 存放可变长参数们 */
 	ui_t i = 0; /* 参数计数器 */
@@ -165,7 +165,7 @@ static void write_func_arg_to_struct_var(addr_t struct_ptr, int param_num, ...)
  * @param struct_ptr 待读取的结构体指针，所有成员变量都从该指针指向的地址开始读取
  * @param param_num 参数个数
  **/
-static void write_struct_var_to_func_arg(addr_t struct_ptr, int param_num, ...)
+static void write_struct_var_to_func_arg(addr_t struct_ptr, ui_t param_num, ...)
 {
     va_list ap;	/* 存放可变长参数们 */
 	ui_t i = 0; /* 参数计数器 */

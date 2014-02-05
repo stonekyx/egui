@@ -51,7 +51,7 @@ static struct vt_mode            vt_omode;
 static struct termios            term;
 static struct fb_var_screeninfo  fb_ovar;
 static unsigned short            ored[256], ogreen[256], oblue[256];
-static struct fb_cmap            ocmap = { 0, 256, ored, ogreen, oblue };
+static struct fb_cmap            ocmap = { 0, 256, ored, ogreen, oblue, NULL };
 
 /* -------------------------------------------------------------------- */
 /* devices                                                              */
@@ -63,14 +63,14 @@ struct DEVS {
 };
 
 struct DEVS devs_default = {
-    fb0:   "/dev/fb0",
-    fbnr:  "/dev/fb%d",
-    ttynr: "/dev/tty%d",
+    .fb0=   "/dev/fb0",
+    .fbnr=  "/dev/fb%d",
+    .ttynr= "/dev/tty%d",
 };
 struct DEVS devs_devfs = {
-    fb0:   "/dev/fb/0",
-    fbnr:  "/dev/fb/%d",
-    ttynr: "/dev/vc/%d",
+    .fb0=   "/dev/fb/0",
+    .fbnr=  "/dev/fb/%d",
+    .ttynr= "/dev/vc/%d",
 };
 struct DEVS *devices;
 
@@ -197,12 +197,12 @@ fb_setmode(char *name)
 	    fb_var.vmode = 0;
 	    while (NULL != fgets(line,79,fp) &&
 		   NULL == strstr(line,"endmode")) {
-		if (5 == sscanf(line," geometry %d %d %d %d %d",
+		if (5 == sscanf(line," geometry %u %u %u %u %u",
 				&fb_var.xres,&fb_var.yres,
 				&fb_var.xres_virtual,&fb_var.yres_virtual,
 				&fb_var.bits_per_pixel))
 		    geometry = 1;
-		if (7 == sscanf(line," timings %d %d %d %d %d %d %d",
+		if (7 == sscanf(line," timings %u %u %u %u %u %u %u",
 				&fb_var.pixclock,
 				&fb_var.left_margin,  &fb_var.right_margin,
 				&fb_var.upper_margin, &fb_var.lower_margin,

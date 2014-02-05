@@ -85,17 +85,18 @@ static int tab_header_point_in_unit(const struct tab_header *self,
         const struct tab_header_unit *u)
 {
     if(p->y<0 || p->y>=self->area.height ||
-            p->x<u->left_border
+            p->x<(si_t)u->left_border
             -TAB_HEADER_LEFT_PADDING-TAB_HEADER_UNIT_INTERVAL ||
-            p->x>=u->left_border+u->width-1
+            p->x>=(si_t)u->left_border+(si_t)u->width-1
             +TAB_HEADER_LEFT_PADDING+TAB_HEADER_UNIT_INTERVAL) {
         return 0;
     }
-    if(p->x>=u->left_border-TAB_HEADER_LEFT_PADDING &&
-            p->x<u->left_border+u->width+TAB_HEADER_LEFT_PADDING) {
+    if(p->x>=(si_t)u->left_border-TAB_HEADER_LEFT_PADDING &&
+            p->x<(si_t)u->left_border+(si_t)u->width
+            +TAB_HEADER_LEFT_PADDING) {
         return 1;
     }
-    if(p->x<u->left_border-TAB_HEADER_LEFT_PADDING) { /* left triangle */
+    if(p->x<(si_t)u->left_border-TAB_HEADER_LEFT_PADDING) { /* left triangle */
         si_t tx = p->x - (u->left_border
             -TAB_HEADER_LEFT_PADDING-TAB_HEADER_UNIT_INTERVAL);
         /* y+1    x_t - x
@@ -261,4 +262,11 @@ void tab_header_set_focus(
         panel_repaint_with_children(PANEL_POINTER(new_focus->page));
         panel_show(PANEL_POINTER(new_focus->page));
     }
+}
+
+void tab_header_set_font(
+        struct tab_header *self,
+        si_t font)
+{
+    label_set_font(self->sample, font);
 }

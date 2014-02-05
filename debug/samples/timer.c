@@ -2,9 +2,12 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <widget.h>
+#include "compiler.h"
 
 void event_handler(struct widget *sub, struct widget *pub, si_t event)
 {
+    NOT_USED(sub);
+    NOT_USED(event);
     puts("hello world");
     timer_run(TIMER_POINTER(pub));
 }

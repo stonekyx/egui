@@ -35,11 +35,13 @@
 # include "application_info.h"
 # include "server_lib.h"
 # include "log.h"
+# include "compiler.h"
 
 si_t window_manager_accept_handler(struct egui_uds* uds_ptr, addr_t arg)
 {
     struct application_info app_info;
     struct application_info* app_info_ptr = NULL;
+    NOT_USED(arg);
 
 	application_info_init(&app_info);
 

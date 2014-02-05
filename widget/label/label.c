@@ -36,6 +36,7 @@
 # include <log.h>
 # include <comm.h>
 # include <client_lib.h>
+# include "compiler.h"
 
 # include "label.h"
 
@@ -118,6 +119,7 @@ static si_t label_init_with_default_style(struct label * l)
 static si_t label_default_widget_show(struct label * l, union message * msg)
 {
     struct rectangle label_absolute_area;
+	NOT_USED(msg);
 
     widget_absolute_area(WIDGET_POINTER(l), &label_absolute_area);
 
@@ -134,6 +136,7 @@ static si_t label_default_widget_repaint(struct label * l, union message * msg)
 {
     struct rectangle area;
     si_t x, y;
+	NOT_USED(msg);
 
     /* 获得左上角的绝对坐标 */
     widget_absolute_coordinate(WIDGET_POINTER(l), &x, &y);
