@@ -27,15 +27,15 @@
  * All rights reserved.
  **/
 # define _GNU_SOURCE
-#include "window_manager.h"
 
 #include <termios.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <stropts.h>
-# include <fcntl.h>
-# include <sys/stat.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <sys/stat.h>
 
 #include "application_info.h"
 #include "window_info.h"
@@ -44,6 +44,8 @@
 #include "cursor.h"
 
 #include "config.h"
+
+#include "window_manager.h"
 
 struct window_manager global_wm;
 
@@ -269,45 +271,45 @@ static void comm_exit()
  *
  * @return 成功返回0 否则返回-1
  **/
-static si_t event_init(char* keybd_device_path, char* mouse_device_path, si_t double_click_delay)
+static si_t event_init(si_t double_click_delay)
 {
 	struct input_device device;
+	DIR *dev = opendir(INPUT_DEV_PATH);
+	struct dirent *entry;
 
 	/**
 	 * 初始化输入设备数组
 	 **/
 	vector_init(&global_wm.input_device_vector);
 
-	/**
-	 * 初始化键盘输入设备
-	 **/
-	if(keybd_init(&device, keybd_device_path) < 0)
-	{
-		EGUI_PRINT_ERROR("failed to init keybd device");
-		return -1;
+	/* 枚举所有输入设备 */
+	while((entry = readdir(dev))) {
+		struct stat buf;
+		static char path[256];
+		snprintf(path, sizeof(path), "%s/%s", INPUT_DEV_PATH, entry->d_name);
+		stat(path, &buf);
+		/* 设备文件必须是字符设备，而且文件名以event开头 */
+		if (!S_ISCHR(buf.st_mode) || !strstr(entry->d_name, "event"))
+			continue;
+		/* 执行初始化 */
+		if(evdev_init(&device, path) < 0)
+		{
+			EGUI_PRINT_ERROR("failed to init device");
+			continue;
+		}
+		/* 将输入设备添加到输入设备队列中 */
+		vector_push_back(&global_wm.input_device_vector, &device, sizeof(device));
 	}
-	/**
-	 * 将键盘输入设备添加到输入设备队列中
-	 **/
-	vector_push_back(&global_wm.input_device_vector, &device, sizeof(device));
+
+	set_double_click_delay(double_click_delay);
 
 	/**
-	 * 初始化鼠标输入设备
-	 **/
-	if(mouse_init(&device, mouse_device_path, double_click_delay) < 0)
-	{
-		EGUI_PRINT_ERROR("failed to init mouse device");
-		return -1;
-	}
-	/**
-	 * 将键盘输入设备添加到输入设备队列中
-	 **/
-	vector_push_back(&global_wm.input_device_vector, &device, sizeof(device));
-
-	/**
-	 * 初始化消息队列
+	 * 初始化消息队列，消息队列的使用位置在
+	 * window_manager_input_handler()调用deal_with_input()时。
 	 **/
 	list_init(&global_wm.message_list);
+
+	/* 将输入设备的监听加入到server_listener是在初始化的下一步，comm_init()里。 */
 
 	return 0;
 }
@@ -449,7 +451,7 @@ si_t window_manager_init()
 		return -1;
 	}
 
-	if(0 != event_init(KBD_EVENT_DEVICE, MOUSE_EVENT_DEVICE, 1000))
+	if(0 != event_init(1000))
 	{
 		EGUI_PRINT_ERROR("failed to init event module");
 		return -1;

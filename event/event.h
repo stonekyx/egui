@@ -10,11 +10,9 @@ struct input_device
     si_t (*input_exit)(struct input_device * self);
 };
 
-/* 键盘设备 */
-extern si_t keybd_init(struct input_device * self, char * keybd_device_path);
+extern si_t evdev_init(struct input_device * self, char * device_path);
 
-/* 鼠标设备 */
-extern si_t mouse_init(struct input_device * self, char * mouse_device_path, si_t double_click_delay);
+extern void set_double_click_delay(si_t double_click_delay);
 
 # endif
 

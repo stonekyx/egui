@@ -9,26 +9,16 @@ AM_INIT_AUTOMAKE([subdir-objects])
 LT_INIT
 
 # Input device paths.
-AC_ARG_WITH([mouse],
-            AS_HELP_STRING([--with-mouse=PATH],
-                           [specify path to the mouse event device]),
+AC_ARG_WITH([input-dev-path],
+            AS_HELP_STRING([--with-input-dev-path=PATH],
+                           [specify path to the event devices]),
             [],
             []
             )
-AC_ARG_WITH([kbd],
-            AS_HELP_STRING([--with-kbd=PATH],
-                           [specify path to the keyboard event device]),
-            [],
-            []
-            )
-AS_IF([test "$with_kbd"],
+AS_IF([test "$with_input_dev_path"],
       [],
-      [read with_kbd <<< `ls -1 /dev/input/by-path/*event*kbd* /dev/input/by-path/*kbd*event* 2>/dev/null | head -1`])
-AS_IF([test "$with_mouse"],
-      [],
-      [read with_mouse <<< `ls -1 /dev/input/by-path/*event*mouse* /dev/input/by-path/*mouse*event* 2>/dev/null | head -1`])
-AC_DEFINE_UNQUOTED([MOUSE_EVENT_DEVICE], ["$with_mouse"], [Path to mouse event device.])
-AC_DEFINE_UNQUOTED([KBD_EVENT_DEVICE], ["$with_kbd"], [Path to keyboard event device.])
+      [with_input_dev_path="/dev/input"])
+AC_DEFINE_UNQUOTED([INPUT_DEV_PATH], ["$with_input_dev_path"], [Path to event devices.])
 
 # Mouse-moving resolution on EV_ABS events
 AC_ARG_WITH([mouse-resolution],

@@ -84,18 +84,19 @@ int main()
 
 	event_listener_init(&server_listener);
 
-    if(keybd_init(&keybd_device, KEYBD_DEVICE_PATH) < 0)
+    if(evdev_init(&keybd_device, KEYBD_DEVICE_PATH) < 0)
     {
 		EGUI_PRINT_ERROR("failed to init keybd device");
         return -1;
     }
 	event_listener_add_read_event(&server_listener, &keybd_device.uds, &keybd_device, input_event_handler, input_device_destructor);
 
-    if (mouse_init(&mouse_device, MOUSE_DEVICE_PATH, 10000) < 0)
+    if (evdev_init(&mouse_device, MOUSE_DEVICE_PATH) < 0)
     {
 		EGUI_PRINT_ERROR("failed to init mouse device");
         return -1;
     }
+    set_double_click_delay(10000);
 	event_listener_add_read_event(&server_listener, &mouse_device.uds, &mouse_device, input_event_handler, input_device_destructor);
 
 	if(0 != event_listener_exec(&server_listener))
