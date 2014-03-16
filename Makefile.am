@@ -13,15 +13,13 @@ noinst_PROGRAMS=
 
 noinst_HEADERS=
 
-nobase_pkgdata_DATA=
-
 client_cflow_SRC=
 
 server_cflow_SRC=
 
 ACLOCAL_AMFLAGS= -I m4
 
-AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(pkgdatadir)\"" \
+AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(resourcedir)\"" \
 			-DPACKAGE_SRC_PATH="\"$(top_srcdir)\""
 
 include $(top_srcdir)/resource/local.mk
