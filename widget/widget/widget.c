@@ -29,14 +29,33 @@
 
 # include <stdio.h>
 # include <stdlib.h>
-
+# include <string.h>
 # include "config_parser.h"
 # include "log.h"
 # include "client_lib.h"
-
+# include "application.h"
 # include "widget.h"
 
 # define TMP_ARRAY_SIZE 256
+
+si_t widget_default_callback(void* self, void* msg)
+{
+    struct widget * w = self;
+    union message * m = msg;
+    int i,flag=0;
+    for(i=0;i<w->msg_num;i++)
+    {
+        if(w->msg_fct[i].msg_type->base.type == m->base.type)
+        {
+            flag=1;
+            w->msg_fct[i].function(w, m);
+        }
+    }
+    if(flag==1)
+        return 0;
+    else
+        return -1;
+}
 
 struct widget_style widget_default_style = 
 {
@@ -217,7 +236,6 @@ void *widget_init(si_t id)
 
     /* 分配存储空间 */
     addr = (struct widget *)malloc(sizeof(struct widget));
-
     if(addr == NULL)
     {
         EGUI_PRINT_SYS_ERROR("fail to malloc");
@@ -272,6 +290,10 @@ void *widget_init_common(struct widget *addr, si_t id)
 
     /* 默认的回调函数 */
     addr->callback = NULL;
+
+    addr->msg_num=0;
+    
+    //addr->msg_num2=0;
 
     return addr;
 }
@@ -495,3 +517,63 @@ si_t get_cursor_enum_from_str(const char * str)
 
     return -1;
 }
+
+si_t widget_listen(void* w,void* m, si_t (* response)(void *,void *))
+{
+    if(w == NULL)
+        return -1;
+    struct widget * self = w;
+   // union message * msg = m;
+    /*sit_t num;
+    num = widget_default_callback(self, msg);
+    w->map[num] = response;*/
+    self->msg_fct[self->msg_num].msg_type = m;
+    self->msg_fct[self->msg_num].function = response;
+    self->msg_num=self->msg_num+1;
+    return 0;
+}
+
+/*extern si_t str_to_msg(char* str)
+{
+    si_t msg,i;
+    msg=str[0];
+    for(i=1; i<=strlen(str), i++)
+    {
+        msg = msg*128 + str[i];
+    }
+    return msg;
+}*/
+
+extern si_t widget_listen_custom(void* w, char* str, si_t (* response)(void *,void *))
+{
+    if(w == NULL)
+        return -1;
+    struct widget * self = w;
+    union message * msg = str;
+//    msg = str_to_msg(m);
+    self->msg_fct[self->msg_num].msg_type = msg;
+    self->msg_fct[self->msg_num].function = response;
+    self->msg_num=self->msg_num+1;
+    return 0;
+}
+
+struct widget* widget_trigger_single(struct widget* w, union message* m)
+{
+    int i;
+    for(i=0;i<w->msg_num;i++)
+    {
+        if(w->msg_fct[i].msg_type->base.type == m->base.type)
+        {
+            w->msg_fct[i].function(w, m);
+        }
+    }
+    return NULL;
+}
+
+si_t widget_trigger(char *str)
+{
+    union message *m = str;
+    application_widgets_for_each_decreament_public(widget_trigger_single, m);
+    return 0;
+}
+

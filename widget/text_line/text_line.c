@@ -1168,11 +1168,11 @@ static si_t text_line_default_keybd_leave(struct text_line* t, union message* ms
     return 0;
 }
 
-extern si_t text_line_default_callback(void* t, void* m)
+si_t text_line_default_callback(void* t, void* m)
 {
     union message* msg = (union message*)m;
     struct text_line* tl = (struct text_line*)t;
-
+    widget_default_callback(tl, msg);
     switch(msg->base.type)
     {
     case MESSAGE_TYPE_WIDGET_REPAINT:

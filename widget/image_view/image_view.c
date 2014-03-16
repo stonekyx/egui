@@ -147,6 +147,8 @@ si_t image_view_default_callback(addr_t self, addr_t msg)
 {
     struct image_view * i = self;
     union message * m = msg;
+    
+    widget_default_callback(i, m);
 
     switch(m->base.type)
     {

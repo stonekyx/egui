@@ -253,7 +253,7 @@ dialog_default_callback
 {
     struct dialog * self = d;
     union message * msg = m;
-
+    widget_default_callback(d,m);
     switch(msg->base.type)
     {
         case MESSAGE_TYPE_WIDGET_SHOW:

@@ -276,6 +276,8 @@ si_t icon_default_callback(void* self , void* msg )
 
     struct icon* ic = self;
     union message * m = msg;
+    
+    widget_default_callback(ic, m);
 
     switch(m->base.type)
     {

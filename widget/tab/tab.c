@@ -177,3 +177,12 @@ si_t tab_set_focus(struct tab *t, struct tab_page *new_focus)
     }
     return -1;
 }
+
+si_t tab_default_callback(void * t, void *m)
+{
+    struct tab* self = t;
+    union message* msg = m;
+    
+    widget_default_callback(self, msg);
+    return 0;
+}

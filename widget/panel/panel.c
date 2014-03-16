@@ -184,6 +184,8 @@ si_t panel_default_callback(void* self , void* msg )
     struct panel* pnl = self;
     union message * m = (union message *)msg;
 
+    widget_default_callback(pnl, m);
+
     switch(m->base.type)
     {
         case MESSAGE_TYPE_WIDGET_REPAINT:

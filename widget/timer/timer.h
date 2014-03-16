@@ -58,4 +58,7 @@ void timer_set_time(struct timer *timer, const struct timespec *value);
 
 void timer_run(struct timer *timer);
 
+
+extern si_t timer_default_callback(void* t, void* m);
+
 # endif

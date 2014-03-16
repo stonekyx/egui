@@ -36,6 +36,14 @@
 
 # include "flowbox.h"
 
+si_t flowbox_default_callback(addr_t self, addr_t msg)
+{
+    struct widget * w = self;
+    union message * m = msg;
+    widget_default_callback(w, m);
+    return 0;
+}
+
 static si_t flowbox_subwidget_adjust_bounds(
         struct flowbox *f,
         struct widget *w

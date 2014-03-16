@@ -113,4 +113,6 @@ extern void tab_add_page(struct tab *t, struct tab_page *tp);
 
 extern si_t tab_set_focus(struct tab *t, struct tab_page *new_focus);
 
+extern si_t tab_default_callback(void * t, void *m);
+
 # endif

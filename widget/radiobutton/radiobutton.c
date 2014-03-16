@@ -181,6 +181,8 @@ si_t radiobutton_default_callback(addr_t self, addr_t msg)
     struct radiobutton * b = self;
     union message * m = msg;
 
+    widget_default_callback(b, m);
+
     switch(m->base.type)
     {
         case MESSAGE_TYPE_WIDGET_REPAINT:

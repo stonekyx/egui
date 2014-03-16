@@ -373,6 +373,7 @@ si_t scroll_bar_default_callback(void* s, void* m)
 {
 	struct scroll_bar* self = s;
 	union message* msg = m;
+    widget_default_callback(self, msg);
 
 	switch(msg->base.type)
 	{

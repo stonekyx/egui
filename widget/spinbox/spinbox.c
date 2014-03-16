@@ -198,6 +198,8 @@ si_t spinbox_default_callback(addr_t self, addr_t msg)
 {
     struct spinbox * b = self;
     union message * m = msg;
+    
+    widget_default_callback(b, m);
 
     switch(m->base.type)
     {

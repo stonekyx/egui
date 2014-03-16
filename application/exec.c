@@ -68,6 +68,12 @@ static struct widget* application_widgets_for_each_decreament(struct widget*(*do
     return NULL;
 }
 
+struct widget* application_widgets_for_each_decreament_public(struct widget*(*do_for_each_widget)(struct widget*, union message*), union message* msg)
+{
+    application_widgets_for_each_decreament(do_for_each_widget,msg);
+    return NULL;
+}
+
 /**
  * traverse the whole window vector and widget tree increamentally
  *

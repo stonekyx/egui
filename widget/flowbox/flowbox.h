@@ -72,6 +72,8 @@ extern struct flowbox* flowbox_init(si_t id);
 **/
 extern si_t flowbox_exit(struct flowbox * b);
 
+extern si_t flowbox_default_callback(addr_t self,addr_t msg);
+
 void flowbox_set_bounds(struct flowbox * b, si_t x, si_t y, si_t width , si_t height);
 
 si_t flowbox_add_widget(struct flowbox *f, struct widget *w);

@@ -36,4 +36,5 @@
 
 extern si_t application_event_listener_handler(struct egui_uds* uds_ptr, addr_t arg);
 
+extern struct widget* application_widgets_for_each_decreament_public(struct widget*(*do_for_each_widget)(struct widget*, union message*), union message* msg);
 # endif

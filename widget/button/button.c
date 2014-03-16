@@ -94,6 +94,7 @@ static struct button_style button_default_style =
  *
  * @return 成功返回0，否则返回-1
  **/
+
 static si_t button_init_with_default_style(struct button * b)
 {
     char tmp_str[TMP_ARRAY_SIZE] = {'\0'};
@@ -173,6 +174,7 @@ static void _paint_button(struct button* b, si_t is_pressed, struct rectangle* a
 
 static si_t button_default_widget_repaint(struct button * b, union message * msg)
 {
+    widget_default_callback(b,msg);
     struct rectangle area;
     si_t x, y;
     NOT_USED(msg);
@@ -229,7 +231,7 @@ si_t button_default_callback(addr_t self, addr_t msg)
 {
     struct button * b = self;
     union message * m = msg;
-
+    widget_default_callback(b, m);
     switch(m->base.type)
     {
         case MESSAGE_TYPE_WIDGET_REPAINT:

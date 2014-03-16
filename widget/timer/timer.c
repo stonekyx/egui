@@ -140,3 +140,10 @@ void timer_register_event_handler(struct timer *pub, struct widget *sub, si_t ev
     si.handler = handler;
     list_push_back(&pub->subscribe_info_list, &si, sizeof(si));
 }
+
+
+si_t timer_default_callback(void* t, void* m)
+{
+    widget_default_callback(t, m);
+    return 0;
+}

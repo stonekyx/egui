@@ -182,6 +182,7 @@ static si_t window_init_with_default_style(struct window * w)
     return res;
 }
 
+
 static si_t window_default_widget_show(struct window * w, union message * msg)
 {
     NOT_USED(msg);
@@ -192,9 +193,18 @@ static si_t window_default_widget_show(struct window * w, union message * msg)
      w->area.y - window_default_style.frame_size - window_default_style.title_bar_size,
      w->area.width + window_default_style.frame_size + window_default_style.frame_size,
      w->area.height + window_default_style.frame_size + window_default_style.frame_size + window_default_style.title_bar_size);
-
+/*    struct point p[4];
+    p[0].x=w->area.x+w->area.width/2;
+    p[0].y=w->area.y;
+    p[1].x=w->area.x;
+    p[1].y=w->area.y+w->area.height/2;
+    p[3].x=w->area.x+w->area.width;
+    p[3].y=w->area.y+w->area.height/2;
+    p[2].x=w->area.x+w->area.width/2;
+    p[2].y=w->area.y+w->area.height;
+    draw_polygon(w->gd,p,4);
+*/
     update(w->gd);
-
     return 0;
 }
 
@@ -466,6 +476,8 @@ si_t window_default_callback(addr_t w, addr_t m)
 {
     struct window * self = w;
     union message * msg = m;
+    
+    widget_default_callback(self, msg);
 
     switch(msg->base.type)
     {

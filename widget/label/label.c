@@ -162,6 +162,8 @@ si_t label_default_callback(addr_t self, addr_t msg)
 {
     struct label * l = self;
     union message * m = msg;
+    
+    widget_default_callback(l, m);
 
     switch(m->base.type)
     {

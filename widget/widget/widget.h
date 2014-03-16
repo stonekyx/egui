@@ -34,6 +34,18 @@
 # include "comm.h"
 # include "graph.h"
 
+struct map
+{
+    union message *msg_type;
+    si_t (* function)(void *, void *);
+};
+
+/*struct map2
+{
+    char * str;
+    si_t (* function)(void *, void *);
+};*/
+
 /**
  * 窗口部件结构体
 **/
@@ -128,7 +140,14 @@
     /**
      * 处理消息的回调函数
     **/ \
-    si_t (* callback)(void *, void *);
+    si_t (* callback)(void *, void *);\
+    \
+   /* si_t (* map[29])(void *,void *);*/\
+    struct map msg_fct[29];\
+    \
+    /* struct map2 msg_fct2[100];*/\
+    si_t msg_num;\
+//    si_t msg_num2;
 
 struct widget
 {
@@ -227,6 +246,7 @@ struct widget_subscribe_info
  *
  * @return 成功返回0，否则返回-1
  **/
+extern si_t widget_default_callback(void* self,void* msg);
 extern si_t widget_init_with_default_style(const char *path, struct widget * w, struct widget_style *style, struct widget_style_entry extra[], ui_t extralen);
 
 /**
@@ -330,4 +350,13 @@ extern si_t get_font_enum_from_str(const char * str);
  **/
 extern si_t get_cursor_enum_from_str(const char * str);
 
+extern si_t widget_listen(void* w, void* m, si_t (* response)(void *,void *));
+
+//extern si_t str_to_msg(char* str);
+
+extern si_t widget_listen_custom(void* w, char* str, si_t (* response)(void *,void *));
+
+extern si_t widget_trigger(char *str);
+
+extern struct widget* widget_trigger_single(struct widget* w, union message* m);
 # endif
