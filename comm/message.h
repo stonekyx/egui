@@ -716,7 +716,7 @@ union message
 	struct message_window_register	 window_register;
 	struct message_window_cancel	 window_cancel;
     struct message_keyboard_leave    keybd_leave;
-    char* message_custom;
+    char * message_custom;
 };
 
 
