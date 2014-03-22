@@ -155,7 +155,7 @@ static struct widget* do_dispatch_mouse_event_and_returns(struct widget* w, unio
      **/
     if(w->is_window == 1)
     {
-        area = w->area;
+        get_area(w->gd, &area);
     }
     else
     {
