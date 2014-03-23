@@ -55,7 +55,7 @@ my_widget_default_widget_show
     struct rectangle area;
     NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(mw), &area);
+    application_widget_absolute_area(WIDGET_POINTER(mw), &area);
 
     /* 设置区域 */
     set_area
@@ -86,7 +86,7 @@ my_widget_default_widget_repaint
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(mw), &area);
+    application_widget_absolute_area(WIDGET_POINTER(mw), &area);
 
     /* 设置区域 */
     set_area
@@ -230,7 +230,7 @@ my_widget_default_mouse_single_click
 
         /* 获得绝对的工作区域 */
         /* 将会舍弃不在父控件内的部分*/
-        widget_absolute_area(WIDGET_POINTER(mw), &area);
+        application_widget_absolute_area(WIDGET_POINTER(mw), &area);
 
         /* 双击了那个目录项 */
         y1 = msg->mouse.cursor_position.y - area.y;

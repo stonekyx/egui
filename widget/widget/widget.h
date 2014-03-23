@@ -290,16 +290,6 @@ extern si_t widget_exit(struct widget * w);
 extern si_t widget_absolute_coordinate(struct widget * w, si_t * x, si_t * y);
 
 /**
- * @brief 获得窗口部件的绝对坐标区域
- *
- * @param w 窗口部件结构体指针
- * @param result 存放绝对区域的地址
- *
- * @return 成功返回 0，失败返回 -1。
-**/
-extern si_t widget_absolute_area(struct widget * w, struct rectangle * result);
-
-/**
  * @brief 设置控件区域
  * 参数若小于0则对应的位置不发生改变
  *
@@ -359,4 +349,5 @@ extern si_t widget_listen_custom(void* w, char* str, si_t (* response)(void *,vo
 extern si_t widget_trigger(char *str);
 
 extern struct widget* widget_trigger_single(struct widget* w, union message* m);
+# include "application.h"
 # endif

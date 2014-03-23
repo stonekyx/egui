@@ -33,7 +33,6 @@
 # include "color.h"
 # include "data_structures.h"
 # include "comm.h"
-# include "widget.h"
 # include "client_lib.h"
 
 /**

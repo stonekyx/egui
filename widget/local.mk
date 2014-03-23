@@ -42,8 +42,9 @@ nobase_pkginclude_HEADERS += %D%/widget/widget.h\
 							 %D%/tab/tab_header.h\
 							 %D%/external.h
 
-library_libwidget_la_LIBADD = library/libclient_lib.la library/libgeometry.la library/libcomm.la \
-					  library/libconfig_parser.la library/libdata_structures.la -lrt
+library_libwidget_la_LIBADD = library/libapplication.la library/libclient_lib.la library/libgeometry.la library/libcomm.la \
+					  library/libconfig_parser.la library/libdata_structures.la \
+					  -lrt
 
 library_libwidget_la_LDFLAGS = -version-info 1:0:0
 

@@ -87,8 +87,8 @@ int main()
         temp = object_tree_iterator_decrement(&node, temp);
     }
 
-    widget_absolute_area(obj + 3, &area);
-    printf("widget_absolute_area\n");
+    application_widget_absolute_area(obj + 3, &area);
+    printf("application_widget_absolute_area\n");
     printf("%ld %ld %ld %ld\n", area.x, area.y, area.width, area.height);
 
     widget_absolute_coordinate(obj + 3, &(area.x), &(area.y));

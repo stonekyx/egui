@@ -12,7 +12,6 @@
 #include <stdlib.h>
 
 #include <data_structures.h>
-#include <graph.h>
 
 void read_cursor_file_header(char *path, struct cursor_file_header *header)
 {

@@ -150,7 +150,7 @@ extern si_t text_line_default_widget_show(struct text_line* t, union message* ms
     struct rectangle area;
 	NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(t), &area);
+    application_widget_absolute_area(WIDGET_POINTER(t), &area);
 
     /* 设置区域 */
     set_area
@@ -932,7 +932,7 @@ static si_t text_line_default_widget_repaint(struct text_line* t, union message*
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(t), &area);
+    application_widget_absolute_area(WIDGET_POINTER(t), &area);
 
     set_area
         (t->gd,

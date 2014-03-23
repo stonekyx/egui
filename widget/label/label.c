@@ -121,7 +121,7 @@ static si_t label_default_widget_show(struct label * l, union message * msg)
     struct rectangle label_absolute_area;
 	NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(l), &label_absolute_area);
+    application_widget_absolute_area(WIDGET_POINTER(l), &label_absolute_area);
 
     /* 设置区域 */
     set_area(l->gd, label_absolute_area.x, label_absolute_area.y, label_absolute_area.width, label_absolute_area.height);
@@ -142,7 +142,7 @@ static si_t label_default_widget_repaint(struct label * l, union message * msg)
     widget_absolute_coordinate(WIDGET_POINTER(l), &x, &y);
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(l), &area);
+    application_widget_absolute_area(WIDGET_POINTER(l), &area);
     /* 设置区域 */
     set_area(l->gd, area.x, area.y, area.width, area.height);
 
