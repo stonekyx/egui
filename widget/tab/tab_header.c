@@ -189,7 +189,7 @@ void tab_header_repaint(struct tab_header *self)
 
     widget_absolute_coordinate(WIDGET_POINTER(self),
             &abs_coor.x, &abs_coor.y);
-    widget_absolute_area(WIDGET_POINTER(self), &abs_area);
+    application_widget_absolute_area(WIDGET_POINTER(self), &abs_area);
     set_area(self->gd, abs_area.x, abs_area.y,
             abs_area.width, abs_area.height);
 
@@ -213,7 +213,7 @@ void tab_header_repaint(struct tab_header *self)
 void tab_header_show(struct tab_header *self)
 {
     struct rectangle area;
-    widget_absolute_area(WIDGET_POINTER(self), &area);
+    application_widget_absolute_area(WIDGET_POINTER(self), &area);
     set_area(self->gd, area.x, area.y, area.width, area.height);
     update(self->gd);
 }

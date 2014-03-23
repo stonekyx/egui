@@ -105,7 +105,7 @@ static si_t checkbox_default_widget_show(struct checkbox * b, union message * ms
     struct rectangle area;
     NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(b), &area);
+    application_widget_absolute_area(WIDGET_POINTER(b), &area);
 
     /* 设置区域 */
     set_area(b->gd, area.x, area.y, area.width, area.height);
@@ -148,7 +148,7 @@ static si_t checkbox_default_widget_repaint(struct checkbox *c, union message *m
     widget_absolute_coordinate(WIDGET_POINTER(c), &x, &y);
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(c), &area);
+    application_widget_absolute_area(WIDGET_POINTER(c), &area);
     /* 设置区域 */
     set_area(c->gd, area.x, area.y, area.width, area.height);
 

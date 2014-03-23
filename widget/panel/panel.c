@@ -261,7 +261,7 @@ si_t panel_default_widget_repaint(struct panel* pnl , union message * msg)
 	NOT_USED(msg);
 
 	/*  绘制panel本身的区域 */
-	widget_absolute_area( WIDGET_POINTER( pnl ), &area );
+	application_widget_absolute_area( WIDGET_POINTER( pnl ), &area );
 
     set_area(pnl->gd,area.x,area.y,area.width,area.height);
 
@@ -310,7 +310,7 @@ si_t panel_default_widget_show(struct panel* pnl , union message * msg)
 	struct widget * wgt;
 
 	/* 先显示panel本身的，即更新绘图设备 */
-    widget_absolute_area(WIDGET_POINTER(pnl), &area);
+    application_widget_absolute_area(WIDGET_POINTER(pnl), &area);
 	set_area( pnl->gd, area.x, area.y, area.width, area.height );
 	update( pnl->gd );
 
@@ -345,7 +345,7 @@ si_t panel_default_mouse_press(struct panel* pnl , union message * msg)
 	node = tree->rchild;
 	while(node != NULL)
 	{
-		widget_absolute_area(WIDGET_POINTER(node), &area);
+		application_widget_absolute_area(WIDGET_POINTER(node), &area);
 		if(point_in_area(&(msg->mouse.cursor_position), &area))
 		{
 			wgt = (struct widget*)node;
@@ -389,7 +389,7 @@ si_t panel_default_mouse_release(struct panel* pnl , union message * msg)
 	node = tree->rchild;
 	while(node != NULL)
 	{
-		widget_absolute_area(WIDGET_POINTER(node), &area);
+		application_widget_absolute_area(WIDGET_POINTER(node), &area);
 		if(point_in_area(&(msg->mouse.cursor_position), &area))
 		{
 			wgt = (struct widget*)node;

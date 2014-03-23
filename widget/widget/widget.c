@@ -330,57 +330,6 @@ si_t widget_absolute_coordinate(struct widget * w, si_t * x, si_t * y)
     return 0;
 }
 
-si_t widget_absolute_area (struct widget * w, struct rectangle * result)
-{
-    struct object * self, * parent;
-    struct rectangle temp, parent_area;
-    si_t flag = 0;
-
-    *result = w->area;
-
-    /* windows always use absolute coordinates. */
-    if(w->is_window) {
-        return 0;
-    }
-
-    parent_area.x = 0;
-    parent_area.y = 0;
-
-    temp.x = w->area.x;
-    temp.y = w->area.y;
-    temp.width = w->area.width;
-    temp.height = w->area.height;
-
-    self = OBJECT_POINTER(w);
-    while((parent = object_parent(self)) != NULL)
-    {
-        parent_area.width = WIDGET_POINTER(parent)->area.width;
-        parent_area.height = WIDGET_POINTER(parent)->area.height;
-
-        if(area_intersection(&parent_area, &temp, result) == -1)
-        {
-            flag = 1;
-            break;
-        }
-
-        temp.x = (result->x += WIDGET_POINTER(parent)->area.x);
-        temp.y = (result->y += WIDGET_POINTER(parent)->area.y);
-        temp.width = result->width;
-        temp.height = result->height;
-
-        self = parent;
-        if(WIDGET_POINTER(parent)->is_window) {
-            break;
-        }
-    }
-
-    if(flag == 1) {
-        return -1;
-    } else {
-        return 0;
-    }
-}
-
 void widget_set_bounds(struct widget* w, si_t x, si_t y, si_t width , si_t height)
 {
 	/* 检验参数 参数若小于0则不改变对应的值 */

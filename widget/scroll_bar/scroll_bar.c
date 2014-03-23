@@ -145,7 +145,7 @@ static si_t scroll_bar_default_widget_show(struct scroll_bar* s, union message* 
 	struct rectangle area;
 	NOT_USED(msg);
 
-	widget_absolute_area(WIDGET_POINTER(s), &area);
+	application_widget_absolute_area(WIDGET_POINTER(s), &area);
 
 	/* 设置区域 */
 	set_area(s->gd, area.x, area.y, area.width, area.height);
@@ -168,7 +168,7 @@ static si_t scroll_bar_default_widget_repaint(struct scroll_bar* s, union messag
 
 	/* 获得绝对的工作区域 */
 	/* 将会舍弃不在父控件内的部分*/
-	widget_absolute_area(WIDGET_POINTER(s), &area);
+	application_widget_absolute_area(WIDGET_POINTER(s), &area);
 
 	set_area(s->gd, area.x, area.y, area.width, area.height);
 
@@ -259,7 +259,7 @@ static si_t scroll_bar_default_mouse_press(struct scroll_bar* s, union message* 
 	si_t arrow_length = s->is_vertical ? s->area.width : s->area.height;
 	si_t new_offset;
 
-	widget_absolute_area(WIDGET_POINTER(s), &area);
+	application_widget_absolute_area(WIDGET_POINTER(s), &area);
 	if(s->is_vertical)
 		s->click_pos = msg->mouse.cursor_position.y - area.y;
 	else
@@ -334,7 +334,7 @@ static si_t scroll_bar_default_mouse_release(struct scroll_bar* s, union message
 	si_t distance;
 	si_t real_distance;
 
-	widget_absolute_area(WIDGET_POINTER(s), &area);
+	application_widget_absolute_area(WIDGET_POINTER(s), &area);
 
 	/**
 	 * only dispatch one event

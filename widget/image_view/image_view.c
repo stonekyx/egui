@@ -106,7 +106,7 @@ static si_t image_view_default_widget_show(struct image_view * i, union message 
     struct rectangle area;
     NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(i), &area);
+    application_widget_absolute_area(WIDGET_POINTER(i), &area);
 
     /* 设置区域 */
     set_area(i->gd, area.x, area.y, area.width, area.height);
@@ -128,7 +128,7 @@ static si_t image_view_default_widget_repaint(struct image_view * i, union messa
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(i), &area);
+    application_widget_absolute_area(WIDGET_POINTER(i), &area);
 
     /* 设置区域 */
     set_area(i->gd, area.x, area.y, area.width, area.height);

@@ -30,11 +30,22 @@
 # ifndef _EXEC_H_
 # define _EXEC_H_ 1
 
-# include "widget.h"
+/* We only need the `widget' definition here, not all the widgets. */
+# include "../widget/widget/widget.h"
 
 # include "application.h"
 
 extern si_t application_event_listener_handler(struct egui_uds* uds_ptr, addr_t arg);
 
 extern struct widget* application_widgets_for_each_decreament_public(struct widget*(*do_for_each_widget)(struct widget*, union message*), union message* msg);
+
+/**
+ * @brief 获得窗口部件的绝对坐标区域
+ *
+ * @param w 窗口部件结构体指针
+ * @param result 存放绝对区域的地址
+ *
+ * @return 成功返回 0，失败返回 -1。
+**/
+extern si_t application_widget_absolute_area (struct widget * w, struct rectangle * result);
 # endif

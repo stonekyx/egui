@@ -124,7 +124,7 @@ static si_t button_default_widget_show(struct button * b, union message * msg)
     struct rectangle area;
     NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(b), &area);
+    application_widget_absolute_area(WIDGET_POINTER(b), &area);
 
     /* 设置区域 */
     set_area(b->gd, area.x, area.y, area.width, area.height);
@@ -184,7 +184,7 @@ static si_t button_default_widget_repaint(struct button * b, union message * msg
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
+    application_widget_absolute_area(WIDGET_POINTER(b), &area);
 
 	_paint_button(b, 0, &area, x, y);
 
@@ -202,7 +202,7 @@ static si_t button_default_mouse_press(struct button * b, union message * msg)
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
+    application_widget_absolute_area(WIDGET_POINTER(b), &area);
 
 	_paint_button(b, 1, &area, x, y);
 
@@ -220,7 +220,7 @@ static si_t button_default_mouse_release(struct button * b, union message * msg)
 
     /* 获得绝对的工作区域 */
     /* 将会舍弃不在父控件内的部分*/
-    widget_absolute_area(WIDGET_POINTER(b), &area);
+    application_widget_absolute_area(WIDGET_POINTER(b), &area);
 
 	_paint_button(b, 0, &area, x, y);
 

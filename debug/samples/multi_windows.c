@@ -32,6 +32,7 @@
 # include <unistd.h>
 
 # include "application.h"
+# include "widget.h"
 
 void foo(addr_t data)
 {

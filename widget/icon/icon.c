@@ -96,7 +96,7 @@ si_t   icon_update_all_areas ( struct icon * ic )
 	si_t text_line_num;
 	si_t maxlen;
 
-    widget_absolute_area(WIDGET_POINTER(ic), &area);
+    application_widget_absolute_area(WIDGET_POINTER(ic), &area);
 
 
 	if(icon_get_is_text_visiable(ic) == 1)
@@ -362,7 +362,7 @@ si_t icon_default_widget_show(struct icon* ic , union message * msg)
 	struct rectangle area;
 	NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(ic), &area);
+    application_widget_absolute_area(WIDGET_POINTER(ic), &area);
 	set_area( ic->gd, area.x, area.y, area.width, area.height );
 	update( ic->gd );
 
@@ -379,7 +379,7 @@ si_t icon_default_mouse_press(struct icon* ic , union message * msg)
 	struct rectangle area;
 	NOT_USED(msg);
 
-    widget_absolute_area(WIDGET_POINTER(ic), &area);
+    application_widget_absolute_area(WIDGET_POINTER(ic), &area);
 
     /* 设置区域 */
     set_area(ic->gd, area.x, area.y, area.width, area.height);
@@ -412,7 +412,7 @@ si_t icon_default_mouse_release(struct icon* ic , union message * msg)
 	struct rectangle area;
 	NOT_USED(msg);
 
-	widget_absolute_area(WIDGET_POINTER(ic), &area);
+	application_widget_absolute_area(WIDGET_POINTER(ic), &area);
 
     /* 设置区域 */
     set_area(ic->gd, area.x, area.y, area.width, area.height);

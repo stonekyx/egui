@@ -30,7 +30,7 @@
 # ifndef _MANIPULATE_WINDOW_H_
 # define _MANIPULATE_WINDOW_H_ 1
 
-# include "widget.h"
+# include "../widget/window/window.h"
 
 /**
  * 设置用户应用程序的主窗口
