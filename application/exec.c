@@ -41,6 +41,8 @@
 # include "application.h"
 # include "manipulate_window.h"
 
+# include "exec.h"
+
 /**
  * traverse the whole window vector and widget tree decreamentally
  *

@@ -2,6 +2,7 @@
 #include "base_type.h"
 #include "client_lib.h"
 #include "log.h"
+#include "application.h"
 
 #include "tab.h"
 #include "tab_header.h"

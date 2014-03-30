@@ -33,6 +33,7 @@
 # include "geometry.h"
 # include "data_structures.h"
 # include "widget.h"
+# include "application.h"
 
 /*
     测试 widget 类

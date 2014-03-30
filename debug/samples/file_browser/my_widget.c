@@ -41,6 +41,7 @@
 #include "widget.h"
 #include "client_lib.h"
 #include "compiler.h"
+#include "application.h"
 
 #define DESKTOP_PATH  "/mnt/hgfs/gui/cece/c_egui_desktop/"
 

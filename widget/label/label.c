@@ -37,6 +37,7 @@
 # include <comm.h>
 # include <client_lib.h>
 # include "compiler.h"
+# include "application.h"
 
 # include "label.h"
 

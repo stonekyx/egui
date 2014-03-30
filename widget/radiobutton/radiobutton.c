@@ -39,6 +39,7 @@
 # include <graph.h>
 # include <data_structures.h>
 # include "compiler.h"
+# include "application.h"
 
 # include "radiobutton.h"
 

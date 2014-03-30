@@ -38,6 +38,7 @@
 # include <client_lib.h>
 # include <graph.h>
 # include "compiler.h"
+# include "application.h"
 
 # include "image_view.h"
 

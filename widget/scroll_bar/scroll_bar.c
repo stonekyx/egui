@@ -35,6 +35,7 @@
 #include "log.h"
 #include "client_lib.h"
 #include "compiler.h"
+#include "application.h"
 
 #include "scroll_bar.h"
 
