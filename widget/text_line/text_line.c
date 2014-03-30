@@ -38,6 +38,7 @@
 #include "comm.h"
 #include "client_lib.h"
 #include "compiler.h"
+#include "application.h"
 
 #define TMP_ARRAY_SIZE 256
 #define MAXBUF 80

@@ -349,5 +349,4 @@ extern si_t widget_listen_custom(void* w, char* str, si_t (* response)(void *,vo
 extern si_t widget_trigger(char *str);
 
 extern struct widget* widget_trigger_single(struct widget* w, union message* m);
-# include "application.h"
 # endif

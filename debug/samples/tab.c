@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "application.h"
+#include "widget.h"
 
 int main()
 {
