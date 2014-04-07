@@ -48,6 +48,7 @@
 #include "window_manager.h"
 
 struct window_manager global_wm;
+si_t gd;
 
 /* ----------------Begin terminal operations---------------- */
 
@@ -391,6 +392,31 @@ static void graph_exit()
 }
 
 /**
+ *  初始化欢迎界面
+ **/
+static si_t interface_init()
+{
+	struct graphics_device* gd_ptr = NULL;
+    gd = engine_graphics_device_init(0 ,0 , global_screen.width, global_screen.height, 255,255,0,0,7);
+	if(0 == gd)
+	{
+		EGUI_PRINT_ERROR("failed to init window manager graph device.");
+		return -1;
+	}
+	gd_ptr = (struct graphics_device*)gd;
+    engine_show_text(gd,global_screen.width/2-100,global_screen.height/2-45,"WELCOME!",8);
+    screen_flush(0,0,gd_ptr->screen.width,gd_ptr->screen.height);
+    return 0;
+}
+
+/**
+ *  清楚gd
+ **/
+static void interface_exit()
+{
+	engine_graphics_device_exit(gd);
+}
+/**
  * @brief 应用程序初始化
  *
  * @param frame_size 配置项 窗口边框宽度
@@ -477,6 +503,12 @@ si_t window_manager_init()
 
 	applications_init(3, 30);
 
+	if(0 != interface_init())
+	{
+		EGUI_PRINT_ERROR("failed to init interface");
+		return -1;
+	}
+
 	return 0;
 }
 
@@ -493,6 +525,7 @@ si_t window_manager_exit()
 	comm_exit();
 	event_exit();
 	config_exit();
+    interface_exit();
 
 	return 0;
 }
