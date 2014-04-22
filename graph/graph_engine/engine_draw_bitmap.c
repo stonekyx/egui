@@ -443,12 +443,12 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
     /* 原点在左下角 */
     if(origin > 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = (y - j - 1) * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素颜色在颜色列表中的地址 */
                 rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
@@ -466,12 +466,12 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
     /* 原点在左上角 */
     else if(origin < 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = j * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素颜色在颜色列表中的地址 */
                 rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
@@ -517,12 +517,12 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
     /* 原点在左下角 */
     if(origin > 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = (y - j - 1) * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
                 rgb = __getdot__(bm->data, bm->color_depth, offset + i);
@@ -539,12 +539,12 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
     /* 原点在左上角 */
     else if(origin < 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = j * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
                 rgb = __getdot__(bm->data, bm->color_depth, offset + i);
@@ -617,12 +617,12 @@ static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, s
     /* 原点在左下角 */
     if(origin > 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = (y - j - 1) * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
                 rgb = __getdot__(bm->data, bm->color_depth, offset + i);
@@ -639,12 +639,12 @@ static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, s
     /* 原点在左上角 */
     else if(origin < 0)
     {
-        for(j = 0; j < location->height; ++ j)
+        for(j = 0; j < location->height && j < y; ++ j)
         {
             /* 当前行起始像素的偏移量 */
             offset = j * x;
 
-            for(i = 0; i < location->width; ++ i)
+            for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
                 rgb = __getdot__(bm->data, bm->color_depth, offset + i);
