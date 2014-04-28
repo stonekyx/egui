@@ -37,7 +37,7 @@
 # include "log.h"
 
 /* static declarition {{{ */
-static ui_t __getdot__(void * addr, ui_t color_depth, ui_t position);
+static ui_t __getdot__(void * addr, ui_t width, ui_t color_depth, ui_t row, ui_t col);
 static si_t __is_color_table_used__(struct bitmap_info * info);
 static si_t __is_color_field_used__(struct bitmap_info * info);
 static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device* gd, struct rectangle* location);
@@ -273,8 +273,11 @@ static si_t bitmap_align(struct bitmap* bm, struct rectangle* location, int alig
  *
  * @return 像素的值
 **/
-static ui_t __getdot__(void * addr, ui_t color_depth, ui_t position)
+static ui_t __getdot__(void * addr, ui_t width, ui_t color_depth, ui_t row, ui_t col)
 {
+    ui_t line_length = ((width*color_depth+31) & (~31U));
+    ui_t line_head_bit = line_length*row;
+    ui_t position = line_head_bit + col*color_depth;
     ui08_t * temp = addr;
     ui_t value;
 
@@ -287,24 +290,25 @@ static ui_t __getdot__(void * addr, ui_t color_depth, ui_t position)
             return value & 0X1U;
         /* 04 位颜色 */
         case 4:
+            position >>= 2;
             value = temp[position >> 1];
             value >>= (position & 1U) << 2;
             return value & 0XFU;
         /* 08 位颜色 */
         case 8:
-            return temp[position];
+            return temp[position >> 3];
         /* 16 位颜色 */
         case 16:
-            temp += position + position;
+            temp += (position >> 3);
             return * ((ui16_t *)temp);
         /* 24 位颜色 */
         case 24:
-            temp += position + position + position;
-            value = * ((ui32_t *)temp);
-            return value & 0XFFFFFFU;
+            temp += (position >> 3);
+            value = (((temp[2]<<8) + temp[1])<<8) + temp[0];
+            return value;
         /* 32 位颜色 */
         case 32:
-            temp += position << 2;
+            temp += (position >> 3);
             return * ((ui32_t *)temp);
 
         default:
@@ -445,13 +449,10 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = (y - j - 1) * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素颜色在颜色列表中的地址 */
-                rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = bm->color_table + __getdot__(bm->data, x, bm->color_depth, y-j-1, i);
 
                 /* 获取颜色分量 */
                 c.r = (rgb->rgbRed) * global_color_limit.r_limit / (ui08_t)-1;
@@ -468,13 +469,10 @@ static si_t __show_with_color_table__(struct bitmap * bm, struct graphics_device
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = j * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素颜色在颜色列表中的地址 */
-                rgb = bm->color_table + __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = bm->color_table + __getdot__(bm->data, x, bm->color_depth, j, i);
 
                 /* 获取颜色分量 */
                 c.r = (rgb->rgbRed) * global_color_limit.r_limit / (ui08_t)-1;
@@ -519,13 +517,10 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = (y - j - 1) * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
-                rgb = __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = __getdot__(bm->data, x, bm->color_depth, y-j-1, i);
 
                 /* 获取颜色分量 */
                 c.r = (rgb & r_field) * global_color_limit.r_limit / (ui08_t)-1;
@@ -541,13 +536,10 @@ static si_t __show_with_color_field__(struct bitmap * bm, struct graphics_device
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = j * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
-                rgb = __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = __getdot__(bm->data, x, bm->color_depth, j, i);
 
                 /* 获取颜色分量 */
                 c.r = (rgb & r_field) * global_color_limit.r_limit / (ui08_t)-1;
@@ -619,13 +611,10 @@ static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, s
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = (y - j - 1) * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
-                rgb = __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = __getdot__(bm->data, x, bm->color_depth, y-j-1, i);
 
                 /* 设置颜色 */
                 c.b = ((rgb & b_mask) >> b_shift) * global_color_limit.b_limit / (ui08_t)-1;
@@ -641,13 +630,10 @@ static si_t __show_only_data__(struct bitmap * bm, struct graphics_device* gd, s
     {
         for(j = 0; j < location->height && j < y; ++ j)
         {
-            /* 当前行起始像素的偏移量 */
-            offset = j * x;
-
             for(i = 0; i < location->width && i < x; ++ i)
             {
                 /* 获得像素的值 */
-                rgb = __getdot__(bm->data, bm->color_depth, offset + i);
+                rgb = __getdot__(bm->data, x, bm->color_depth, j, i);
 
                 /* 设置颜色 */
                 c.b = ((rgb & b_mask) >> b_shift) * global_color_limit.b_limit / (ui08_t)-1;
