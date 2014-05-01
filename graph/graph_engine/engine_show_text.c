@@ -34,6 +34,7 @@
 
 # include "../graph_engine.h"
 
+extern si_t font_matrix_inited;
 extern ui08_t font_matrix_08[][1 *  16];
 extern ui08_t font_matrix_10[][2 *  20];
 extern ui08_t font_matrix_12[][2 *  24];
@@ -211,6 +212,10 @@ engine_show_text
  si_t length)
 {
     si_t i, w;
+
+    if(!font_matrix_inited && -1==engine_font_init()) {
+        return -1;
+    }
 
     /* 文字的宽度 */
     w = engine_get_font_width(graphics_device_handle);

@@ -20,7 +20,7 @@ server_cflow_SRC=
 ACLOCAL_AMFLAGS= -I m4
 
 AM_CPPFLAGS=@AM_CPPFLAGS@ -DPACKAGE_DATA_PATH="\"$(resourcedir)\"" \
-			-DPACKAGE_SRC_PATH="\"$(top_srcdir)\""
+			-DPACKAGE_SRC_PATH="\"$(abs_top_srcdir)\""
 
 include $(top_srcdir)/resource/local.mk
 include $(top_srcdir)/include/local.mk

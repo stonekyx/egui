@@ -40,7 +40,7 @@
 # include "config.h"
 
 #define DEFAULT_CURSOR PACKAGE_DATA_PATH"/resource/default.cur"
-#define NONINST_DEFAULT_CURSOR "../"PACKAGE_SRC_PATH"/resource/default.cur"
+#define NONINST_DEFAULT_CURSOR PACKAGE_SRC_PATH"/resource/default.cur"
 static struct graphics_device cursor_gd;
 static si_t cursor_gd_handler = (si_t)&cursor_gd;
 static struct cursor cursor;

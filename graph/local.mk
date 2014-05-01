@@ -48,19 +48,7 @@ library_libgraph_la_SOURCES = %D%/graph_lower/screen_init.c \
 					  %D%/graph_engine/engine_set_color.c \
 					  %D%/graph_engine/engine_cpy_area.c \
 					  %D%/graph_engine/engine_update.c \
-					  %D%/graph_engine/font_matrix/font_matrix_08.c \
-					  %D%/graph_engine/font_matrix/font_matrix_10.c \
-					  %D%/graph_engine/font_matrix/font_matrix_12.c \
-					  %D%/graph_engine/font_matrix/font_matrix_14.c \
-					  %D%/graph_engine/font_matrix/font_matrix_16.c \
-					  %D%/graph_engine/font_matrix/font_matrix_20.c \
-					  %D%/graph_engine/font_matrix/font_matrix_24.c \
-					  %D%/graph_engine/font_matrix/font_matrix_28.c \
-					  %D%/graph_engine/font_matrix/font_matrix_32.c \
-					  %D%/graph_engine/font_matrix/font_matrix_40.c \
-					  %D%/graph_engine/font_matrix/font_matrix_48.c \
-					  %D%/graph_engine/font_matrix/font_matrix_56.c \
-					  %D%/graph_engine/font_matrix/font_matrix_64.c
+					  %D%/graph_engine/font_matrix/font_matrix.c
 nobase_pkginclude_HEADERS += %D%/graph_lower.h \
 							 %D%/graph_engine.h \
 							 %D%/graph_enumerator.h \

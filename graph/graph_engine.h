@@ -743,4 +743,11 @@ extern struct color* engine_get_color(si_t graphics_device_handle);
  **/
 extern struct rectangle* engine_get_area(si_t graphics_device_handle);
 
+/**
+ * 初始化字体
+ *
+ * @return 0 on success
+ **/
+extern si_t engine_font_init();
+
 # endif
