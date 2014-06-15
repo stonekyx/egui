@@ -43,7 +43,7 @@ int main()
 	}
 	EGUI_PRINT_INFO("write %s successfully", SERVER_MSG);
 
-	if(uds_read(&client_uds, buf, sizeof(buf)) < 0)
+	if(uds_read(&client_uds, buf, sizeof(CLIENT_MSG)) < 0)
 	{
 		EGUI_PRINT_ERROR("failed to read client msg");
 		return -1;

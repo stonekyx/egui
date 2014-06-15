@@ -29,7 +29,7 @@ int main()
 	}
 	EGUI_PRINT_INFO("connect to server successfully!");
 
-	if(uds_read(&server_uds, buf, sizeof(buf)) < 0)
+	if(uds_read(&server_uds, buf, sizeof(SERVER_MSG)) < 0)
 	{
 		EGUI_PRINT_ERROR("failed to read server msg");
 		return -1;
