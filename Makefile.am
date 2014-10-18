@@ -27,9 +27,7 @@ include $(top_srcdir)/include/local.mk
 include $(top_srcdir)/utils/local.mk
 include $(top_srcdir)/comm/local.mk
 include $(top_srcdir)/event/local.mk
-include $(top_srcdir)/client_lib/local.mk
 include $(top_srcdir)/graph/local.mk
-include $(top_srcdir)/server_lib/local.mk
 include $(top_srcdir)/widget/local.mk
 include $(top_srcdir)/application/local.mk
 include $(top_srcdir)/debug/local.mk
